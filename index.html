@@ -637,17 +637,23 @@
      PHONE / SMALL SCREENS  — placed last so it overrides desktop
      ============================================================ */
   @media (max-width: 640px) {
-    .topbar { flex-wrap: wrap; gap: 6px; padding: 8px 10px; row-gap: 7px; }
-    .topbar .btn { padding: 8px 11px; font-size: 12.5px; }
-    .brand { font-size: 15px; }
-    .brand .dot { width: 18px; height: 18px; }
+    /* iPhone safe areas: keep the bar clear of the status bar / Dynamic Island
+       (selector must be header.topbar to beat the base rule's specificity) */
+    header.topbar { flex-wrap: wrap; gap: 7px; row-gap: 8px;
+      padding: calc(9px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 10px calc(12px + env(safe-area-inset-left));
+    }
+    .topbar .btn { padding: 10px 13px; font-size: 13.5px; }
+    #sidebarToggle { padding: 11px 15px !important; font-size: 22px; line-height: 1; }
+    #themeBtn, #dataMenuBtn, .topbar .btn[onclick*="openShortcuts"] { font-size: 15px; }
+    .brand { font-size: 16px; }
+    .brand .dot { width: 19px; height: 19px; }
     .search-box { width: 100%; order: 99; } .search-box:focus { width: 100%; }  /* search drops to its own full-width row */
     .search-count { order: 99; }
     .today-pill { font-size: 11px; padding: 5px 8px; }
     .today-pill-bar { width: 40px; }
 
     /* board fills the whole screen now (sidebar is an overlay drawer) */
-    .board { padding: 14px 12px 90px; gap: 14px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+    .board { padding: 14px calc(12px + env(safe-area-inset-right)) calc(90px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); gap: 14px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
     .column { flex: 0 0 88vw; width: 88vw; scroll-snap-align: start; }
 
     /* ---- sidebar = slide-in drawer (hidden by default) ---- */
@@ -658,7 +664,7 @@
       transform: translateX(-100%);
       transition: transform .25s ease;
       box-shadow: var(--shadow-lg);
-      padding: 20px 16px 90px;
+      padding: calc(20px + env(safe-area-inset-top)) 16px calc(90px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
     }
     body.sidebar-hidden .sidebar { display: flex; }   /* desktop "hidden" pref must not hide the mobile drawer */
     body.mobile-nav-open .sidebar { transform: translateX(0); }
@@ -670,11 +676,11 @@
     /* round ✕ to close the drawer */
     body.mobile-nav-open .mobile-nav-close {
       display: flex; align-items: center; justify-content: center;
-      position: fixed; top: 12px; right: 12px; z-index: 82;
-      width: 40px; height: 40px; border-radius: 50%;
+      position: fixed; top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); z-index: 82;
+      width: 46px; height: 46px; border-radius: 50%;
       background: var(--panel); color: var(--ink);
       border: 1px solid var(--line); box-shadow: var(--shadow-lg);
-      font-size: 17px; cursor: pointer;
+      font-size: 19px; cursor: pointer;
     }
 
     /* bigger, easier tap targets inside the drawer */
@@ -683,17 +689,20 @@
     .sidelink-act, .sl-grip { opacity: 1; }
     .palette-item { padding: 12px 12px; }
 
-    .save-fab { left: 12px; bottom: 12px; }
+    .save-fab { left: calc(12px + env(safe-area-inset-left)); bottom: calc(12px + env(safe-area-inset-bottom)); padding: 11px 17px; font-size: 14px; }
     .tray { width: 92vw; right: 4vw; }
     .modal, .dlg { width: 94vw; }
     .card-menu, .card-edit, .note-archive, .sl-grip { opacity: 1; }   /* always show controls on touch */
 
     /* Quick Notes takes the whole screen on phones */
     .modal.qn-modal { position: fixed; inset: 0; width: auto; height: auto; max-width: none; max-height: none; border-radius: 0; }
+    .modal.qn-modal .modal-head { padding-top: calc(14px + env(safe-area-inset-top)); padding-left: calc(18px + env(safe-area-inset-left)); padding-right: calc(18px + env(safe-area-inset-right)); }
+    .modal.qn-modal .modal-head .x { padding: 10px 13px; font-size: 18px; }
     .modal.qn-modal .qn-body { flex: 1; }
-    .qn-add { padding: 12px 14px; }
+    .qn-add { padding: 12px calc(14px + env(safe-area-inset-right)) 12px calc(14px + env(safe-area-inset-left)); }
     .qn-add textarea { font-size: 16px; }   /* 16px stops iOS zooming in on focus */
-    .modal.qn-modal .modal-body { padding: 12px 14px; }
+    .modal.qn-modal .modal-body { padding: 12px calc(14px + env(safe-area-inset-right)) 12px calc(14px + env(safe-area-inset-left)); }
+    .modal.qn-modal .modal-foot { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
   }
 </style>
 </head>
