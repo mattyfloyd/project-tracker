@@ -122,22 +122,10 @@
   .login-toggle a { color: var(--accent); text-decoration: none; font-weight: 700; margin-left: 4px; }
 
   /* ---------- phone / small screens ---------- */
-  @media (max-width: 640px) {
-    .topbar { flex-wrap: wrap; gap: 5px; padding: 8px 9px; }
-    .topbar .btn { padding: 7px 9px; font-size: 12px; }
-    .brand { font-size: 15px; }
-    .brand .dot { width: 18px; height: 18px; }
-    .search-box { width: 120px; } .search-box:focus { width: 150px; }
-    .today-pill { font-size: 11px; padding: 5px 8px; }
-    .today-pill-bar { width: 40px; }
-    .board { padding: 12px; gap: 12px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
-    .column { flex: 0 0 86vw; width: 86vw; scroll-snap-align: start; }
-    .sidebar { position: fixed; top: 52px; bottom: 0; left: 0; width: 85vw; max-width: 330px; z-index: 62; box-shadow: var(--shadow-lg); }
-    .save-fab { left: 12px; bottom: 12px; }
-    .tray { width: 92vw; right: 4vw; }
-    .modal, .dlg { width: 94vw; }
-    .card-menu, .card-edit, .note-archive, .sl-grip { opacity: 1; }   /* always show controls on touch */
-  }
+  .mobile-scrim { display: none; }
+  .mobile-nav-close { display: none; }
+  /* NOTE: the full mobile @media block lives at the very END of this stylesheet
+     so it reliably overrides the base desktop styles defined below. */
 
   /* styled dialog (prompt / confirm / alert) */
   .dlg-overlay { z-index: 90; }
@@ -614,6 +602,62 @@
   body.dark .col-title { color: var(--ink); }
   body.dark ::-webkit-scrollbar-thumb { background: #3a4654; background-clip: padding-box; }
   body.dark ::-webkit-scrollbar-thumb:hover { background: #4a5868; background-clip: padding-box; }
+
+  /* ============================================================
+     PHONE / SMALL SCREENS  — placed last so it overrides desktop
+     ============================================================ */
+  @media (max-width: 640px) {
+    .topbar { flex-wrap: wrap; gap: 6px; padding: 8px 10px; row-gap: 7px; }
+    .topbar .btn { padding: 8px 11px; font-size: 12.5px; }
+    .brand { font-size: 15px; }
+    .brand .dot { width: 18px; height: 18px; }
+    .search-box { width: 100%; order: 99; } .search-box:focus { width: 100%; }  /* search drops to its own full-width row */
+    .search-count { order: 99; }
+    .today-pill { font-size: 11px; padding: 5px 8px; }
+    .today-pill-bar { width: 40px; }
+
+    /* board fills the whole screen now (sidebar is an overlay drawer) */
+    .board { padding: 14px 12px 90px; gap: 14px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+    .column { flex: 0 0 88vw; width: 88vw; scroll-snap-align: start; }
+
+    /* ---- sidebar = slide-in drawer (hidden by default) ---- */
+    .sidebar {
+      position: fixed; top: 0; bottom: 0; left: 0;
+      width: min(84vw, 340px); max-width: 340px;
+      z-index: 80; display: flex;
+      transform: translateX(-100%);
+      transition: transform .25s ease;
+      box-shadow: var(--shadow-lg);
+      padding: 20px 16px 90px;
+    }
+    body.sidebar-hidden .sidebar { display: flex; }   /* desktop "hidden" pref must not hide the mobile drawer */
+    body.mobile-nav-open .sidebar { transform: translateX(0); }
+    /* dim backdrop behind the drawer */
+    body.mobile-nav-open .mobile-scrim {
+      display: block; position: fixed; inset: 0;
+      background: rgba(8,12,18,.5); z-index: 78;
+    }
+    /* round ✕ to close the drawer */
+    body.mobile-nav-open .mobile-nav-close {
+      display: flex; align-items: center; justify-content: center;
+      position: fixed; top: 12px; right: 12px; z-index: 82;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--panel); color: var(--ink);
+      border: 1px solid var(--line); box-shadow: var(--shadow-lg);
+      font-size: 17px; cursor: pointer;
+    }
+
+    /* bigger, easier tap targets inside the drawer */
+    .sidelink { padding: 10px 6px; }
+    .sidelink a { font-size: 13.5px; }
+    .sidelink-act, .sl-grip { opacity: 1; }
+    .palette-item { padding: 12px 12px; }
+
+    .save-fab { left: 12px; bottom: 12px; }
+    .tray { width: 92vw; right: 4vw; }
+    .modal, .dlg { width: 94vw; }
+    .card-menu, .card-edit, .note-archive, .sl-grip { opacity: 1; }   /* always show controls on touch */
+  }
 </style>
 </head>
 <body>
@@ -645,6 +689,10 @@
     <aside class="sidebar" id="sidebar"></aside>
     <div class="board" id="board"></div>
   </div>
+
+  <!-- mobile drawer backdrop + close (only visible on small screens when the menu is open) -->
+  <div class="mobile-scrim" onclick="closeMobileNav()"></div>
+  <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">✕</button>
 
   <!-- floating Save (bottom-left, out of the way) -->
   <button class="save-fab" id="saveBtn" onclick="saveNow()" title="Save now (Ctrl+S)">💾 Save</button>
@@ -2518,7 +2566,29 @@ const PALETTE = [
   { type:"note",      icon:"📝", label:"Note",    desc:"Plain text sticky" },
   { type:"checklist", icon:"✓",  label:"Checklist", desc:"Tickable to-do list" },
 ];
-function toggleSidebar(){ document.body.classList.toggle("sidebar-hidden"); state.sidebarHidden = document.body.classList.contains("sidebar-hidden"); save(); }
+function isMobileView(){ return window.matchMedia("(max-width: 640px)").matches; }
+function setDrawer(open){
+  document.body.classList.toggle("mobile-nav-open", open);
+  const sb = document.getElementById("sidebar");
+  if(sb) sb.style.transform = open ? "translateX(0)" : "";   // authoritative; CSS provides the same as a fallback
+}
+function closeMobileNav(){ setDrawer(false); }
+function toggleSidebar(){
+  if(isMobileView()){
+    // on phones the sidebar is a slide-in drawer; just open/close it (don't persist)
+    setDrawer(!document.body.classList.contains("mobile-nav-open"));
+    return;
+  }
+  document.body.classList.toggle("sidebar-hidden");
+  state.sidebarHidden = document.body.classList.contains("sidebar-hidden");
+  save();
+}
+// tapping a link or palette chip inside the drawer closes it (so you land back on the board)
+document.addEventListener("click", e => {
+  if(!document.body.classList.contains("mobile-nav-open")) return;
+  const sb = e.target.closest(".sidebar");
+  if(sb && e.target.closest("a, .palette-item")) closeMobileNav();
+});
 function renderSidebar(){
   const el = document.getElementById("sidebar");
   if(!el) return;
