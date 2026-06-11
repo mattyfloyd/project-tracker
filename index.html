@@ -425,6 +425,36 @@
   .modal-head .x { margin-left: auto; }
   .modal-body { padding: 16px 18px; overflow-y: auto; }
   .modal-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: center; }
+
+  /* ----- Quick Notes ----- */
+  .qn-open-btn { width: 100%; display: flex; align-items: center; gap: 11px; text-align: left; cursor: pointer; border: 1px solid var(--line); border-radius: 12px; padding: 12px 13px; background: linear-gradient(135deg, rgba(59,111,214,.12), rgba(138,69,224,.12)); color: var(--ink); transition: border-color .12s, box-shadow .12s, transform .04s; }
+  .qn-open-btn:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+  .qn-open-btn:active { transform: translateY(1px); }
+  .qn-open-ic { font-size: 20px; flex: 0 0 auto; }
+  .qn-open-tx { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .qn-open-title { font-size: 14px; font-weight: 800; }
+  .qn-open-sub { font-size: 11px; color: var(--muted); }
+  .qn-open-count { flex: 0 0 auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .qn-open-count:empty { display: none; }
+  .qn-head-sub { font-size: 11.5px; color: var(--muted); margin-left: 2px; }
+  .qn-add { display: flex; gap: 8px; align-items: flex-start; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .qn-add textarea { flex: 1; resize: none; min-height: 42px; max-height: 140px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: var(--ink); background: var(--bg); outline: none; line-height: 1.4; }
+  .qn-add textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.16); }
+  .qn-add .btn { flex: 0 0 auto; padding: 11px 16px; }
+  .qn-body { display: flex; flex-direction: column; gap: 7px; min-height: 120px; }
+  .qn-item { display: flex; align-items: flex-start; gap: 9px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+  .qn-item.done { opacity: .6; }
+  .qn-item.done .qn-text { text-decoration: line-through; color: var(--muted); }
+  .qn-check { flex: 0 0 auto; width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); cursor: pointer; color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .qn-item.done .qn-check { background: var(--accent); border-color: var(--accent); }
+  .qn-text { flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; color: var(--ink); outline: none; white-space: pre-wrap; word-break: break-word; }
+  .qn-act { flex: 0 0 auto; border: none; background: none; cursor: pointer; color: var(--muted); font-size: 14px; padding: 2px 5px; border-radius: 6px; }
+  .qn-act:hover { color: var(--ink); background: var(--bg); }
+  .qn-del:hover { color: #c0392b; }
+  .qn-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 30px 10px; line-height: 1.6; }
+  .qn-foot-count { font-size: 12px; color: var(--muted); }
+  body.dark .qn-add textarea { background: #161d27; }
+  body.dark .qn-open-btn { background: linear-gradient(135deg, rgba(122,165,255,.16), rgba(160,110,240,.16)); }
   .field { margin-bottom: 15px; }
   .field label { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); margin-bottom: 6px; }
   .input, .textarea {
@@ -657,6 +687,13 @@
     .tray { width: 92vw; right: 4vw; }
     .modal, .dlg { width: 94vw; }
     .card-menu, .card-edit, .note-archive, .sl-grip { opacity: 1; }   /* always show controls on touch */
+
+    /* Quick Notes takes the whole screen on phones */
+    .modal.qn-modal { position: fixed; inset: 0; width: auto; height: auto; max-width: none; max-height: none; border-radius: 0; }
+    .modal.qn-modal .qn-body { flex: 1; }
+    .qn-add { padding: 12px 14px; }
+    .qn-add textarea { font-size: 16px; }   /* 16px stops iOS zooming in on focus */
+    .modal.qn-modal .modal-body { padding: 12px 14px; }
   }
 </style>
 </head>
@@ -2046,7 +2083,7 @@ function endTsForDate(dv){
   const chosen = new Date(y, m-1, d, 12, 0, 0);
   return sameDay(chosen.getTime(), Date.now()) ? Date.now() : chosen.getTime();
 }
-function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); if(wasEditing) render(); }
+function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); const m = document.getElementById("modal"); if(m) m.classList.remove("qn-modal"); if(wasEditing) render(); }
 function inEditable(el){ return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable)); }
 document.addEventListener("keydown", e => {
   if(e.key === "Escape"){ if(dlgCancelFn){ dlgCancelFn(); return; } closeModal(); hideCtx(); return; }
@@ -2107,6 +2144,70 @@ function openShortcuts(){
     `<div class="modal-foot"><span style="flex:1"></span><button class="btn primary" onclick="closeModal()">✓ Got it</button></div>`;
   document.getElementById("overlay").classList.add("show");
 }
+
+/* ============================ Quick Notes ============================ */
+function qnList(){ return state.quickNotes || (state.quickNotes = []); }
+function openQuickNotes(){
+  currentModal = "quicknotes";
+  closeMobileNav();   // if the mobile drawer was open, slide it away behind the panel
+  const modal = document.getElementById("modal");
+  modal.classList.add("qn-modal");
+  modal.innerHTML =
+    `<div class="modal-head"><strong>⚡ Quick Notes</strong>`+
+      `<span class="qn-head-sub">jot ideas fast — they sync to all your devices</span>`+
+      `<button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="qn-add">`+
+      `<textarea id="qnInput" rows="1" placeholder="Type an idea and press Enter…"></textarea>`+
+      `<button class="btn primary" id="qnAddBtn">Add</button>`+
+    `</div>`+
+    `<div class="modal-body qn-body" id="qnBody"></div>`+
+    `<div class="modal-foot"><span class="qn-foot-count" id="qnFootCount"></span><span style="flex:1"></span><button class="btn ghost" id="qnClearDone">Clear done</button></div>`;
+  document.getElementById("overlay").classList.add("show");
+  renderQuickNotes();
+  const input = document.getElementById("qnInput");
+  const autosize = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 140) + "px"; };
+  const submit = () => { const v = input.value.trim(); if(v){ addQuickNote(v); input.value = ""; autosize(); } input.focus(); };
+  document.getElementById("qnAddBtn").onclick = submit;
+  input.addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); submit(); } });
+  input.addEventListener("input", autosize);
+  document.getElementById("qnClearDone").onclick = () => {
+    const had = qnList().some(n => n.done);
+    state.quickNotes = qnList().filter(n => !n.done);
+    save(); renderQuickNotes(); renderSidebar();
+    if(had) flashToast("Cleared done notes");
+  };
+  setTimeout(() => input.focus(), 50);
+}
+function renderQuickNotes(){
+  const body = document.getElementById("qnBody"); if(!body) return;
+  const all = qnList();
+  const list = all.slice().sort((a,b) => (a.done - b.done) || (b.ts - a.ts));   // open first, newest first
+  body.innerHTML = list.length ? list.map(n =>
+    `<div class="qn-item ${n.done ? "done" : ""}" data-id="${n.id}">`+
+      `<button class="qn-check" data-act="toggle" title="Mark done">${n.done ? "✓" : ""}</button>`+
+      `<div class="qn-text" contenteditable="true" spellcheck="true">${esc(n.text)}</div>`+
+      `<button class="qn-act qn-del" data-act="del" title="Delete">✕</button>`+
+    `</div>`).join("") : `<div class="qn-empty">No quick notes yet.<br>Type above to capture an idea.</div>`;
+  const open = all.filter(n => !n.done).length;
+  const fc = document.getElementById("qnFootCount");
+  if(fc) fc.textContent = all.length ? `${open} open · ${all.length} total` : "";
+  body.querySelectorAll(".qn-item").forEach(it => {
+    const id = it.dataset.id;
+    it.querySelector('[data-act="toggle"]').onclick = () => toggleQuickNote(id);
+    it.querySelector('[data-act="del"]').onclick = () => deleteQuickNote(id);
+    const txt = it.querySelector(".qn-text");
+    txt.addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); txt.blur(); } });
+    txt.addEventListener("blur", () => {
+      const n = qnList().find(x => x.id === id); if(!n) return;
+      const v = txt.textContent.trim();
+      if(!v){ deleteQuickNote(id); return; }
+      if(v !== n.text){ n.text = v; save(); }
+    });
+  });
+}
+function addQuickNote(text){ qnList().push({ id: uid(), text, done: false, ts: Date.now() }); save(); renderQuickNotes(); renderSidebar(); }
+function toggleQuickNote(id){ const n = qnList().find(x => x.id === id); if(n){ n.done = !n.done; save(); renderQuickNotes(); renderSidebar(); } }
+function deleteQuickNote(id){ state.quickNotes = qnList().filter(x => x.id !== id); save(); renderQuickNotes(); renderSidebar(); }
 
 /* ============================ Timer tray ============================ */
 let trayOpen = false;
@@ -2627,6 +2728,13 @@ function renderSidebar(){
     `</div>`;
   el.innerHTML =
     `<div class="side-sec">`+
+      `<button class="qn-open-btn" onclick="openQuickNotes()" title="Quick Notes — jot ideas without making a card">`+
+        `<span class="qn-open-ic">⚡</span>`+
+        `<span class="qn-open-tx"><span class="qn-open-title">Quick Notes</span><span class="qn-open-sub">Jot an idea — no card needed</span></span>`+
+        `<span class="qn-open-count" id="qnCount">${(state.quickNotes||[]).filter(n=>!n.done).length||""}</span>`+
+      `</button>`+
+    `</div>`+
+    `<div class="side-sec">`+
       `<h3>➕ Add to board</h3>`+
       `<div class="hint" style="margin-bottom:10px">Drag a card onto any column — or click it to drop one in the first column.</div>`+
       PALETTE.map(p =>
@@ -3113,6 +3221,59 @@ async function init(){
     finishBoot();
   }
 }
+/* ============================ App icon (favicon + home-screen) ============================ */
+function drawAppIcon(size){
+  const c = document.createElement("canvas"); c.width = c.height = size;
+  const x = c.getContext("2d");
+  x.scale(size/512, size/512);   // draw everything in a fixed 512 grid
+  const rr = (X, Y, W, H, R) => { if(x.roundRect){ x.beginPath(); x.roundRect(X, Y, W, H, R); } else { x.beginPath(); x.moveTo(X+R,Y); x.arcTo(X+W,Y,X+W,Y+H,R); x.arcTo(X+W,Y+H,X,Y+H,R); x.arcTo(X,Y+H,X,Y,R); x.arcTo(X,Y,X+W,Y,R); x.closePath(); } };
+  // gradient background
+  const g = x.createLinearGradient(0, 0, 512, 512);
+  g.addColorStop(0, "#3b6fd6"); g.addColorStop(.55, "#5b5cf0"); g.addColorStop(1, "#8a45e0");
+  x.fillStyle = g; rr(0, 0, 512, 512, 112); x.fill();
+  // soft top highlight
+  const hl = x.createLinearGradient(0, 0, 0, 300);
+  hl.addColorStop(0, "rgba(255,255,255,.16)"); hl.addColorStop(1, "rgba(255,255,255,0)");
+  x.fillStyle = hl; rr(0, 0, 512, 512, 112); x.fill();
+  // "MF" monogram (upper third)
+  x.fillStyle = "#ffffff"; x.textAlign = "center"; x.textBaseline = "middle";
+  x.font = "800 184px system-ui, -apple-system, 'Segoe UI', Arial, sans-serif";
+  x.fillText("MF", 256, 176);
+  // mini kanban board underneath — reads as a project tracker
+  const colW = 92, gap = 26, n = 3, totalW = n*colW + (n-1)*gap, startX = (512 - totalW)/2;
+  const colY = 300, colH = 150, pad = 13, cardH = 23, cardGap = 12, cardW = colW - pad*2;
+  const counts = [2, 1, 3];   // varied card counts = a board in progress
+  for(let i = 0; i < n; i++){
+    const cx = startX + i*(colW + gap);
+    x.fillStyle = "rgba(255,255,255,.22)"; rr(cx, colY, colW, colH, 14); x.fill();
+    x.fillStyle = "rgba(255,255,255,.93)";
+    for(let k = 0; k < counts[i]; k++){
+      const cy = colY + pad + k*(cardH + cardGap);
+      if(cy + cardH > colY + colH - pad) break;
+      rr(cx + pad, cy, cardW, cardH, 7); x.fill();
+    }
+  }
+  return c;
+}
+function installIcons(){
+  try {
+    const png = s => drawAppIcon(s).toDataURL("image/png");
+    const setLink = (rel, href, type) => {
+      let el = document.querySelector('link[rel="'+rel+'"]');
+      if(!el){ el = document.createElement("link"); el.rel = rel; document.head.appendChild(el); }
+      if(type) el.type = type; el.href = href;
+    };
+    setLink("icon", png(64), "image/png");
+    setLink("apple-touch-icon", png(180));
+    const man = { name:"Project Tracker", short_name:"Tracker", start_url:".", display:"standalone",
+      background_color:"#0e1218", theme_color:"#3b6fd6",
+      icons:[ { src:png(192), sizes:"192x192", type:"image/png", purpose:"any" },
+              { src:png(512), sizes:"512x512", type:"image/png", purpose:"any" } ] };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(man)], { type:"application/json" }));
+    setLink("manifest", url);
+  } catch(e){ /* keep the static fallback icons in <head> */ }
+}
+installIcons();
 init();
 </script>
 </body>
