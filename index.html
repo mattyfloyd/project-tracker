@@ -653,8 +653,8 @@
     .today-pill-bar { width: 40px; }
 
     /* board fills the whole screen now (sidebar is an overlay drawer) */
-    .board { padding: 14px calc(12px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); gap: 14px; align-items: stretch; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
-    .column { flex: 0 0 88vw; width: 88vw; height: 100%; scroll-snap-align: start; }
+    .board { padding: 14px calc(12px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); gap: 14px; align-items: flex-start; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+    .column { flex: 0 0 88vw; width: 88vw; scroll-snap-align: start; }
 
     /* ---- sidebar = slide-in drawer (hidden by default) ---- */
     .sidebar {
