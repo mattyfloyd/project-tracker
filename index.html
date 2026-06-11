@@ -690,6 +690,7 @@
     .palette-item { padding: 12px 12px; }
 
     .save-fab { display: none; }   /* mobile auto-saves to the cloud, so the manual Save button is redundant */
+    .add-card-btn { padding: 6px; font-size: 12px; margin: 2px 10px 8px; }   /* slimmer "+ Add card" on phones */
     .tray { width: 92vw; right: 4vw; }
     .modal, .dlg { width: 94vw; }
     .card-menu, .card-edit, .note-archive, .sl-grip { opacity: 1; }   /* always show controls on touch */
@@ -774,10 +775,6 @@
       <input class="login-input" id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
       <button class="btn primary login-btn" id="loginBtn">Sign in</button>
       <div class="login-err" id="loginErr"></div>
-      <div class="login-toggle">
-        <span id="loginToggleText">No account yet?</span>
-        <a href="#" id="loginToggleLink">Create one</a>
-      </div>
     </div>
   </div>
 
@@ -3167,8 +3164,6 @@ function hideLogin(){ document.getElementById("loginScreen").classList.remove("s
 function updateLoginMode(){
   document.getElementById("loginSub").textContent = signupMode ? "Create your account" : "Sign in to your tracker";
   document.getElementById("loginBtn").textContent = signupMode ? "Create account" : "Sign in";
-  document.getElementById("loginToggleText").textContent = signupMode ? "Already have an account?" : "No account yet?";
-  document.getElementById("loginToggleLink").textContent = signupMode ? "Sign in" : "Create one";
   document.getElementById("loginPass").setAttribute("autocomplete", signupMode ? "new-password" : "current-password");
 }
 function wireLogin(){
@@ -3194,7 +3189,6 @@ function wireLogin(){
   };
   btn.onclick = submit;
   pass.addEventListener("keydown", ev => { if(ev.key === "Enter") submit(); });
-  document.getElementById("loginToggleLink").onclick = ev => { ev.preventDefault(); signupMode = !signupMode; errEl.textContent = ""; updateLoginMode(); };
 }
 async function cloudSignOut(){
   try { await sb.auth.signOut(); } catch(e){}
