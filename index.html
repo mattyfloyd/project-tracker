@@ -1,0 +1,3049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#3b6fd6" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Tracker" />
+<title>Project Tracker</title>
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Project%20Tracker%22%2C%22short_name%22%3A%22Tracker%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230e1218%22%2C%22theme_color%22%3A%22%233b6fd6%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI%2BPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjM2I2ZmQ2Ii8%2BPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNmY0ZmQ2Ii8%2BPC9saW5lYXJHcmFkaWVudD48L2RlZnM%2BPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjcuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNiAxNiBWMTAuNSBNMTYgMTYgTDIwLjUgMTguNSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8%2BPC9zdmc%2B%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" />
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjM2I2ZmQ2Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNmY0ZmQ2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjcuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNiAxNiBWMTAuNSBNMTYgMTYgTDIwLjUgMTguNSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PC9zdmc+" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjM2I2ZmQ2Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNmY0ZmQ2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjcuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNiAxNiBWMTAuNSBNMTYgMTYgTDIwLjUgMTguNSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PC9zdmc+" />
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --ink: #1f2933;
+    --muted: #7b8794;
+    --line: #e1e5ea;
+    --accent: #3b6fd6;
+    --shadow: 0 1px 3px rgba(16,24,40,.08), 0 1px 2px rgba(16,24,40,.06);
+    --shadow-lg: 0 10px 30px rgba(16,24,40,.18);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ---------- Top bar ---------- */
+  header.topbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    z-index: 40;
+    flex: 0 0 auto;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+  .brand .dot { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg,#3b6fd6,#6f4fd6); }
+  .spacer { flex: 1; }
+  .btn {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .12s, border-color .12s, transform .05s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: #f3f5f9; border-color: #cfd6df; }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: #335fc0; }
+  .btn.danger { color: #c0392b; }
+  .btn.danger:hover { background: #fdecea; border-color: #f0c4be; }
+  .btn.ghost { border-color: transparent; background: transparent; }
+  .btn.ghost:hover { background: #eef1f6; }
+  .running-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #fff2f2; color: #c0392b; border: 1px solid #f3c7c2;
+    padding: 6px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer;
+  }
+  .search-box { width: 190px; border: 1px solid var(--line); border-radius: 9px; padding: 7px 11px; font-size: 13px; font-family: inherit; color: var(--ink); background: var(--bg); outline: none; transition: width .15s; }
+  .search-box:focus { width: 250px; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.15); background: var(--panel); }
+  .search-count { font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+
+  /* collapsed column strip */
+  .column.collapsed { flex: 0 0 42px; width: 42px; cursor: pointer; flex-direction: column; align-items: center; padding: 10px 0; gap: 8px; }
+  .column.collapsed:hover { background: #e3e6ea; }
+  .column.collapsed .col-color { width: 12px; height: 12px; border-radius: 4px; }
+  .column.collapsed .collapsed-title { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 800; font-size: 12.5px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 68vh; }
+  .column.collapsed .collapsed-count { font-size: 11px; font-weight: 700; color: var(--muted); }
+  .col-grip { cursor: grab; color: #b3bac4; font-size: 13px; line-height: 1; padding: 2px 1px; flex: 0 0 auto; user-select: none; }
+  .col-grip:hover { color: var(--muted); }
+  .col-grip:active { cursor: grabbing; }
+  .column.col-dragging { opacity: .45; }
+  .col-collapse { border: none; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; padding: 2px 3px; border-radius: 5px; flex: 0 0 auto; }
+  .col-collapse:hover { background: #dde1e6; color: var(--ink); }
+
+  /* undo toast */
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); background: #232b36; color: #fff; padding: 10px 14px; border-radius: 10px; box-shadow: var(--shadow-lg); z-index: 70; display: flex; align-items: center; gap: 14px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .toast button { background: none; border: none; color: #8fb6ff; font-weight: 800; cursor: pointer; font-size: 13px; }
+  .toast button:hover { color: #b9d2ff; }
+  .reconnect-banner { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-12px); background: #fff7e6; border: 1px solid #f0d9a8; color: #7a5a16; padding: 8px 10px 8px 14px; border-radius: 10px; box-shadow: var(--shadow-lg); z-index: 75; display: none; align-items: center; gap: 10px; font-size: 13px; }
+  .reconnect-banner.show { display: flex; }
+  .reconnect-banner .btn { padding: 6px 12px; }
+  body.dark .reconnect-banner { background: #2e2613; border-color: #51461f; color: #e6c878; }
+
+  /* login screen */
+  .login-screen { position: fixed; inset: 0; z-index: 95; background: var(--bg); display: none; align-items: center; justify-content: center; padding: 20px; }
+  .login-screen.show { display: flex; }
+  .login-box { width: 330px; max-width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-lg); padding: 28px 26px; display: flex; flex-direction: column; gap: 11px; }
+  .login-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+  .login-brand .dot { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg,#3b6fd6,#6f4fd6); }
+  .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .login-input { border: 1px solid var(--line); border-radius: 9px; padding: 11px 12px; font-size: 15px; font-family: inherit; outline: none; background: var(--bg); color: var(--ink); }
+  .login-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.15); }
+  .login-btn { padding: 11px; font-size: 14px; margin-top: 4px; width: 100%; }
+  .login-err { font-size: 12.5px; min-height: 14px; line-height: 1.4; }
+  .login-toggle { font-size: 12.5px; color: var(--muted); text-align: center; }
+  .login-toggle a { color: var(--accent); text-decoration: none; font-weight: 700; margin-left: 4px; }
+
+  /* ---------- phone / small screens ---------- */
+  @media (max-width: 640px) {
+    .topbar { flex-wrap: wrap; gap: 5px; padding: 8px 9px; }
+    .topbar .btn { padding: 7px 9px; font-size: 12px; }
+    .brand { font-size: 15px; }
+    .brand .dot { width: 18px; height: 18px; }
+    .search-box { width: 120px; } .search-box:focus { width: 150px; }
+    .today-pill { font-size: 11px; padding: 5px 8px; }
+    .today-pill-bar { width: 40px; }
+    .board { padding: 12px; gap: 12px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+    .column { flex: 0 0 86vw; width: 86vw; scroll-snap-align: start; }
+    .sidebar { position: fixed; top: 52px; bottom: 0; left: 0; width: 85vw; max-width: 330px; z-index: 62; box-shadow: var(--shadow-lg); }
+    .save-fab { left: 12px; bottom: 12px; }
+    .tray { width: 92vw; right: 4vw; }
+    .modal, .dlg { width: 94vw; }
+    .card-menu, .card-edit, .note-archive, .sl-grip { opacity: 1; }   /* always show controls on touch */
+  }
+
+  /* styled dialog (prompt / confirm / alert) */
+  .dlg-overlay { z-index: 90; }
+  .dlg { background: var(--panel); border-radius: 15px; box-shadow: var(--shadow-lg); width: 400px; max-width: 100%; overflow: hidden; }
+  .dlg-head { padding: 17px 20px 0; font-weight: 800; font-size: 15.5px; color: var(--ink); }
+  .dlg-body { padding: 9px 20px 4px; font-size: 13.5px; color: var(--ink); line-height: 1.5; }
+  .dlg-body .dlg-sub { color: var(--muted); }
+  .dlg-label { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); margin: 10px 0 6px; }
+  .dlg-input { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: var(--ink); background: var(--bg); outline: none; }
+  .dlg-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.18); }
+  .dlg-foot { padding: 16px 20px 18px; display: flex; gap: 9px; justify-content: flex-end; }
+  .dlg-foot .btn { padding: 8px 16px; }
+  .dlg-foot .btn.danger { background: #d8473e; border-color: #d8473e; color: #fff; }
+  .dlg-foot .btn.danger:hover { background: #c0392b; }
+  body.dark .dlg-input { background: #161d27; }
+  body.dark .dlg-foot .btn.danger { background: #d8473e; border-color: #d8473e; color: #fff; }
+  .running-pill .live { width: 8px; height: 8px; border-radius: 50%; background: #e74c3c; animation: blink 1.1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+  /* ---------- Workspace + Sidebar ---------- */
+  .workspace { flex: 1 1 auto; display: flex; min-height: 0; }
+  .sidebar {
+    flex: 0 0 270px; width: 270px;
+    background: var(--panel); border-right: 1px solid var(--line);
+    overflow-y: auto; padding: 16px 14px 64px; display: flex; flex-direction: column; gap: 20px;
+  }
+  body.sidebar-hidden .sidebar { display: none; }
+  .side-sec h3 { margin: 0 0 9px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .palette-item { display: flex; align-items: center; gap: 10px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; cursor: grab; background: #fff; transition: border-color .12s, box-shadow .12s, transform .05s; }
+  .palette-item:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+  .palette-item:active { cursor: grabbing; }
+  .palette-item.dragging { opacity: .5; }
+  .pi-icon { font-size: 18px; width: 26px; text-align: center; flex: 0 0 auto; }
+  .pi-text { display: flex; flex-direction: column; min-width: 0; }
+  .pi-label { font-size: 13.5px; font-weight: 700; }
+  .pi-desc { font-size: 11px; color: var(--muted); }
+  .add-col-btn { width: 100%; margin-top: 6px; border: 1px dashed #c3c9d2; background: transparent; color: var(--muted); padding: 9px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .add-col-btn:hover { background: #eef1f6; color: var(--ink); border-color: #aab3c0; }
+  /* floating Save button (bottom-left) */
+  .save-fab { position: fixed; left: 16px; bottom: 16px; z-index: 55; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 9px 15px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-lg); }
+  .save-fab:hover { background: #335fc0; }
+  .sidelink-add { display: flex; gap: 6px; margin-bottom: 8px; }
+  .sidelink-add input { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font-size: 12.5px; font-family: inherit; outline: none; }
+  .sidelink-add input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.15); }
+  .sidelink-add button { flex: 0 0 auto; border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 8px; padding: 0 11px; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .sidelink-list { display: flex; flex-direction: column; gap: 1px; }
+  .sidelink { display: flex; align-items: center; gap: 4px; padding: 6px 4px; border-radius: 7px; }
+  .sidelink:hover { background: #f6f7f9; }
+  .sidelink.dragging { opacity: .45; }
+  .sl-grip { flex: 0 0 auto; cursor: grab; color: #c2c9d2; font-size: 11px; opacity: 0; user-select: none; }
+  .sidelink:hover .sl-grip { opacity: 1; }
+  .sl-grip:active { cursor: grabbing; }
+  .lf-links.drop-over { background: rgba(59,111,214,.08); border-radius: 8px; outline: 1px dashed #b9c6e6; }
+  .sidelink a { flex: 1; min-width: 0; font-size: 12.5px; color: var(--accent); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sidelink a:hover { text-decoration: underline; }
+  .sidelink-act { flex: 0 0 auto; opacity: 0; border: none; background: none; cursor: pointer; color: var(--muted); font-size: 12px; padding: 0 2px; }
+  .sidelink:hover .sidelink-act { opacity: 1; }
+  .sidelink-act:hover { color: var(--ink); }
+  .sidelink-rm:hover { color: #c0392b; }
+  .side-empty { font-size: 12px; color: var(--muted); padding: 4px 4px 4px 8px; }
+  /* link folders (by client) */
+  .link-addfolder { margin-left: auto; border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 6px; font-size: 11px; font-weight: 700; padding: 3px 8px; cursor: pointer; text-transform: none; letter-spacing: 0; }
+  .link-addfolder:hover { background: #eef1f6; color: var(--ink); }
+  .link-folder { margin-bottom: 6px; }
+  .lf-head { display: flex; align-items: center; gap: 6px; padding: 7px 4px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 6px; }
+  .lf-head:hover { background: #f1f3f6; }
+  body.dark .lf-head:hover { background: #2c3848; }
+  .lf-toggle { border: none; background: none; cursor: pointer; color: var(--muted); font-size: 15px; line-height: 1; padding: 0 2px; flex: 0 0 auto; pointer-events: none; }
+  .lf-name { flex: 1; min-width: 0; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; color: var(--ink); outline: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+  .lf-name[contenteditable="true"] { cursor: text; white-space: normal; }
+  .lf-name.plain { text-transform: uppercase; color: var(--muted); }
+  .lf-name[contenteditable]:focus { background: rgba(59,111,214,.08); border-radius: 4px; }
+  .lf-count { font-size: 10.5px; font-weight: 700; color: var(--muted); flex: 0 0 auto; }
+  .lf-del { opacity: 0; border: none; background: none; cursor: pointer; color: var(--muted); font-size: 12px; padding: 0 2px; flex: 0 0 auto; }
+  .lf-head:hover .lf-del { opacity: 1; }
+  .lf-del:hover { color: #c0392b; }
+  .lf-links { padding: 2px 0 2px 6px; }
+  .sl-up, .sl-down { font-size: 11px; }
+  .ctx-label { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); padding: 4px 10px 2px; }
+
+  /* note + checklist cards */
+  .note-card { border-left-color: var(--card-color, #e0b84a); background: #fffdf5; position: relative; }
+  .note-edit-title { font-size: 13.5px; font-weight: 600; line-height: 1.35; outline: none; word-break: break-word; }
+  .note-edit-body { font-size: 13px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; margin-top: 3px; outline: none; min-height: 18px; }
+  .note-edit-title:empty:before, .note-edit-body:empty:before { content: attr(data-ph); color: #b3bac4; pointer-events: none; }
+  .note-edit-title:focus, .note-edit-body:focus { background: rgba(59,111,214,.05); border-radius: 4px; }
+  .note-archive { position: absolute; top: 6px; right: 6px; border: none; background: rgba(255,255,255,.7); color: var(--muted); cursor: pointer; font-size: 12px; line-height: 1; width: 20px; height: 20px; border-radius: 5px; opacity: 0; }
+  .note-dup { position: absolute; top: 6px; right: 30px; border: none; background: rgba(255,255,255,.7); color: var(--muted); cursor: pointer; font-size: 12px; line-height: 1; width: 20px; height: 20px; border-radius: 5px; opacity: 0; }
+  .note-card:hover .note-archive, .note-card:hover .note-dup { opacity: 1; }
+  .note-archive:hover { background: #fdecea; color: #c0392b; }
+  .note-dup:hover { background: #eef1f6; color: var(--ink); }
+  body.dark .note-archive, body.dark .note-dup { background: rgba(0,0,0,.25); }
+  .checklist-card .chk-count { font-size: 11px; color: var(--muted); font-weight: 700; }
+  .chk-list { display: flex; flex-direction: column; gap: 1px; margin-top: 7px; }
+  .chk-item { display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.35; padding: 4px 4px; border-radius: 6px; cursor: grab; }
+  .chk-item:hover { background: #f6f7f9; }
+  .chk-item:active { cursor: grabbing; }
+  .chk-item.chk-dragging { opacity: .4; }
+  .chk-item input { margin-top: 2px; width: 14px; height: 14px; flex: 0 0 auto; accent-color: var(--accent); cursor: pointer; }
+  .chk-item.done .chk-txt { text-decoration: line-through; color: var(--muted); }
+  .chk-txt { flex: 1; min-width: 0; word-break: break-word; cursor: pointer; }
+  .chk-empty { font-size: 12px; color: var(--muted); padding: 2px; }
+  .chk-add { margin-top: 6px; }
+  .chk-add-input { width: 100%; border: 1px solid var(--line); border-radius: 7px; padding: 5px 8px; font-size: 12px; font-family: inherit; outline: none; }
+  .chk-add-input:focus { border-color: var(--accent); }
+  /* editor checklist items */
+  .ed-item { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+  .ed-item input[type=text] { flex: 1; border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px; font-size: 13px; font-family: inherit; outline: none; }
+  .ed-item .im-up, .ed-item .im-down { cursor: pointer; color: var(--muted); border: none; background: none; font-size: 13px; padding: 0 2px; flex: 0 0 auto; }
+  .ed-item .im-up:hover, .ed-item .im-down:hover { color: var(--ink); }
+  .ed-item .rm { cursor: pointer; color: var(--muted); border: none; background: none; font-size: 14px; }
+
+  /* ---------- Board ---------- */
+  .board {
+    flex: 1 1 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    gap: 16px;
+    padding: 18px;
+    align-items: flex-start;
+    cursor: grab;
+  }
+  .board.panning { cursor: grabbing; user-select: none; }
+  .column { cursor: default; }
+  .column {
+    flex: 0 0 300px;
+    width: 300px;
+    background: #eceef1;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    border: 1px solid #e0e3e8;
+  }
+  .col-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 12px 9px;
+  }
+  .col-color { width: 12px; height: 12px; border-radius: 4px; flex: 0 0 auto; cursor: pointer; }
+  .col-title {
+    font-weight: 700; font-size: 13.5px; letter-spacing: .02em; text-transform: uppercase;
+    flex: 1; border: none; background: transparent; color: var(--ink); outline: none; min-width: 0;
+  }
+  .col-count { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .col-menu-btn { border: none; background: transparent; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 5px; border-radius: 6px; }
+  .col-menu-btn:hover { background: #dde1e6; color: var(--ink); }
+  .col-cards {
+    overflow-y: auto;
+    padding: 4px 10px 10px;
+    display: flex; flex-direction: column; gap: 9px;
+    min-height: 14px;
+  }
+  .col-cards.drag-over { background: rgba(59,111,214,.07); border-radius: 10px; }
+  .add-card-btn {
+    margin: 2px 10px 12px;
+    border: 1px dashed #c3c9d2; background: transparent; color: var(--muted);
+    padding: 8px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .add-card-btn:hover { background: #e3e6ea; color: var(--ink); }
+
+  /* ---------- Card ---------- */
+  .card {
+    background: var(--panel);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--card-color, #cbd2da);
+    padding: 10px 11px;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow .12s, transform .06s;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(16,24,40,.13); }
+  .card.dragging { opacity: .45; }
+  .card-img { width: 100%; border-radius: 7px; margin-bottom: 8px; max-height: 130px; object-fit: cover; display: block; }
+  .card-title { font-size: 13.5px; font-weight: 600; line-height: 1.35; word-break: break-word; padding-right: 48px; }
+  .card-topline { padding-right: 48px; }
+  .card-topline .card-title { padding-right: 0; }
+  .note-edit-title { padding-right: 50px; }
+  .card-titlerow { display: flex; align-items: baseline; gap: 7px; padding-right: 44px; }
+  .card-titlerow .card-title { flex: 1; min-width: 0; padding-right: 0; }
+  .proj-num { flex: 0 0 auto; font-size: 13px; font-weight: 800; font-family: ui-monospace, Menlo, Consolas, monospace; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--panel)); border-radius: 6px; padding: 2px 7px; }
+  .cc-num { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 800; color: var(--accent); font-size: 11px; }
+  .card-path { display: flex; align-items: center; gap: 5px; margin-top: 7px; font-size: 11.5px; }
+  .card-path .cp-icon { flex: 0 0 auto; }
+  .card-path .cp-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .card-path .cp-copy { flex: 0 0 auto; border: 1px solid var(--line); background: var(--panel); border-radius: 5px; cursor: pointer; font-size: 11px; padding: 1px 5px; }
+  .card-path .cp-copy:hover { background: #eef1f6; }
+  body.dark .card-path .cp-copy { background: #2d394a; border-color: #3a4656; }
+  body.dark .card-path .cp-copy:hover { background: #38465a; }
+  .card-title[contenteditable] { outline: none; cursor: text; }
+  .card-title[contenteditable]:focus { background: rgba(59,111,214,.06); border-radius: 4px; }
+  .card-title:empty:before { content: attr(data-ph); color: #b3bac4; pointer-events: none; }
+  .card-topline { display: flex; align-items: baseline; gap: 6px; }
+  .card-topline .card-title { flex: 1; min-width: 0; }
+  .card-ctrls { position: absolute; top: 5px; right: 5px; display: flex; gap: 3px; }
+  .card-edit, .card-menu { border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor: pointer; line-height: 1; width: 22px; height: 20px; border-radius: 6px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .card-edit { font-size: 11px; }
+  .card-menu { font-size: 15px; font-weight: 700; }
+  .card-edit:hover, .card-menu:hover { background: #eef1f6; color: var(--ink); border-color: #cfd6df; }
+  body.dark .card-edit, body.dark .card-menu { background: #38465a; border-color: #4a5a70; color: #c8d3e0; }
+  body.dark .card-edit:hover, body.dark .card-menu:hover { background: #44546a; color: var(--ink); }
+  .card-notes { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.4; white-space: pre-wrap; word-break: break-word;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  /* compact card (dense list, e.g. Inductions) */
+  .card.compact { padding: 7px 9px; }
+  .card.compact .cc { display: flex; align-items: flex-start; gap: 7px; }
+  .cc-title { flex: 1 1 auto; min-width: 0; font-size: 12.5px; font-weight: 600; line-height: 1.3; white-space: normal; word-break: break-word; }
+  .cc-shoot { flex: 0 0 auto; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 5px; background: #eef1f5; color: #56616e; }
+  .cc-shoot.near { background: #fdf3e3; color: #b7791f; }
+  .cc-shoot.soon { background: #fdecea; color: #c0392b; }
+  .cc-shoot.past { background: #f0f1f3; color: #9aa3af; }
+  .cc-shoot.none { background: transparent; color: #b3bac4; border: 1px dashed #d3d8df; font-weight: 600; }
+  .cc-link { flex: 0 0 auto; text-decoration: none; font-size: 12px; opacity: .8; }
+  .cc-link:hover { opacity: 1; }
+  .cc-time { flex: 0 0 auto; font-size: 10.5px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cc-time.running { color: #c0392b; } .cc-time.paused { color: #b7791f; }
+  .play-btn.cc-play { width: 24px; height: 24px; flex: 0 0 24px; font-size: 9px; margin-left: 0; }
+  /* priority (urgent) */
+  .prio-badge { display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; padding: 2px 7px; border-radius: 6px; margin-bottom: 6px; }
+  .prio-badge.low { background: #eef1f5; color: #64748b; }
+  .prio-badge.med { background: #e7eefb; color: #2c5cc4; }
+  .prio-badge.high { background: #fdecd3; color: #9a5b12; }
+  .prio-badge.crit { background: #fbe0dd; color: #b5271b; }
+  .card.prio-high { outline: 2px solid #e0962a; outline-offset: -1px; }
+  .card.prio-critical { outline: 2px solid #d8473e; outline-offset: -1px; }
+  .cc-prio { margin-bottom: 3px; }
+  .cc-prio .prio-badge { margin-bottom: 0; }
+  body.dark .prio-badge.low { background: #2a3645; color: #aeb9c7; }
+  body.dark .prio-badge.med { background: #1e3252; color: #9bc0ff; }
+  body.dark .prio-badge.high { background: #3a3115; color: #e8b85a; }
+  body.dark .prio-badge.crit { background: #3a1f1d; color: #ff8f84; }
+  /* note bold/italic buttons */
+  .note-fmt { border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor: pointer; width: 20px; height: 20px; border-radius: 5px; font-size: 11px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .note-fmt:hover { background: #eef1f6; color: var(--ink); }
+  body.dark .note-fmt { background: #2d394a; border-color: #3a4656; color: #c8d3e0; }
+  body.dark .note-fmt:hover { background: #38465a; }
+  .card-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .status-pill { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: #eef1f5; color: #56616e; }
+  .shoot-badge { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: #eef1f5; color: #56616e; }
+  .shoot-badge.near { background: #fdf3e3; color: #b7791f; }
+  .shoot-badge.soon { background: #fdecea; color: #c0392b; }
+  .shoot-badge.past { background: #f0f1f3; color: #9aa3af; }
+  .card-links { display: flex; flex-direction: column; gap: 3px; margin-top: 7px; }
+  .link-chip {
+    font-size: 11.5px; color: var(--accent); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px; max-width: 100%;
+  }
+  .link-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .link-chip:hover { text-decoration: underline; }
+  .card-foot { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
+  .time-badge {
+    font-size: 11.5px; font-weight: 700; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .time-badge.running { color: #c0392b; }
+  .time-badge.paused { color: #b7791f; }
+  .play-btn {
+    margin-left: auto;
+    border: 1px solid var(--line); background: #fff; cursor: pointer;
+    width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 12px; padding: 0;
+  }
+  .play-btn:hover { background: #eef3fc; }
+  .play-btn.running { background: #fdecea; border-color: #f5c6c0; color: #c0392b; }
+  .play-btn.paused { background: #fdf3e3; border-color: #f0dcb4; color: #b7791f; }
+
+  /* ---------- Timer tray ---------- */
+  .tray {
+    position: fixed; right: 16px; bottom: 16px; width: 320px; max-height: 60vh;
+    background: var(--panel); border-radius: 14px; box-shadow: var(--shadow-lg);
+    border: 1px solid var(--line); z-index: 50; display: none; flex-direction: column; overflow: hidden;
+  }
+  .tray.show { display: flex; }
+  .tray-head { padding: 11px 14px; font-weight: 700; font-size: 13px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
+  .tray-body { overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 7px; }
+  .tray-item { border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; border-left: 4px solid var(--card-color,#cbd2da); }
+  .tray-item .ti-title { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+  .tray-item .ti-row { display: flex; align-items: center; gap: 6px; margin-top: 7px; }
+  .tray-time { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; cursor: text; border-bottom: 1px dashed transparent; }
+  .tray-time:hover { border-bottom-color: currentColor; }
+  .tray-time-input { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; width: 96px; border: 1px solid var(--accent); border-radius: 6px; padding: 2px 6px; outline: none; box-shadow: 0 0 0 3px rgba(59,111,214,.15); }
+  .tray-time.running { color: #c0392b; }
+  .tray-time.paused { color: #b7791f; }
+  .mini-btn { border: 1px solid var(--line); background: #fff; border-radius: 7px; font-size: 11px; font-weight: 700; padding: 4px 8px; cursor: pointer; }
+  .mini-btn:hover { background: #f0f3f8; }
+  .mini-btn.stop { color: #c0392b; }
+  .tray-empty { padding: 18px; text-align: center; color: var(--muted); font-size: 12.5px; }
+
+  /* ---------- Modal ---------- */
+  .overlay { position: fixed; inset: 0; background: rgba(16,24,40,.45); z-index: 60; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .overlay.show { display: flex; }
+  .modal { background: var(--panel); border-radius: 16px; box-shadow: var(--shadow-lg); width: 560px; max-width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; }
+  .modal-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+  .modal-head .x { margin-left: auto; }
+  .modal-body { padding: 16px 18px; overflow-y: auto; }
+  .modal-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: center; }
+  .field { margin-bottom: 15px; }
+  .field label { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); margin-bottom: 6px; }
+  .input, .textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px;
+    font-size: 14px; font-family: inherit; color: var(--ink); outline: none; background: #fff;
+  }
+  .input:focus, .textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.15); }
+  .textarea { resize: vertical; min-height: 84px; line-height: 1.45; }
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  .swatch { width: 26px; height: 26px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; }
+  .swatch.sel { border-color: var(--ink); box-shadow: 0 0 0 2px #fff inset; }
+  .link-row { display: flex; gap: 6px; margin-bottom: 6px; }
+  .link-row .input { flex: 1; }
+  .links-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+  .links-list .li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; background: #f6f7f9; border-radius: 8px; padding: 6px 9px; }
+  .links-list .li a { color: var(--accent); text-decoration: none; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .links-list .li .rm { cursor: pointer; color: var(--muted); border: none; background: none; font-size: 14px; }
+  .log-list { display: flex; flex-direction: column; gap: 5px; max-height: 160px; overflow-y: auto; }
+  .log-item { display: flex; align-items: center; gap: 10px; font-size: 12.5px; padding: 6px 9px; background: #f6f7f9; border-radius: 8px; }
+  .log-item .dur { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .log-item .dt { color: var(--muted); flex: 1; }
+  .log-item .rm { cursor: pointer; color: var(--muted); border: none; background: none; font-size: 14px; }
+  .img-preview { max-width: 100%; border-radius: 9px; margin-top: 8px; display: block; }
+  .hint { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+  .danger { color: #c0392b; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+
+  /* context menu */
+  .ctx { position: fixed; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow-lg); z-index: 80; padding: 5px; min-width: 170px; display: none; }
+  .ctx.show { display: block; }
+  .ctx button { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border: none; background: none; padding: 8px 10px; border-radius: 7px; font-size: 13px; cursor: pointer; color: var(--ink); }
+  .ctx button:hover { background: #f0f3f8; }
+  .ctx button.danger:hover { background: #fdecea; }
+  .ctx .sep { height: 1px; background: var(--line); margin: 4px 2px; }
+  .ctx .swatches { padding: 6px 8px; }
+
+  /* reports */
+  table.rep { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.rep th, table.rep td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--line); }
+  table.rep th { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; }
+  table.rep td.num, table.rep th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .rep-group { font-weight: 700; background: #f6f7f9; }
+  .archived-tag { font-size: 10px; background: #e6e8ec; color: var(--muted); padding: 1px 6px; border-radius: 6px; font-weight: 700; text-transform: uppercase; margin-left: 6px; }
+
+  /* help / shortcuts panel */
+  .help-sec-title { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 4px 0 10px; }
+  .help-grid { display: grid; grid-template-columns: 64px 1fr; gap: 9px 14px; align-items: center; margin-bottom: 6px; }
+  .help-grid .k { text-align: right; }
+  .help-grid .d { font-size: 13px; color: var(--ink); }
+  kbd { display: inline-block; min-width: 16px; text-align: center; padding: 3px 8px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: var(--bg); font: 700 12px/1.2 ui-monospace, Menlo, Consolas, monospace; color: var(--ink); }
+  .help-tips { margin: 0; padding-left: 20px; }
+  .help-tips li { font-size: 13px; line-height: 1.55; margin-bottom: 7px; color: var(--ink); }
+  /* focus view */
+  .focus-sec-title { font-size: 12px; font-weight: 800; color: var(--muted); margin: 14px 0 6px; display: flex; align-items: center; gap: 7px; }
+  .focus-sec-title:first-child { margin-top: 2px; }
+  .focus-n { font-size: 10.5px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 0 7px; }
+  .focus-row { cursor: pointer; }
+  .focus-row:hover { background: var(--bg); border-radius: 8px; }
+  .focus-row .tm.running { color: #c0392b; } .focus-row .tm.paused { color: #b7791f; }
+  body.dark .focus-row .tm.running { color: #ff8f84; } body.dark .focus-row .tm.paused { color: #e8b85a; }
+  body.dark kbd { background: #11171f; }
+
+  /* today pill + timesheet */
+  .today-pill { display: inline-flex; align-items: center; gap: 8px; background: #eef3fc; border: 1px solid #d3e0f7; color: #2c4a8a; padding: 6px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+  .today-pill:hover { background: #e3edfb; }
+  .today-pill strong { font-variant-numeric: tabular-nums; }
+  .today-pill-bar { width: 56px; height: 6px; border-radius: 4px; background: #cfdcf3; overflow: hidden; }
+  .today-pill-bar > span { display: block; height: 100%; width: 0; background: #3b6fd6; transition: width .4s; }
+  .today-pill-bar > span.done { background: #2f9e51; }
+
+  .ts-tabs { display: flex; gap: 6px; }
+  .ts-tab { border: 1px solid var(--line); background: #fff; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--muted); }
+  .ts-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .ts-nav { display: flex; align-items: center; gap: 8px; margin: 4px 0 14px; }
+  .ts-nav .lbl { font-weight: 800; font-size: 15px; flex: 1; }
+  .ts-bar { height: 13px; border-radius: 7px; background: #eceef1; overflow: hidden; margin: 10px 0 5px; }
+  .ts-bar-fill { height: 100%; background: linear-gradient(90deg,#4f86e8,#3b6fd6); border-radius: 7px; transition: width .4s; }
+  .ts-bar-fill.done { background: linear-gradient(90deg,#37b566,#2f9e51); }
+  .ts-bar-label { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+  .ts-bar-label .over { color: #2f9e51; }
+  .ts-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 4px; border-bottom: 1px solid var(--line); }
+  .ts-row .dot { width: 9px; height: 9px; border-radius: 3px; margin-top: 4px; flex: 0 0 auto; }
+  .ts-row .nm { flex: 1; min-width: 0; }
+  .ts-row .nm .t { font-size: 13.5px; font-weight: 600; }
+  .ts-row .nm .n { font-size: 11.5px; color: var(--muted); margin-top: 2px; white-space: pre-wrap; }
+  .ts-row .tm { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 13.5px; }
+  .ts-empty { padding: 26px; text-align: center; color: var(--muted); font-size: 13px; }
+  .ts-day { border: 1px solid var(--line); border-radius: 11px; padding: 11px 13px; margin-bottom: 9px; cursor: pointer; transition: background .1s; }
+  .ts-day:hover { background: #f6f7f9; }
+  .ts-day.today { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,111,214,.13); }
+  .ts-day.empty { opacity: .6; }
+  .ts-day-head { display: flex; align-items: baseline; gap: 8px; }
+  .ts-day-head .dname { font-weight: 800; font-size: 14px; }
+  .ts-day-head .ddate { font-size: 12px; color: var(--muted); }
+  .ts-day-head .dtot { margin-left: auto; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ts-mini { height: 8px; border-radius: 5px; background: #eceef1; overflow: hidden; margin: 8px 0 6px; }
+  .ts-mini > span { display: block; height: 100%; background: #3b6fd6; }
+  .ts-mini > span.done { background: #2f9e51; }
+  .ts-sub { font-size: 12px; color: var(--muted); }
+  .addtime-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .addtime-row .input { padding: 7px 9px; font-size: 13px; }
+  .log-note-edit { cursor: pointer; color: var(--muted); border: none; background: none; font-size: 13px; }
+
+  ::-webkit-scrollbar { height: 11px; width: 11px; }
+  ::-webkit-scrollbar-thumb { background: #c7cdd6; border-radius: 8px; border: 3px solid transparent; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background: #aeb6c2; background-clip: padding-box; }
+
+  /* ===================== Dark mode ===================== */
+  body.dark {
+    --bg: #161c25; --panel: #232e3d; --ink: #f3f6fb; --muted: #b8c4d2;
+    --line: #3a4859; --accent: #7aa5ff;
+    --shadow: 0 1px 3px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.45);
+    --shadow-lg: 0 14px 36px rgba(0,0,0,.65);
+  }
+  body.dark { background: var(--bg); }
+  /* surfaces: board (darkest) < columns < cards (lightest) for clear separation */
+  body.dark .play-btn { background: #36445a; border-color: #46556a; color: #9bbcff; }
+  body.dark .play-btn:hover { background: #41526b; }
+  body.dark .play-btn.running { background: #3a1f1d; border-color: #5e2e2b; color: #ff8f84; }
+  body.dark .play-btn.paused { background: #382f14; border-color: #5a4a1e; color: #e8b85a; }
+  body.dark .time-badge.running, body.dark .tray-time.running, body.dark .cc-time.running { color: #ff8f84; }
+  body.dark .time-badge.paused, body.dark .tray-time.paused, body.dark .cc-time.paused { color: #e8b85a; }
+  body.dark .card-img { opacity: .92; }
+  body.dark .btn { background: #2c3848; }
+  body.dark .btn:hover { background: #38465a; border-color: #4a5a70; }
+  body.dark .btn.ghost { background: transparent; }
+  body.dark .btn.ghost:hover { background: #222b38; }
+  body.dark .btn.danger { color: #ff8f84; }
+  body.dark .btn.danger:hover { background: #3a1f1d; border-color: #5e2e2b; }
+  body.dark .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  body.dark .column { background: #1c2532; border-color: #344253; }
+  body.dark .card { background: #2a3645; border-color: #3c4a5c; border-left-color: var(--card-color, #4a5a70); }  /* keep colour stripe; subtle default */
+  body.dark .card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.5); border-color: #50617a; border-left-color: var(--card-color, #50617a); }
+  body.dark .column.collapsed:hover { background: #202a37; }
+  body.dark .col-menu-btn:hover, body.dark .col-collapse:hover { background: #2a3543; color: var(--ink); }
+  body.dark .add-card-btn { border-color: #39434f; }
+  body.dark .add-card-btn:hover { background: #222b38; color: var(--ink); }
+  body.dark .add-col-btn { border-color: #39434f; }
+  body.dark .add-col-btn:hover { background: #222b38; color: var(--ink); }
+  body.dark .col-cards.drag-over { background: rgba(91,139,240,.14); }
+  body.dark .input, body.dark .textarea, body.dark .search-box,
+  body.dark .sidelink-add input, body.dark .chk-add-input, body.dark .todo-add input,
+  body.dark .tray-time-input, body.dark .ed-item input[type=text] { background: #161d27; color: var(--ink); border-color: #3a4859; }
+  body.dark .note-card { background: #36301c; border-color: #514624; border-left-color: var(--card-color, #e6bb52); }
+  body.dark ::selection { background: rgba(108,155,255,.32); }
+  body.dark .card-title[contenteditable]:focus, body.dark .note-edit-title:focus, body.dark .note-edit-body:focus { background: rgba(108,155,255,.12); }
+  body.dark .input:focus, body.dark .textarea:focus, body.dark .search-box:focus { box-shadow: 0 0 0 3px rgba(108,155,255,.22); }
+  body.dark .note-edit-title:empty:before, body.dark .note-edit-body:empty:before { color: #6b7686; }
+  body.dark .status-pill, body.dark .shoot-badge, body.dark .cc-shoot { background: #36445a; color: #c8d3e0; }
+  body.dark .cc-shoot.none { background: transparent; border-color: #3a4654; color: #7e8a98; }
+  body.dark .shoot-badge.near, body.dark .cc-shoot.near { background: #3a3115; color: #e6b34d; }
+  body.dark .shoot-badge.soon, body.dark .cc-shoot.soon { background: #3a1f1d; color: #ff8f84; }
+  body.dark .shoot-badge.past, body.dark .cc-shoot.past { background: #313e4f; color: #a3afbd; }
+  body.dark .today-pill { background: #1e3252; border-color: #335081; color: #cfe0fb; }
+  body.dark .today-pill-bar { background: #335081; }
+  body.dark .running-pill { background: #462624; border-color: #7a3a36; color: #ffaaa0; }
+  body.dark .mini-btn { background: #36445a; color: var(--ink); }
+  body.dark .mini-btn:hover { background: #41526b; }
+  body.dark .ctx { background: #232e3d; border-color: #3a4859; }
+  body.dark .ctx button:hover { background: #38465a; }
+  body.dark .ctx button.danger:hover { background: #4a2422; }
+  body.dark .links-list .li, body.dark .log-item, body.dark .ts-day:hover,
+  body.dark .chk-item:hover, body.dark .sidelink:hover, body.dark .rep-group,
+  body.dark .todo-item:hover { background: #2c3848; }
+  body.dark .ts-tab { background: #2c3848; }
+  body.dark .ts-tab.active { background: var(--accent); color: #fff; }
+  body.dark .ts-bar, body.dark .ts-mini { background: #313e4f; }
+  body.dark .palette-item { background: #2a3645; }
+  body.dark .link-addfolder { background: #2c3848; }
+  body.dark .link-addfolder:hover { background: #38465a; }
+  body.dark .lf-name[contenteditable]:focus { background: rgba(122,165,255,.16); }
+  body.dark .lf-links.drop-over { background: rgba(122,165,255,.14); outline-color: #3f5070; }
+  body.dark .archived-tag { background: #3a4859; color: #b8c4d2; }
+  body.dark .col-title { color: var(--ink); }
+  body.dark ::-webkit-scrollbar-thumb { background: #3a4654; background-clip: padding-box; }
+  body.dark ::-webkit-scrollbar-thumb:hover { background: #4a5868; background-clip: padding-box; }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <button class="btn ghost" id="sidebarToggle" onclick="toggleSidebar()" title="Show/hide sidebar" style="padding:7px 9px">☰</button>
+    <div class="brand"><div class="dot"></div> Project Tracker</div>
+    <input id="searchBox" class="search-box" type="search" placeholder="🔍 Search cards…" oninput="setSearch(this.value)" autocomplete="off" />
+    <span id="searchCount" class="search-count"></span>
+    <div class="today-pill" onclick="openTimesheet('day')" title="Today's timesheet">
+      📅 Today <strong id="todayPillText">0m / 8h</strong>
+      <span class="today-pill-bar"><span id="todayPillBar"></span></span>
+    </div>
+    <div class="running-pill" id="runningPill" style="display:none" onclick="toggleTray(true)">
+      <span class="live"></span><span id="runningPillText">0 running</span>
+    </div>
+    <button class="btn ghost" onclick="openFocus()" title="What needs you now (F)">🎯 Focus</button>
+    <button class="btn ghost" onclick="toggleTray()" title="Timers">⏱ Timers</button>
+    <button class="btn ghost" onclick="openTimesheet('day')" title="Timesheet">📅 Timesheet</button>
+    <button class="btn ghost" onclick="openReports()" title="All-time totals">📊 Totals</button>
+    <button class="btn ghost" onclick="openArchive()" title="Archived &amp; deleted cards">🗄 Archive</button>
+    <div class="spacer"></div>
+    <button class="btn ghost" id="dataMenuBtn" onclick="openDataMenu(event)" title="Backups, export &amp; import">🗂 Data ▾</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)" />
+    <button class="btn ghost" onclick="openShortcuts()" title="Keyboard shortcuts &amp; quick guide" style="padding:7px 9px">⌨</button>
+    <button class="btn ghost" id="themeBtn" onclick="toggleTheme()" title="Light / dark" style="padding:7px 9px">🌙</button>
+  </header>
+
+  <div class="workspace">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="board" id="board"></div>
+  </div>
+
+  <!-- floating Save (bottom-left, out of the way) -->
+  <button class="save-fab" id="saveBtn" onclick="saveNow()" title="Save now (Ctrl+S)">💾 Save</button>
+
+  <!-- Timer tray -->
+  <div class="tray" id="tray">
+    <div class="tray-head">⏱ Active timers <span class="spacer" style="flex:1"></span>
+      <button class="mini-btn stop" onclick="confirmStopAll()" title="Confirm &amp; log all">Stop all</button>
+      <button class="btn ghost" style="padding:3px 8px" onclick="toggleTray(false)">✕</button>
+    </div>
+    <div class="tray-body" id="trayBody"></div>
+  </div>
+
+  <!-- Card editor modal -->
+  <div class="overlay" id="overlay" onclick="if(event.target===this) closeModal()">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <!-- context menu -->
+  <div class="ctx" id="ctx"></div>
+
+  <!-- undo toast -->
+  <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastUndo">Undo</button></div>
+
+  <!-- styled dialog (replaces native prompt/confirm/alert) -->
+  <div class="overlay dlg-overlay" id="dlgOverlay"><div class="dlg" id="dlg"></div></div>
+
+  <!-- login screen (shown only when the cloud backend is configured) -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-brand"><div class="dot"></div> Project Tracker</div>
+      <div class="login-sub" id="loginSub">Sign in to your tracker</div>
+      <input class="login-input" id="loginEmail" type="email" placeholder="Email" autocomplete="username" />
+      <input class="login-input" id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
+      <button class="btn primary login-btn" id="loginBtn">Sign in</button>
+      <div class="login-err" id="loginErr"></div>
+      <div class="login-toggle">
+        <span id="loginToggleText">No account yet?</span>
+        <a href="#" id="loginToggleLink">Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- reconnect-your-data-file banner -->
+  <div class="reconnect-banner" id="reconnectBanner">
+    <span>🔌 Reconnect <b class="rb-name">your data file</b> to keep auto-saving</span>
+    <button class="btn primary" onclick="reconnectDataFile()">Reconnect</button>
+    <button class="btn ghost" onclick="hideReconnectBanner()" style="padding:6px 9px">✕</button>
+  </div>
+
+<script>
+"use strict";
+
+/* ============================ State ============================ */
+const STORE_KEY = "ptracker.v1";
+const COLORS = [
+  { name: "Blue",   value: "#3b6fd6" },
+  { name: "Teal",   value: "#13a8a0" },
+  { name: "Green",  value: "#2f9e51" },
+  { name: "Amber",  value: "#e0962a" },
+  { name: "Red",    value: "#d8473e" },
+  { name: "Pink",   value: "#d8569e" },
+  { name: "Purple", value: "#7a52d6" },
+  { name: "Slate",  value: "#64748b" },
+  { name: "Gray",   value: "#9aa3af" },
+];
+
+let state;  // initialised at the bottom, once all definitions (incl. INDUCTION_DATA) exist
+let showArchived = false;
+let searchQuery = "";
+
+/* ---- search / filter ---- */
+function setSearch(v){ searchQuery = v || ""; applySearch(); }
+function cardMatches(c, q){
+  if(!q) return true;
+  const hay = [c.title, c.notes, c.status, (c.links||[]).map(l => (l.label||"") + " " + (l.url||"")).join(" "), (c.items||[]).map(i => i.text).join(" ")].join(" ").toLowerCase();
+  return hay.indexOf(q) >= 0;
+}
+function applySearch(){
+  const q = (searchQuery || "").trim().toLowerCase();
+  let matches = 0;
+  document.querySelectorAll("#board .card").forEach(el => {
+    const c = card(el.dataset.cardId);
+    const show = !q || (c && cardMatches(c, q));
+    el.style.display = show ? "" : "none";
+    if(q && show) matches++;
+  });
+  const ind = document.getElementById("searchCount");
+  if(ind) ind.textContent = q ? (matches + " match" + (matches === 1 ? "" : "es")) : "";
+  document.body.classList.toggle("searching", !!q);
+}
+
+/* ---- theme (light / dark) ---- */
+function toggleTheme(){ state.dark = !state.dark; applyTheme(); save(); }
+function applyTheme(){
+  document.body.classList.toggle("dark", !!(state && state.dark));
+  const b = document.getElementById("themeBtn");
+  if(b) b.textContent = (state && state.dark) ? "☀️" : "🌙";
+}
+
+/* ---- undo (toast + Ctrl+Z stack) ---- */
+let undoTimer = null;
+let undoStack = [];   // most recent last; popped by the toast button or Ctrl+Z
+function showUndo(message, undoFn){
+  undoStack.push({ message, fn: undoFn });
+  if(undoStack.length > 40) undoStack.shift();
+  const btn = document.getElementById("toastUndo");
+  btn.style.display = "";
+  btn.textContent = "Undo";
+  btn.onclick = () => performUndo();
+  document.getElementById("toastMsg").textContent = message;
+  document.getElementById("toast").classList.add("show");
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(hideToast, 6000);
+}
+// Run the most recent undo-able action (toast button or Ctrl+Z).
+function performUndo(){
+  const u = undoStack.pop();
+  if(!u){ flashToast("Nothing to undo"); return false; }
+  hideToast();
+  try { u.fn(); } catch(e){}
+  flashToast("↩ Undone");
+  return true;
+}
+// A brief, non-actionable toast (no Undo button).
+function flashToast(message){
+  const btn = document.getElementById("toastUndo");
+  document.getElementById("toastMsg").textContent = message;
+  btn.style.display = "none";
+  document.getElementById("toast").classList.add("show");
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(() => { hideToast(); btn.style.display = ""; }, 1500);
+}
+function hideToast(){ document.getElementById("toast").classList.remove("show"); }
+
+/* ---- styled dialogs (on-brand prompt / confirm / alert) ---- */
+let dlgResolve = null, dlgCancelFn = null;
+function openDialog(o){
+  return new Promise(resolve => {
+    dlgResolve = resolve;
+    const isPrompt = o.kind === "prompt", isAlert = o.kind === "alert";
+    const dlg = document.getElementById("dlg");
+    dlg.innerHTML =
+      (o.title ? `<div class="dlg-head">${esc(o.title)}</div>` : "") +
+      `<div class="dlg-body">` +
+        (o.message ? `<div class="dlg-sub">${esc(o.message).replace(/\n/g,"<br>")}</div>` : "") +
+        (o.label ? `<label class="dlg-label">${esc(o.label)}</label>` : "") +
+        (isPrompt ? `<input class="dlg-input" id="dlgInput" value="${esc(o.value||"")}" placeholder="${esc(o.placeholder||"")}" spellcheck="false" />` : "") +
+      `</div>` +
+      `<div class="dlg-foot">` +
+        (isAlert ? "" : `<button class="btn" id="dlgCancel">${esc(o.cancelText||"Cancel")}</button>`) +
+        `<button class="btn ${o.danger?'danger':'primary'}" id="dlgOk">${esc(o.okText || (isAlert?"OK":(isPrompt?"Save":"Confirm")))}</button>` +
+      `</div>`;
+    document.getElementById("dlgOverlay").classList.add("show");
+    const done = val => { document.getElementById("dlgOverlay").classList.remove("show"); const r = dlgResolve; dlgResolve = null; dlgCancelFn = null; if(r) r(val); };
+    const ok = () => done(isPrompt ? document.getElementById("dlgInput").value : (isAlert ? undefined : true));
+    const cancel = () => done(isPrompt ? null : (isAlert ? undefined : false));
+    dlgCancelFn = cancel;
+    document.getElementById("dlgOk").onclick = ok;
+    const cBtn = document.getElementById("dlgCancel"); if(cBtn) cBtn.onclick = cancel;
+    if(isPrompt){
+      const inp = document.getElementById("dlgInput");
+      inp.focus(); inp.select();
+      inp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); ok(); } });
+    } else {
+      const okBtn = document.getElementById("dlgOk"); okBtn.focus();
+    }
+  });
+}
+function uiConfirm(o){ return openDialog(Object.assign({ kind:"confirm" }, typeof o==="string"?{message:o}:o)); }
+function uiPrompt(o){ return openDialog(Object.assign({ kind:"prompt" }, o)); }
+function uiAlert(o){ return openDialog(Object.assign({ kind:"alert" }, typeof o==="string"?{message:o}:o)); }
+document.getElementById("dlgOverlay").addEventListener("click", e => { if(e.target.id === "dlgOverlay" && dlgCancelFn) dlgCancelFn(); });
+
+/* ============================ Persistence ============================ */
+function uid(){ return "id" + Math.random().toString(36).slice(2,10) + (state ? (state._n = (state._n||0)+1) : ""); }
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    catch(e){ uiAlert({ title:"Couldn't save", message:"Storage may be full (large images?). " + e.message }); }
+    if(fileHandle) writeStateToFile();   // mirror to the connected file (durable)
+    if(typeof cloudSave === "function") cloudSave();   // sync to the cloud (when logged in)
+  }, 150);
+}
+// Explicit save: flush immediately (no debounce), snapshot, and confirm.
+function saveNow(){
+  clearTimeout(saveTimer);
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch(e){ uiAlert({ title:"Couldn't save", message:"Storage may be full (large images?). " + e.message }); return; }
+  try { makeBackup("manual save"); } catch(e){}
+  if(fileHandle) writeStateToFile();
+  if(typeof cloudSave === "function") cloudSave();
+  flashSaved();
+}
+function flashSaved(){
+  const b = document.getElementById("saveBtn");
+  if(!b) return;
+  if(b._t) clearTimeout(b._t);
+  b.textContent = "✓ Saved";
+  b._t = setTimeout(() => { b.textContent = "💾 Save"; }, 1500);
+}
+function load(){
+  const raw = localStorage.getItem(STORE_KEY);
+  if(!raw) return null;
+  let s;
+  try { s = JSON.parse(raw); }
+  catch(e){
+    // Never silently overwrite unreadable data — keep a backup and bail.
+    try { localStorage.setItem(STORE_KEY + "__backup_" + Date.now(), raw); } catch(_){}
+    uiAlert({ title:"Couldn't read saved board", message:"A backup copy was kept (nothing was overwritten). Let Claude know so it can be recovered." });
+    return null;
+  }
+  if(!s || !Array.isArray(s.cards) || !Array.isArray(s.columns)) return null;
+  if(!Array.isArray(s.sideLinks)) s.sideLinks = [];
+  if(!Array.isArray(s.linkGroups)) s.linkGroups = [];
+  s.sideLinks.forEach(l => { if(l.groupId === undefined) l.groupId = null; });
+  // Migrations run inside try/catch but we ALWAYS return the parsed data — a migration
+  // bug must never discard the user's cards (incl. archived ones).
+  if(!Array.isArray(s.statuses)) s.statuses = ["In Progress", "Waiting Feedback", "On Hold", "Awaiting PO", "Completed"];
+  try {
+    s.cards.forEach(c => { if(!c.timer) c.timer = newTimer(); if(!c.logs) c.logs = []; if(!c.links) c.links = []; if(c.shootDate===undefined) c.shootDate = null; if(c.status===undefined) c.status = ""; if(!c.type) c.type = "project"; if(!Array.isArray(c.items)) c.items = []; if(c.projectNumber===undefined) c.projectNumber = ""; if(c.filePath===undefined) c.filePath = ""; });
+    // one-time: split "1499 - Name" titles into a separate project number + name
+    if(!s._mig_projnum){
+      s.cards.forEach(c => {
+        if((c.type||"project") === "project" && !c.projectNumber){
+          const m = (c.title||"").match(/^\s*(\d{3,5}[A-Za-z]?)\s*[-–—:]\s*(.+)$/);
+          if(m){ c.projectNumber = m[1]; c.title = m[2].trim(); }
+        }
+      });
+      s._mig_projnum = true;
+    }
+    // one-time: bake induction links/shoot dates onto existing cards and compact the Inductions column
+    if(!s._mig_induction){
+      try { applyInductionData(s.cards, s.columns, false); } catch(e){}
+      const ind = s.columns.find(k => k.title === "Inductions");
+      if(ind) ind.compact = true;
+      s._mig_induction = true;
+    }
+    // one-time: convert the old sidebar To-Do / Notes into draggable cards (nothing lost)
+    if(!s._mig_cards){
+      const target = s.columns.find(k => /to-?do|notes/i.test(k.title)) || s.columns[0];
+      if(target){
+        let ord = s.cards.filter(c => c.columnId === target.id).length;
+        if(Array.isArray(s.todos) && s.todos.length)
+          s.cards.push(newCard("checklist", target.id, ord++, { title:"To-Do", items: s.todos.map(t => ({ id: t.id || ("i"+Math.random().toString(36).slice(2,9)), text: t.text, done: !!t.done })) }));
+        if(typeof s.note === "string" && s.note.trim())
+          s.cards.push(newCard("note", target.id, ord++, { title:"Notes", notes: s.note }));
+      }
+      s.todos = []; s.note = "";
+      s._mig_cards = true;
+    }
+    // one-time: add the "Lifting Operations Work" to-do list to the top of the first column
+    if(!s._mig_liftops){
+      const col = s.columns[0];
+      if(col){
+        const liftItems = [
+          "send lief flass lane",
+          "ring the vac ex company",
+          "send joe ellesmere RAMS",
+          "Piling Visual Standard sheet — https://docs.google.com/spreadsheets/d/1Tuv1fh1En8kUWLNtiP7BaPcbmUSu9GFXF4-IqNeNCUc/edit?usp=sharing",
+          "Staveley Overlays! — check the Review Studio link below",
+          "Review Studio (Staveley) — https://boundless.reviewstudio.com/cube/513945031/file/11568245",
+          "kelly slavery — IMPORTANT",
+          "flass lane — eamonn wants this in induct",
+          "re-export toyota for bikram",
+          "EPA Resources — look into the new models",
+        ].map(t => ({ id:"i"+Math.random().toString(36).slice(2,9), text:t, done:false }));
+        s.cards.forEach(c => { if(c.columnId === col.id) c.order = (c.order||0) + 1; }); // push others down
+        s.cards.push(newCard("checklist", col.id, 0, { title:"Lifting Operations Work", items: liftItems }));
+      }
+      s._mig_liftops = true;
+    }
+  } catch(e){ console.error("Migration skipped due to error (data preserved):", e); }
+  return s;
+}
+function newTimer(){ return { st: "stopped", startedAt: null, elapsed: 0 }; }
+
+/* ============================ Seed (from Milanote board) ============================ */
+function seed(){
+  const mk = (title, opts={}) => Object.assign({ id:"c"+Math.random().toString(36).slice(2,9), type:"project", title, notes:"", color:null, links:[], image:null, archived:false, logs:[], timer:newTimer(), shootDate:null, status:"", items:[] }, opts);
+  const cols = [];
+  const addCol = (title, color, cards) => {
+    const id = "k"+Math.random().toString(36).slice(2,9);
+    cols.push({ id, title, color });
+    cards.forEach((c,i) => { c.columnId = id; c.order = i; allCards.push(c); });
+  };
+  const allCards = [];
+
+  addCol("In Progress", "#3b6fd6", [
+    mk("1509 - KMJV — Send to client"),
+    mk("1516 - Piling Visual Standard"),
+    mk("1499 - Lifting Operations Visual Standard — Update", { notes:"P:\\MURPHY\\1253 - VISUAL STANDARDS\\04 Renders\\02 Draft\\Rev3\\LO\\01", links:[
+      {label:"Fireflies — Lifting Ops VS", url:"https://app.fireflies.ai/view/Lifting-Operations-Visual-Standard::01KRXM8XFHR2F82A40NCR7MMAE"},
+      {label:"ChatGPT thread", url:"https://chatgpt.com/c/69f0888a-a450-838e-9716-2a85d5663190"},
+      {label:"Working sheet", url:"https://docs.google.com/spreadsheets/d/1PmnG-3AGVRSQGOE1mstmXOVAwS1essqOcaF1J3lwpL0/edit"}
+    ]}),
+    mk("1537 - Northumbrian Water — Visual Standards", { links:[{label:"NWG sheet", url:"https://docs.google.com/spreadsheets/d/1xF8Qc0uUA5eCsP6nFD9o5siFiu9sC5bboTTC0Cc6r_0/edit"}]}),
+    mk("1553 - Bentley HV interactive desktop application", { notes:"Deadline — ASAP", links:[{label:"Sheet", url:"https://docs.google.com/spreadsheets/d/1_n10r2tXMxrGIcNSI3PZCZKAUQBegG1dVihPYF7PgYA/edit"}]}),
+    mk("1521 - Shell (End of July)", { notes:"We have the assist list", links:[{label:"Assist list", url:"https://docs.google.com/spreadsheets/d/1sh4NylksW4G6K8N0Kn491CPX4iIjy76Qkq3mePrHCD8/edit"}]}),
+    mk("Whitbread — Customer interactive", { links:[{label:"Sheet", url:"https://docs.google.com/spreadsheets/d/1sh4NylksW4G6K8N0Kn491CPX4iIjy76Qkq3mePrHCD8/edit"}]}),
+    mk("Sky — Low poly environment", { notes:"3 scenarios, 1 environment. ~6 weeks from the 8th (Jamie to confirm deadline).\n1 vehicle (Sky van). Petrol / EVO / Residential.\nScenarios: cardboard cut-out child/adult, 'A' road, car pulling out of junction, motorway, accident head, stalled vehicle.\nLook into Meta 3D model." }),
+    mk("1501 - The Waterside", { notes:"Interactive · Townhouse VR tour" }),
+    mk("1542 - Thames Water — Typical Site / Mobile & Tablet compatibility"),
+  ]);
+
+  addCol("Inductions", "#13a8a0", [
+    mk("1552 - Mile End"),
+    mk("1415 - Southport"),
+    mk("1530 - Satellite Induction — Ellesmere Port"),
+    mk("1528 - Satellite Induction — Staveley"),
+    mk("1532 - Site Induction — Davyhulme"),
+    mk("1524 - Satellite Induction — Ferry PS"),
+    mk("1523 - Satellite Induction — Tally Ho"),
+    mk("1520 - Satellite Induction — Oxford STW"),
+    mk("1527 - Satellite Induction — SAL18 / Peel Green Road"),
+    mk("1526 - Satellite Induction — Flass Lane"),
+    mk("1529 - Satellite Induction — Hindley / Pennington Flash"),
+    mk("Briardale Road", { notes:"4th of June · Awaiting PO" }),
+    mk("Fleetwood", { notes:"5th of June · Awaiting PO" }),
+    mk("Satellite Induction Sites — Status", { links:[{label:"Status sheet", url:"https://docs.google.com/spreadsheets/d/1AHqyY1_gSVGURjbpgY2OI0BpWBwfFqPA54XR9vJG1eU/edit"}]}),
+  ]);
+
+  addCol("Awaiting Feedback", "#e0962a", [
+    mk("1536 - Reading — Food Hall", { notes:"CC: Giles.Mount@hammerson.com · emma.williams@eur.cushwake.com · emma.charlesworth@jll.com\nSend: Mile End induction" }),
+    mk("1507 - Hyundai — Expanded Level 2 Gateway (Expert Level Blended Learning)", { notes:"Vehicle Check" }),
+    mk("1488 - Minworth Site Induction", { notes:"A Road", links:[{label:"Sheet", url:"https://docs.google.com/spreadsheets/d/1-dcfiVup6b6ukRWO4WnWMuvZyA-j29rP4uqJ4tZhpIo/edit"}]}),
+  ]);
+
+  addCol("Confirmed Upcoming", "#7a52d6", [
+    mk("Skidata Phase 2"),
+    mk("Stellantis Power Up"),
+  ]);
+
+  addCol("Waiting to Start", "#64748b", [
+    mk("1531 - Immersive Fire VR Training", { notes:"Sathya model / assets list", links:[
+      {label:"Assets sheet", url:"https://docs.google.com/spreadsheets/d/1G7hQ56UhHsASOQoMO9uh6ovsjWJ4CSB-ZTLLiY7rsm0/edit"},
+      {label:"Matterport model", url:"https://my.matterport.com/models/u4Ca8YCZ7dX"}
+    ]}),
+    mk("Power Up / Power Down"),
+    mk("1506 - Harbour Energy — Dec 25 Tour Updates"),
+  ]);
+
+  addCol("With Bikram / Rob / Tom / Danny", "#d8569e", [
+    mk("1491 - Stellantis Power Up"),
+    mk("1495 - Stellantis EPA XR", { notes:"Check through information for Sathya" }),
+    mk("1512 - NFCC eLearning & Assets", { notes:"Awaiting video from Rob" }),
+  ]);
+
+  addCol("Unconfirmed", "#9aa3af", [
+    mk("Tunnelling — VS", { notes:"Check with Eamonn where that is at" }),
+    mk("Constaine — 5 inductions", { notes:"We can start a template once we have a PO" }),
+    mk("Work at Height — standard"),
+    mk("VS — demonstrate new platform", { notes:"Check when meeting is with John" }),
+  ]);
+
+  addCol("Complete", "#2f9e51", [
+    mk("1510 - VW Content Creation"),
+    mk("1470 - Van Visual Standards"),
+    mk("1519 - Southport Site Induction Update — January 2026"),
+    mk("1458 - Pentonville — Site induction (updates every 2 months)"),
+  ]);
+
+  addCol("To-Do / Notes", "#d8473e", [
+    mk("Email Rob — Townhouse", { notes:"Send updated townhouse · change temp link · confirm 27th · add who's attending (in ChatGPT)" }),
+    mk("Update Mile End online"),
+    mk("Speak to Paul"),
+    mk("Boundless Command Centre", { notes:"Compare against Scoro — what can it do? Make some tasks, test time tracking etc." }),
+  ]);
+
+  // Inductions column defaults to compact (long list); bake in induction links + shoot dates.
+  const indCol = cols.find(k => k.title === "Inductions");
+  if(indCol) indCol.compact = true;
+  applyInductionData(allCards, cols, false);
+  return { columns: cols, cards: allCards, todos: [], note: "", sideLinks: [], linkGroups: [], statuses: ["In Progress", "Waiting Feedback", "On Hold", "Awaiting PO", "Completed"], _n: 0 };
+}
+
+/* ============================ Helpers ============================ */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function card(id){ return state.cards.find(c => c.id === id); }
+function column(id){ return state.columns.find(k => k.id === id); }
+function urgentRank(c){ return c.priority === "critical" ? 0 : c.priority === "high" ? 1 : 9; }  // very-urgent & urgent float to the top; everything else keeps manual order
+function cardsIn(colId){ return state.cards.filter(c => c.columnId === colId && (showArchived || !c.archived)).sort((a,b) => urgentRank(a) - urgentRank(b) || a.order - b.order); }
+function hostOf(url){ try { return new URL(url).hostname.replace(/^www\./,""); } catch(e){ return url; } }
+
+function timerValue(t){ // live seconds
+  let v = t.elapsed || 0;
+  if(t.st === "running" && t.startedAt) v += (Date.now() - t.startedAt) / 1000;
+  return v;
+}
+function loggedSeconds(c){ return (c.logs||[]).reduce((s,l)=>s+l.seconds,0); }
+function totalSeconds(c){ return loggedSeconds(c) + timerValue(c.timer); }
+
+function fmtClock(sec){
+  sec = Math.floor(sec);
+  const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  const p = n => String(n).padStart(2,"0");
+  return (h>0? p(h)+":":"") + p(m) + ":" + p(s);
+}
+function parseClock(str){
+  const parts = String(str).trim().split(":").map(x => parseInt(x,10) || 0);
+  if(parts.length >= 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if(parts.length === 2) return parts[0]*60 + parts[1];
+  return parts[0] * 60; // a lone number = minutes
+}
+function fmtHuman(sec){
+  sec = Math.floor(sec);
+  if(sec < 60) return sec + "s";
+  const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60);
+  if(h>0) return h + "h " + m + "m";
+  return m + "m";
+}
+function fmtDate(ts){ const d = new Date(ts); return d.toLocaleDateString(undefined,{day:"numeric",month:"short"}) + " " + d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}); }
+
+/* ---- date helpers (daily / weekly timesheet) ---- */
+const DAY_TARGET = 8 * 3600; // 8 hours in seconds
+function startOfDay(ts){ const d = new Date(ts); d.setHours(0,0,0,0); return d.getTime(); }
+function sameDay(a,b){ return startOfDay(a) === startOfDay(b); }
+function addDays(ts,n){ const d = new Date(ts); d.setDate(d.getDate()+n); return d.getTime(); }
+function startOfWeek(ts){ const d = new Date(startOfDay(ts)); const dow = (d.getDay()+6)%7; /* Mon=0 */ d.setDate(d.getDate()-dow); return d.getTime(); }
+const DAYNAMES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+// Per-project time on a given day. Includes live (running/paused) time if the day is today.
+function daySummary(dayTs){
+  const live = sameDay(dayTs, Date.now());
+  const out = [];
+  state.cards.forEach(c => {
+    let secs = 0; const notes = [];
+    (c.logs||[]).forEach(l => { if(sameDay(l.end, dayTs)){ secs += l.seconds; if(l.note) notes.push(l.note); } });
+    if(live && c.timer.st !== "stopped") secs += timerValue(c.timer);
+    if(secs > 0) out.push({ card:c, secs, notes });
+  });
+  return out.sort((a,b)=>b.secs-a.secs);
+}
+function daySeconds(dayTs){ return daySummary(dayTs).reduce((s,x)=>s+x.secs, 0); }
+
+// Live shoot countdown from a stored "YYYY-MM-DD" shoot date.
+function shootInfo(c){
+  if(!c.shootDate) return null;
+  const p = c.shootDate.split("-").map(Number);
+  if(p.length<3 || !p[0]) return null;
+  const target = startOfDay(new Date(p[0], p[1]-1, p[2]).getTime());
+  const days = Math.round((target - startOfDay(Date.now())) / 86400000);
+  const dateLabel = new Date(target).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+  let label;
+  if(days === 0) label = "Shoot today";
+  else if(days === 1) label = "Shoot tomorrow";
+  else if(days === -1) label = "Shoot yesterday";
+  else if(days > 1) label = `Shoot in ${days} days`;
+  else label = `Shoot ${-days} days ago`;
+  const level = days < 0 ? "past" : (days <= 3 ? "soon" : (days <= 7 ? "near" : "ok"));
+  return { days, label: `${label} (${dateLabel})`, level };
+}
+// Parse a UK-style date "d/m/yyyy" (or d/m/yy) to "YYYY-MM-DD"; null if unparseable.
+function parseUKDate(s){
+  if(!s) return null;
+  const m = String(s).trim().match(/^(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{2,4})$/);
+  if(!m) return null;
+  let [_, d, mo, y] = m; d=+d; mo=+mo; y=+y;
+  if(y < 100) y += 2000;
+  if(mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  return y + "-" + String(mo).padStart(2,"0") + "-" + String(d).padStart(2,"0");
+}
+
+/* ============================ Timer ops ============================ */
+// Only one timer runs at a time: banking & pausing any other that's currently running.
+function pauseOthers(exceptId){
+  state.cards.forEach(c => {
+    if(c.id !== exceptId && c.timer.st === "running"){
+      c.timer.elapsed = timerValue(c.timer); c.timer.startedAt = null; c.timer.st = "paused";
+    }
+  });
+}
+let lastTimerId = null;
+function startTimer(id){ const t = card(id).timer; if(t.st==="running") return; pauseOthers(id); if(!t.firstStart) t.firstStart = Date.now(); t.st="running"; t.startedAt = Date.now(); lastTimerId = id; save(); render(); }
+function pauseTimer(id){ const t = card(id).timer; if(t.st!=="running") return; t.elapsed = timerValue(t); t.startedAt=null; t.st="paused"; save(); render(); }
+function resumeTimer(id){ const t = card(id).timer; if(t.st==="running") return; pauseOthers(id); if(!t.firstStart) t.firstStart = Date.now(); t.st="running"; t.startedAt=Date.now(); lastTimerId = id; save(); render(); }
+function stopTimer(id){
+  const c = card(id), t = c.timer;
+  const secs = timerValue(t);
+  if(secs >= 1) c.logs.push({ id:"l"+Math.random().toString(36).slice(2,9), seconds: Math.round(secs), start: t.firstStart || Date.now(), end: Date.now(), note: "" });
+  c.timer = newTimer();
+  save(); render();
+}
+function stopAllTimers(){
+  state.cards.filter(c=>c.timer.st!=="stopped").forEach(c=>stopTimer(c.id));
+}
+// Confirm before banking a session (so you don't end one by accident).
+async function confirmStopTimer(id){
+  const c = card(id); if(!c) return;
+  const secs = timerValue(c.timer);
+  if(await uiConfirm({ title:"Log this time?", message:`Log ${fmtClock(secs)} on “${c.title || "this card"}”?`, okText:"✓ Confirm" })) stopTimer(id);
+}
+async function confirmStopAll(){
+  const n = state.cards.filter(c=>c.timer.st!=="stopped").length;
+  if(!n) return;
+  if(await uiConfirm({ title:"Log all timers?", message:`Confirm and log all ${n} timer${n===1?"":"s"}?`, okText:"✓ Confirm" })) stopAllTimers();
+}
+function toggleCardTimer(id, e){
+  e && e.stopPropagation();
+  const t = card(id).timer;
+  if(t.st === "stopped") startTimer(id);
+  else if(t.st === "running") pauseTimer(id);
+  else resumeTimer(id);
+}
+
+/* ============================ Render board ============================ */
+function render(){
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  state.columns.forEach(col => board.appendChild(renderColumn(col)));
+  renderTray();
+  renderTodayPill();
+  renderSidebar();
+  applySearch();
+}
+
+function renderTodayPill(){
+  const secs = daySeconds(Date.now());
+  const txt = document.getElementById("todayPillText");
+  if(txt) txt.textContent = fmtHuman(secs) + " / 8h";
+  const bar = document.getElementById("todayPillBar");
+  if(bar){ bar.style.width = Math.min(100, secs/DAY_TARGET*100) + "%"; bar.classList.toggle("done", secs >= DAY_TARGET); }
+}
+
+function renderColumn(col){
+  const cards = cardsIn(col.id);
+
+  if(col.collapsed){
+    const strip = document.createElement("div");
+    strip.className = "column collapsed";
+    strip.dataset.colId = col.id;
+    strip.title = "Click to expand — " + col.title;
+    strip.innerHTML = `<div class="col-color" style="background:${col.color}"></div>`+
+      `<span class="collapsed-title">${esc(col.title)}</span>`+
+      `<span class="collapsed-count">${cards.length}</span>`;
+    strip.addEventListener("click", () => { col.collapsed = false; save(); render(); });
+    wireColumnDrag(strip, strip);   // drag the strip to reorder
+    return strip;
+  }
+
+  const el = document.createElement("div");
+  el.className = "column";
+  el.dataset.colId = col.id;
+
+  const head = document.createElement("div");
+  head.className = "col-head";
+  head.innerHTML =
+    `<span class="col-grip" title="Drag to move column">⠿</span>`+
+    `<button class="col-collapse" title="Collapse">▾</button>`+
+    `<div class="col-color" style="background:${col.color}" title="Column colour"></div>`+
+    `<input class="col-title" value="${esc(col.title)}" />`+
+    `<span class="col-count">${cards.length}</span>`+
+    `<button class="col-menu-btn">⋯</button>`;
+  wireColumnDrag(head.querySelector(".col-grip"), el);   // drag the grip to reorder
+  head.querySelector(".col-collapse").addEventListener("click", () => { col.collapsed = true; save(); render(); });
+  head.querySelector(".col-title").addEventListener("change", e => { col.title = e.target.value; save(); });
+  head.querySelector(".col-color").addEventListener("click", e => openColorMenu(e, col.color, v => { col.color = v; save(); render(); }));
+  head.querySelector(".col-menu-btn").addEventListener("click", e => openColumnMenu(e, col));
+  el.appendChild(head);
+
+  const list = document.createElement("div");
+  list.className = "col-cards";
+  list.dataset.colId = col.id;
+  cards.forEach(c => list.appendChild(renderCard(c)));
+  // drag targets
+  list.addEventListener("dragover", e => {
+    if(draggingColEl) return;   // a column is being reordered — let the board handle it
+    e.preventDefault();
+    list.classList.add("drag-over");
+    const after = getDragAfter(list, e.clientY);
+    const dragging = document.querySelector(".card.dragging");
+    if(!dragging) return;
+    if(after == null) list.appendChild(dragging);
+    else list.insertBefore(dragging, after);
+  });
+  list.addEventListener("dragleave", () => list.classList.remove("drag-over"));
+  list.addEventListener("drop", e => {
+    if(draggingColEl) return;
+    e.preventDefault();
+    list.classList.remove("drag-over");
+    if(paletteType){
+      const after = getDragAfter(list, e.clientY);
+      const index = after ? [...list.querySelectorAll(".card")].indexOf(after) : cardsIn(col.id).length;
+      const type = paletteType; paletteType = null;
+      createCardAt(type, col.id, index);
+      return;
+    }
+    commitOrder();
+  });
+  el.appendChild(list);
+
+  const add = document.createElement("button");
+  add.className = "add-card-btn";
+  add.textContent = "+ Add card";
+  add.title = "Add a project here (use the left palette for notes/checklists)";
+  add.addEventListener("click", () => quickAddCard(col.id));   // direct project add, no menu
+  el.appendChild(add);
+
+  return el;
+}
+
+const PRIORITIES = [
+  { key:"none",     label:"Normal",      icon:"",   cls:"" },
+  { key:"low",      label:"Low",         icon:"🔽", cls:"low" },
+  { key:"medium",   label:"Medium",      icon:"🔹", cls:"med" },
+  { key:"high",     label:"Urgent",      icon:"❗", cls:"high" },
+  { key:"critical", label:"Very urgent", icon:"🚨", cls:"crit" },
+];
+function prioBadgeHtml(c){
+  const p = PRIORITIES.find(x => x.key === c.priority);
+  return (p && p.key !== "none") ? `<span class="prio-badge ${p.cls}">${p.icon} ${p.label}</span>` : "";
+}
+// <select> of statuses (your custom list) + the card's current value + an "add new" option.
+function statusSelectHtml(c){
+  const list = (state.statuses || []).slice();
+  if(c.status && !list.includes(c.status)) list.push(c.status);
+  return `<select class="input" id="f-status">`+
+    `<option value="" ${!c.status?"selected":""}>— none —</option>`+
+    list.map(s => `<option value="${esc(s)}" ${c.status===s?"selected":""}>${esc(s)}</option>`).join("")+
+    `<option value="__add__">＋ Add status…</option>`+
+  `</select>`;
+}
+// light sanitiser so rich-text notes can't carry anything nasty
+function sanitizeHtml(html){
+  const d = document.createElement("div");
+  d.innerHTML = String(html == null ? "" : html);
+  d.querySelectorAll("script,style,iframe,object,embed,link,meta,form,input,button").forEach(n => n.replaceWith(...n.childNodes));
+  d.querySelectorAll("*").forEach(n => [...n.attributes].forEach(a => { if(/^on/i.test(a.name) || (/(href|src)/i.test(a.name) && /^\s*javascript:/i.test(a.value))) n.removeAttribute(a.name); }));
+  return d.innerHTML;
+}
+function renderCard(c){
+  const el = document.createElement("div");
+  el.className = "card";
+  el.draggable = true;
+  el.dataset.cardId = c.id;
+  if(c.color){ el.style.setProperty("--card-color", c.color); el.style.background = `color-mix(in srgb, ${c.color} 15%, var(--panel))`; }   // tint the whole card
+  if(c.priority && c.priority !== "none") el.classList.add("prio-" + c.priority);
+  const prioBadge = prioBadgeHtml(c);
+
+  if(c.type === "note"){ renderNoteCard(el, c); return el; }  // notes edit inline; wire their own drag
+  if(c.type === "checklist"){ renderChecklistCard(el, c); wireCardBase(el, c); wireInlineTitle(el, c); wireCardMenu(el, c); return el; }
+
+  const t = c.timer;
+  let badgeClass = "time-badge", live = fmtHuman(totalSeconds(c));
+  if(t.st === "running"){ badgeClass += " running"; live = fmtClock(totalSeconds(c)); }
+  else if(t.st === "paused"){ badgeClass += " paused"; live = fmtClock(totalSeconds(c)); }
+
+  let playClass = "play-btn", playIcon = "▶";
+  if(t.st === "running"){ playClass += " running"; playIcon = "⏸"; }
+  else if(t.st === "paused"){ playClass += " paused"; playIcon = "▶"; }
+
+  const linksHtml = (c.links||[]).slice(0,4).map(l =>
+    `<a class="link-chip" href="${esc(l.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 <span>${esc(l.label || hostOf(l.url))}</span></a>`
+  ).join("");
+
+  const si = shootInfo(c);
+  const col = column(c.columnId);
+
+  if(col && col.compact){
+    // ---- compact one-line row (e.g. the long Inductions list) ----
+    el.classList.add("compact");
+    const firstLink = (c.links || [])[0];
+    const shootShort = si ? (si.days >= 0 ? "in " + si.days + "d" : (-si.days) + "d ago") : null;
+    const shootCell = si
+      ? `<span class="cc-shoot ${si.level}" data-shootshort="${c.id}" title="${esc(si.label)}">🎬 ${esc(si.days===0?"today":shootShort)}</span>`
+      : `<span class="cc-shoot none" title="No shoot date — click the card to set one">🎬 set date</span>`;
+    const hasTime = totalSeconds(c) > 0 || t.st !== "stopped";
+    el.innerHTML =
+      (prioBadge ? `<div class="cc-prio">${prioBadge}</div>` : "") +
+      `<div class="cc">` +
+        `<span class="cc-title">${c.projectNumber?`<span class="cc-num">${esc(c.projectNumber)}</span> `:""}${esc(c.title)}${c.archived?'<span class="archived-tag">arch</span>':''}</span>` +
+        shootCell +
+        (firstLink ? `<a class="cc-link" href="${esc(firstLink.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${esc(firstLink.url)}">🔗</a>` : "") +
+        (hasTime ? `<span class="${badgeClass} cc-time" data-timebadge="${c.id}">⏱ ${esc(fmtClock(totalSeconds(c)))}</span>` : `<span class="cc-time" data-timebadge="${c.id}"></span>`) +
+        `<button class="${playClass} cc-play" title="${t.st==='running'?'Pause':(t.st==='paused'?'Resume':'Start timer')}">${playIcon}</button>` +
+      `</div>`;
+    el.querySelector(".play-btn").addEventListener("click", e => toggleCardTimer(c.id, e));
+    el.addEventListener("click", () => openCardEditor(c.id));
+    el.addEventListener("dragstart", e => { el.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+    el.addEventListener("dragend", () => { el.classList.remove("dragging"); commitOrder(); });
+    return el;
+  }
+
+  const metaHtml = (c.status || si) ? `<div class="card-meta">` +
+    (c.status ? `<span class="status-pill">${esc(c.status)}</span>` : "") +
+    (si ? `<span class="shoot-badge ${si.level}" data-shoot="${c.id}">🎬 ${esc(si.label)}</span>` : "") +
+    `</div>` : "";
+
+  const pathHtml = c.filePath ? `<div class="card-path"><span class="cp-icon">📁</span><span class="cp-text" title="${esc(c.filePath)}">${esc(c.filePath)}</span><button class="cp-copy" title="Copy path to paste in File Explorer">📋</button></div>` : "";
+  el.innerHTML =
+    `<div class="card-ctrls"><button class="card-edit" title="Edit">✏️</button><button class="card-menu" title="More options">⋯</button></div>` +
+    prioBadge +
+    (c.image ? `<img class="card-img" src="${esc(c.image)}" alt="" />` : "") +
+    `<div class="card-titlerow">`+
+      (c.projectNumber ? `<span class="proj-num">${esc(c.projectNumber)}</span>` : "") +
+      `<div class="card-title" contenteditable="true" data-ph="Untitled" spellcheck="false">${esc(c.title)}</div>` +
+    `</div>` +
+    (c.archived ? `<span class="archived-tag">archived</span>` : "") +
+    (c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : "") +
+    pathHtml +
+    metaHtml +
+    (linksHtml ? `<div class="card-links">${linksHtml}</div>` : "") +
+    `<div class="card-foot">` +
+      `<span class="${badgeClass}" data-timebadge="${c.id}">⏱ ${live}</span>` +
+      `<button class="${playClass}" title="${t.st==='running'?'Pause':(t.st==='paused'?'Resume':'Start timer')}">${playIcon}</button>` +
+    `</div>`;
+
+  el.querySelector(".play-btn").addEventListener("click", e => toggleCardTimer(c.id, e));
+  const cpBtn = el.querySelector(".cp-copy");
+  if(cpBtn) cpBtn.addEventListener("click", e => { e.stopPropagation(); copyText(c.filePath); });
+  wireCardBase(el, c); wireInlineTitle(el, c); wireCardMenu(el, c);
+  return el;
+}
+// Shared card wiring: drag + double-click-to-open-editor.
+function wireCardBase(el, c){
+  el.addEventListener("dragstart", e => { el.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+  el.addEventListener("dragend", () => { el.classList.remove("dragging"); el.draggable = true; commitOrder(); });
+  el.addEventListener("dblclick", e => {
+    if(e.target.isContentEditable || e.target.closest(".card-menu,.play-btn,a,input,button,label")) return;
+    openCardEditor(c.id);
+  });
+}
+// Edit the title straight on the card (contenteditable). No modal.
+function wireInlineTitle(el, c){
+  const t = el.querySelector(".card-title");
+  if(!t) return;
+  t.addEventListener("mousedown", () => { el.draggable = false; });
+  t.addEventListener("blur", () => { el.draggable = true; c.title = t.innerText.trim(); save(); });
+  t.addEventListener("input", () => { c.title = t.innerText; save(); });
+  t.addEventListener("click", e => e.stopPropagation());
+  t.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); t.blur(); } });
+}
+function wireCardMenu(el, c){
+  const m = el.querySelector(".card-menu");
+  if(m) m.addEventListener("click", e => { e.stopPropagation(); openCardMenu(e, c.id); });
+  const ed = el.querySelector(".card-edit");
+  if(ed) ed.addEventListener("click", e => {
+    e.stopPropagation();
+    if(c.type === "note"){ const b = el.querySelector(".note-edit-body"); if(b) b.focus(); }
+    else openCardEditor(c.id);
+  });
+}
+
+function renderNoteCard(el, c){
+  el.classList.add("note-card");
+  el.innerHTML =
+    `<div class="card-ctrls"><button class="card-edit" title="Edit">✏️</button><button class="card-menu" title="More options">⋯</button></div>` +
+    prioBadgeHtml(c) +
+    `<div class="note-edit-title" contenteditable="true" data-ph="Title (optional)" spellcheck="false">${esc(c.title)}</div>` +
+    `<div class="note-edit-body" contenteditable="true" data-ph="Write a note…" spellcheck="false">${sanitizeHtml(c.notes)}</div>`;
+  wireCardMenu(el, c);
+  const titleEl = el.querySelector(".note-edit-title");
+  const bodyEl = el.querySelector(".note-edit-body");
+  // body keeps rich formatting (Ctrl+B / Ctrl+I work natively in the editable text)
+  const saveNote = () => { c.title = titleEl.innerText.trim(); c.notes = bodyEl.innerHTML; save(); };
+  [titleEl, bodyEl].forEach(ed => {
+    ed.addEventListener("mousedown", () => { el.draggable = false; });
+    ed.addEventListener("blur", () => { el.draggable = true; saveNote(); });
+    ed.addEventListener("input", saveNote);
+    ed.addEventListener("click", e => e.stopPropagation());
+  });
+  // Enter finishes editing (closes it). Title → done; Body → done, Shift+Enter = new line.
+  titleEl.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); titleEl.blur(); } });
+  bodyEl.addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); bodyEl.blur(); } });
+  el.addEventListener("dragstart", e => { el.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+  el.addEventListener("dragend", () => { el.classList.remove("dragging"); el.draggable = true; commitOrder(); });
+}
+
+function renderChecklistCard(el, c){
+  el.classList.add("checklist-card");
+  const items = c.items || [];
+  const done = items.filter(i=>i.done).length;
+  const itemsHtml = items.map(i =>
+    `<div class="chk-item ${i.done?'done':''}" data-item="${i.id}" draggable="true">`+
+      `<input type="checkbox" class="chk-cb" data-chk="${i.id}" ${i.done?'checked':''} />`+
+      `<span class="chk-txt" data-chk="${i.id}">${esc(i.text)}</span>`+
+    `</div>`
+  ).join("") || `<div class="chk-empty">No items yet.</div>`;
+  el.innerHTML =
+    `<div class="card-ctrls"><button class="card-edit" title="Edit">✏️</button><button class="card-menu" title="More options">⋯</button></div>` +
+    prioBadgeHtml(c) +
+    `<div class="card-topline">`+
+      `<div class="card-title" contenteditable="true" data-ph="Checklist" spellcheck="false">${esc(c.title)}</div>` +
+      `<span class="chk-count">${items.length?done+"/"+items.length:""}</span>` +
+    `</div>` +
+    (c.archived ? `<span class="archived-tag">archived</span>` : "") +
+    `<div class="chk-list">${itemsHtml}</div>` +
+    `<div class="chk-add"><input class="chk-add-input" data-chkadd="${c.id}" placeholder="+ add item" spellcheck="false" /></div>`;
+  el.querySelectorAll(".chk-cb").forEach(cb => cb.addEventListener("click", e => {
+    e.stopPropagation();
+    const it = (c.items||[]).find(x=>x.id===cb.dataset.chk); if(it){ it.done = cb.checked; save(); render(); }
+  }));
+  // click the text toggles done too (kept from the old <label> behaviour)
+  el.querySelectorAll(".chk-txt").forEach(sp => sp.addEventListener("click", e => {
+    e.stopPropagation();
+    const it = (c.items||[]).find(x=>x.id===sp.dataset.chk); if(it){ it.done = !it.done; save(); render(); }
+  }));
+  // drag items to reorder (no buttons)
+  const chkList = el.querySelector(".chk-list");
+  el.querySelectorAll(".chk-item").forEach(it => {
+    it.addEventListener("dragstart", e => { e.stopPropagation(); draggingChkItem = it.dataset.item; it.classList.add("chk-dragging"); e.dataTransfer.effectAllowed = "move"; });
+    it.addEventListener("dragend", e => { e.stopPropagation(); it.classList.remove("chk-dragging"); if(draggingChkItem){ draggingChkItem = null; commitChecklistOrder(c); } });
+  });
+  if(chkList){
+    chkList.addEventListener("dragover", e => {
+      if(!draggingChkItem) return;
+      e.preventDefault(); e.stopPropagation();
+      const dragging = chkList.querySelector(".chk-item.chk-dragging"); if(!dragging) return;
+      const after = getChkAfter(chkList, e.clientY);
+      if(after == null) chkList.appendChild(dragging); else chkList.insertBefore(dragging, after);
+    });
+    chkList.addEventListener("drop", e => { if(draggingChkItem){ e.preventDefault(); e.stopPropagation(); } });
+  }
+  const addInput = el.querySelector(".chk-add-input");
+  addInput.addEventListener("click", e => e.stopPropagation());
+  const commitItem = (refocus) => {
+    const v = addInput.value.trim(); if(!v) return;
+    (c.items = c.items || []).push({ id:"i"+Math.random().toString(36).slice(2,9), text:v, done:false });
+    addInput.value = "";
+    save(); render();
+    if(refocus){ const again = document.querySelector(`.chk-add-input[data-chkadd="${c.id}"]`); if(again) again.focus(); }
+  };
+  addInput.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); commitItem(true); } });
+  addInput.addEventListener("blur", () => commitItem(false));  // clicking away also adds it
+}
+
+function getDragAfter(list, y){
+  const els = [...list.querySelectorAll(".card:not(.dragging)")];
+  let closest = { offset: -Infinity, el: null };
+  for(const child of els){
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height/2;
+    if(offset < 0 && offset > closest.offset) closest = { offset, el: child };
+  }
+  return closest.el;
+}
+
+// Read the DOM order back into state after a drag
+function commitOrder(){
+  document.querySelectorAll(".col-cards").forEach(list => {
+    const colId = list.dataset.colId;
+    [...list.querySelectorAll(".card")].forEach((el, i) => {
+      const c = card(el.dataset.cardId);
+      if(c){ c.columnId = colId; c.order = i; }
+    });
+  });
+  save();
+  render();   // redraw so each card matches its column (compact only in compact columns, full elsewhere)
+}
+
+/* ============================ Card factory / quick add / columns ============================ */
+function newCard(type, colId, order, extra){
+  const base = { id:"c"+Math.random().toString(36).slice(2,9), type: type||"project", title: "", projectNumber: "",
+    notes:"", color:null, links:[], image:null, archived:false, logs:[], timer:newTimer(), shootDate:null, status:"", filePath:"", items:[],
+    columnId: colId, order: order||0 };
+  return Object.assign(base, extra||{});
+}
+// Create a card of `type` in a column at a given index (used by palette drag + the add menu).
+function createCardAt(type, colId, index){
+  const c = newCard(type, colId, 0);
+  state.cards.push(c);
+  const list = cardsIn(colId).filter(x => x.id !== c.id);
+  if(index == null || index < 0 || index > list.length) index = list.length;
+  list.splice(index, 0, c);
+  list.forEach((x,i) => x.order = i);
+  save(); render();
+  // No modal — just drop the card in and let the user type its name straight on it.
+  const sel = type === "note" ? ".note-edit-body" : ".card-title";
+  const target = document.querySelector(`[data-card-id="${c.id}"] ${sel}`);
+  if(target){ target.focus(); }
+}
+function quickAddCard(colId){ createCardAt("project", colId, null); }
+// Duplicate a card (fresh copy — no time logs, reset checklist ticks). Great for recurring work.
+function duplicateCard(id){
+  const c = card(id); if(!c) return;
+  const copy = JSON.parse(JSON.stringify(c));
+  copy.id = "c"+Math.random().toString(36).slice(2,9);
+  copy.title = (c.title || "Untitled") + " (copy)";
+  copy.logs = [];
+  copy.timer = newTimer();
+  copy.archived = false;
+  if(Array.isArray(copy.items)) copy.items = copy.items.map(i => ({ id:"i"+Math.random().toString(36).slice(2,9), text:i.text, done:false }));
+  state.cards.push(copy);
+  // place the copy directly after the original within its column
+  const list = cardsIn(c.columnId);
+  const at = list.findIndex(x => x.id === c.id);
+  list.splice(list.indexOf(copy), 1);
+  list.splice(at + 1, 0, copy);
+  list.forEach((x,i) => x.order = i);
+  save(); render();
+  if(copy.type === "note"){ const b = document.querySelector(`[data-card-id="${copy.id}"] .note-edit-body`); if(b) b.focus(); }
+  else openCardEditor(copy.id, true);
+}
+// Small menu on the "+ Add" button to choose a card type.
+function openAddMenu(e, colId){
+  e.stopPropagation();
+  ctx.innerHTML =
+    `<button data-t="project">📋 Project (with timer)</button>`+
+    `<button data-t="note">📝 Note</button>`+
+    `<button data-t="checklist">✓ Checklist</button>`;
+  showCtx(e);
+  ctx.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { hideCtx(); createCardAt(b.dataset.t, colId, null); });
+}
+// Top-bar "Data" dropdown: the rarely-used backup/export/import actions.
+function openDataMenu(e){
+  e.stopPropagation();
+  ctx.innerHTML =
+    `<div class="ctx-label">${esc(fileStatusText())}</div>`+
+    (fileSupported
+      ? (fileHandle
+          ? `<button data-a="reconnect">🔌 Reconnect / save now</button>`
+          : `<button data-a="connect">💾 Auto-save to a file…</button>`)+
+        `<button data-a="loadfile">📂 Load from a file…</button>`
+      : `<div class="ctx-label" style="text-transform:none;font-weight:600;color:var(--muted)">Auto-save-to-file isn't available in this mode.</div>`)+
+    `<div class="sep"></div>`+
+    `<button data-a="backups">🕘 Backups &amp; restore</button>`+
+    `<button data-a="export">⤓ Export (.json)</button>`+
+    `<button data-a="import">⤒ Import (.json)</button>`+
+    ((typeof cloudEnabled !== "undefined" && cloudEnabled && cloudUser)
+      ? `<div class="sep"></div><div class="ctx-label">${esc(cloudUser.email||"signed in")}</div><button class="danger" data-a="signout">⎋ Sign out</button>`
+      : "");
+  showCtx(e);
+  const wire = (sel, fn) => { const b = ctx.querySelector(sel); if(b) b.onclick = () => { hideCtx(); fn(); }; };
+  wire('[data-a="connect"]', connectDataFile);
+  wire('[data-a="reconnect"]', () => writeStateToFile().then(() => flashToast("Saved to " + fileName)));
+  wire('[data-a="loadfile"]', loadDataFile);
+  wire('[data-a="backups"]', openBackups);
+  wire('[data-a="export"]', exportData);
+  wire('[data-a="import"]', () => document.getElementById("importFile").click());
+  wire('[data-a="signout"]', cloudSignOut);
+}
+function addColumn(){
+  const id = "k"+Math.random().toString(36).slice(2,9);
+  state.columns.unshift({ id, title:"New Column", color: COLORS[Math.floor(state.columns.length)%COLORS.length].value });
+  save(); render();
+  const board = document.getElementById("board");
+  board.scrollLeft = 0;
+}
+async function deleteColumn(col){
+  const inCol = state.cards.filter(c => c.columnId === col.id);
+  const live = inCol.filter(c => !c.archived).length;
+  const arch = inCol.length - live;
+  if(inCol.length && !(await uiConfirm({ title:`Delete “${col.title}”?`, message:`${live} card${live===1?"":"s"} will be removed.` + (arch?` ${arch} archived card${arch===1?"":"s"} stay in the Archive.`:""), okText:"Delete column", danger:true }))) return;
+  const colIndex = state.columns.indexOf(col);
+  const removed = inCol.filter(c => !c.archived).map(c => JSON.parse(JSON.stringify(c)));
+  const colCopy = JSON.parse(JSON.stringify(col));
+  // remove only non-archived cards; keep archived ones (they stay in the Archive pod)
+  state.cards = state.cards.filter(c => c.columnId !== col.id || c.archived);
+  state.columns = state.columns.filter(k => k.id !== col.id);
+  save(); render();
+  showUndo(`Deleted column “${col.title}”`, () => {
+    state.columns.splice(Math.min(colIndex, state.columns.length), 0, colCopy);
+    removed.forEach(c => state.cards.push(c));
+    save(); render();
+  });
+}
+
+/* ============================ Context menus ============================ */
+const ctx = document.getElementById("ctx");
+
+// Global right-click: show a context-aware app menu instead of Chrome's default.
+document.addEventListener("contextmenu", e => {
+  // keep the native menu inside text fields so copy/paste still works while typing
+  if(e.target.closest('input, textarea, [contenteditable="true"]')) return;
+  e.preventDefault();   // suppress Chrome's menu everywhere else
+  const linkEl = e.target.closest(".sidelink");
+  if(linkEl){ openLinkMenu(e, linkEl.dataset.link); return; }
+  const cardEl = e.target.closest(".card");
+  if(cardEl && cardEl.dataset.cardId){ openCardMenu(e, cardEl.dataset.cardId); return; }
+  const folderEl = e.target.closest(".link-folder");
+  if(folderEl){ const gid = folderEl.dataset.group || null; if(gid){ openLinkFolderMenu(e, gid); return; } }
+  const colEl = e.target.closest(".column");
+  if(colEl){ const col = column(colEl.dataset.colId); if(col){ openColumnMenu(e, col); return; } }
+  // empty board / sidebar / header → general menu
+  openGeneralMenu(e);
+});
+
+function copyText(t){
+  const fallback = () => { const ta = document.createElement("textarea"); ta.value = t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand("copy"); } catch(_){} ta.remove(); };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(()=>flashToast("Copied"), ()=>{ fallback(); flashToast("Copied"); });
+  else { fallback(); flashToast("Copied"); }
+}
+// General menu for empty areas (board background, header, sidebar).
+function openGeneralMenu(e){
+  e.preventDefault();
+  const col0 = state.columns[0] && state.columns[0].id;
+  ctx.innerHTML =
+    `<div class="ctx-label">Add to board</div>`+
+    `<button data-g="project">📋 New project</button>`+
+    `<button data-g="note">📝 New note</button>`+
+    `<button data-g="checklist">✓ New checklist</button>`+
+    `<button data-g="column">🗂 Add column</button>`;
+  showCtx(e);
+  ctx.querySelector('[data-g="project"]').onclick = () => { hideCtx(); if(col0) createCardAt("project", col0, null); };
+  ctx.querySelector('[data-g="note"]').onclick = () => { hideCtx(); if(col0) createCardAt("note", col0, null); };
+  ctx.querySelector('[data-g="checklist"]').onclick = () => { hideCtx(); if(col0) createCardAt("checklist", col0, null); };
+  ctx.querySelector('[data-g="column"]').onclick = () => { hideCtx(); addColumn(); };
+}
+// Right-click menu on a client link folder.
+function openLinkFolderMenu(e, gid){
+  e.preventDefault();
+  const g = (state.linkGroups||[]).find(x => x.id === gid); if(!g) return;
+  ctx.innerHTML =
+    `<button data-a="rename">✏️ Rename folder</button>`+
+    `<button data-a="collapse">${g.collapsed?'▸ Expand':'▾ Collapse'}</button>`+
+    `<div class="sep"></div>`+
+    `<button class="danger" data-a="del">🗑 Delete folder</button>`;
+  showCtx(e);
+  ctx.querySelector('[data-a="rename"]').onclick = async () => { hideCtx(); const name = await uiPrompt({ title:"Rename folder", label:"Client / folder name", value:g.name, okText:"Save" }); if(name!==null){ g.name = name.trim() || "Untitled"; save(); renderSidebar(); } };
+  ctx.querySelector('[data-a="collapse"]').onclick = () => { hideCtx(); g.collapsed = !g.collapsed; save(); renderSidebar(); };
+  ctx.querySelector('[data-a="del"]').onclick = () => { hideCtx(); deleteLinkFolder(gid); };
+}
+
+// Right-click menu on a card: quick edit / duplicate / recolour / archive / delete.
+function openCardMenu(e, id){
+  e.preventDefault(); e.stopPropagation();
+  const c = card(id); if(!c) return;
+  const isNote = c.type === "note";
+  const p = c.priority || "none";
+  ctx.innerHTML =
+    `<button data-a="edit">✏️ ${isNote ? "Edit note" : "Edit"}</button>`+
+    `<button data-a="dup">⧉ Duplicate</button>`+
+    `<div class="ctx-label">Priority</div>`+
+    PRIORITIES.map(x => `<button data-prio="${x.key}">${p===x.key?"✓ ":"　"}${x.icon?x.icon+" ":""}${x.label}</button>`).join("")+
+    `<div class="ctx-label">Colour</div>`+
+    `<div class="swatches">`+
+      `<div class="swatch ${!c.color?'sel':''}" style="background:#cbd2da" data-col="" title="None"></div>`+
+      COLORS.map(cl=>`<div class="swatch ${c.color===cl.value?'sel':''}" style="background:${cl.value}" data-col="${cl.value}" title="${cl.name}"></div>`).join("")+
+    `</div>`+
+    `<div class="sep"></div>`+
+    `<button data-a="archive">🗄 Archive</button>`+
+    `<button class="danger" data-a="delete">🗑 Delete</button>`;
+  showCtx(e);
+  ctx.querySelector('[data-a="edit"]').onclick = () => { hideCtx(); if(isNote){ const b = document.querySelector(`[data-card-id="${id}"] .note-edit-body`); if(b) b.focus(); } else openCardEditor(id); };
+  ctx.querySelector('[data-a="dup"]').onclick = () => { hideCtx(); duplicateCard(id); };
+  ctx.querySelectorAll("[data-prio]").forEach(b => b.onclick = () => { c.priority = b.dataset.prio; save(); render(); hideCtx(); });
+  ctx.querySelectorAll(".swatch").forEach(s => s.onclick = () => { c.color = s.dataset.col || null; save(); render(); hideCtx(); });
+  ctx.querySelector('[data-a="archive"]').onclick = () => { hideCtx(); c.archived = true; save(); render(); showUndo(`Archived “${c.title || (isNote?'note':'card')}”`, () => { c.archived = false; save(); render(); }); };
+  ctx.querySelector('[data-a="delete"]').onclick = () => {
+    hideCtx();
+    const snapshot = JSON.parse(JSON.stringify(c));
+    state.cards = state.cards.filter(x => x.id !== id);
+    save(); render();
+    showUndo(`Deleted “${c.title || (isNote?'note':'card')}”`, () => { state.cards.push(snapshot); save(); render(); });
+  };
+}
+function openColumnMenu(e, col){
+  e.stopPropagation();
+  ctx.innerHTML =
+    `<button data-a="add">➕ Add project here</button>`+
+    `<div class="sep"></div>`+
+    `<button data-a="rename">✏️ Rename</button>`+
+    `<button data-a="collapse">${col.collapsed?'▸ Expand column':'▾ Collapse column'}</button>`+
+    `<button data-a="compact">${col.compact?'▤ Expanded cards':'☰ Compact cards'}</button>`+
+    `<div class="swatches">${COLORS.map(cl=>`<div class="swatch ${col.color===cl.value?'sel':''}" style="background:${cl.value}" data-col="${cl.value}" title="${cl.name}"></div>`).join("")}</div>`+
+    `<div class="sep"></div>`+
+    `<button data-a="left">← Move left</button>`+
+    `<button data-a="right">→ Move right</button>`+
+    `<div class="sep"></div>`+
+    `<button class="danger" data-a="delete">🗑 Delete column</button>`;
+  showCtx(e);
+  ctx.querySelectorAll(".swatch").forEach(s => s.onclick = () => { col.color = s.dataset.col; save(); render(); hideCtx(); });
+  ctx.querySelector('[data-a="add"]').onclick = () => { hideCtx(); createCardAt("project", col.id, null); };
+  ctx.querySelector('[data-a="rename"]').onclick = () => { hideCtx(); const inp = document.querySelector(`.column[data-col-id="${col.id}"] .col-title`); inp && inp.focus(); };
+  ctx.querySelector('[data-a="compact"]').onclick = () => { col.compact = !col.compact; save(); render(); hideCtx(); };
+  ctx.querySelector('[data-a="collapse"]').onclick = () => { col.collapsed = !col.collapsed; save(); render(); hideCtx(); };
+  ctx.querySelector('[data-a="delete"]').onclick = () => { hideCtx(); deleteColumn(col); };
+  ctx.querySelector('[data-a="left"]').onclick = () => { hideCtx(); moveColumn(col, -1); };
+  ctx.querySelector('[data-a="right"]').onclick = () => { hideCtx(); moveColumn(col, 1); };
+}
+function moveColumn(col, dir){
+  const i = state.columns.findIndex(k=>k.id===col.id);
+  const j = i + dir;
+  if(j<0 || j>=state.columns.length) return;
+  state.columns.splice(j,0,state.columns.splice(i,1)[0]);
+  save(); render();
+}
+function openColorMenu(e, current, cb){
+  e.stopPropagation();
+  ctx.innerHTML = `<div class="swatches">${COLORS.map(cl=>`<div class="swatch ${current===cl.value?'sel':''}" style="background:${cl.value}" data-col="${cl.value}" title="${cl.name}"></div>`).join("")}</div>`;
+  showCtx(e);
+  ctx.querySelectorAll(".swatch").forEach(s => s.onclick = () => { cb(s.dataset.col); hideCtx(); });
+}
+function showCtx(e){
+  ctx.classList.add("show");
+  const w = ctx.offsetWidth, h = ctx.offsetHeight;
+  let x = e.clientX, y = e.clientY;
+  if(x + w > innerWidth) x = innerWidth - w - 8;
+  if(y + h > innerHeight) y = innerHeight - h - 8;
+  ctx.style.left = x + "px"; ctx.style.top = y + "px";
+}
+function hideCtx(){ ctx.classList.remove("show"); }
+document.addEventListener("click", e => { if(!ctx.contains(e.target)) hideCtx(); });
+
+/* ============================ Card editor ============================ */
+let editingId = null;
+let currentModal = null; // 'editor' | 'reports' | 'timesheet'
+function openCardEditor(id, focusTitle){
+  editingId = id;
+  currentModal = "editor";
+  const c = card(id);
+  const isNote = c.type === "note", isCheck = c.type === "checklist", isProject = !isNote && !isCheck;
+  const headLabel = isNote ? "Edit note" : (isCheck ? "Edit checklist" : "Edit card");
+  const modal = document.getElementById("modal");
+
+  const colourField =
+    `<div class="field"><label>Colour</label><div class="swatches" id="f-colors">`+
+      `<div class="swatch ${!c.color?'sel':''}" style="background:#cbd2da" data-col="" title="None"></div>`+
+      COLORS.map(cl=>`<div class="swatch ${c.color===cl.value?'sel':''}" style="background:${cl.value}" data-col="${cl.value}" title="${cl.name}"></div>`).join("")+
+    `</div></div>`;
+  const linksField =
+    `<div class="field"><label>Links</label><div class="links-list" id="f-links"></div>`+
+      `<div class="link-row"><input class="input" id="f-link-label" placeholder="Label (optional)" /><input class="input" id="f-link-url" placeholder="https://…" /><button class="btn" id="f-link-add">Add</button></div>`+
+    `</div>`;
+  const imageField =
+    `<div class="field"><label>Image</label>`+
+      `<div id="f-img-wrap"></div>`+
+      `<div class="row" style="margin-top:6px"><input class="input" id="f-img-url" placeholder="Paste image URL…" /><button class="btn" id="f-img-url-add" style="flex:0 0 auto">Use URL</button></div>`+
+      `<input type="file" id="f-img-file" accept="image/*" style="margin-top:8px;font-size:12px" />`+
+      `<div class="hint">Uploaded images are stored in this browser. Keep them reasonably small.</div>`+
+    `</div>`;
+
+  modal.innerHTML =
+    `<div class="modal-head"><strong>${headLabel}</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="modal-body">`+
+      (isProject
+        ? `<div class="field"><div class="row">`+
+            `<div style="flex:0 0 96px"><label>Project no.</label><input class="input" id="f-projnum" value="${esc(c.projectNumber||"")}" placeholder="1499" /></div>`+
+            `<div><label>Name</label><input class="input" id="f-title" value="${esc(c.title)}" /></div>`+
+          `</div></div>`
+        : `<div class="field"><label>Title</label><input class="input" id="f-title" value="${esc(c.title)}" ${isNote?'placeholder="Optional title"':''} /></div>`)+
+      (isCheck
+        ? `<div class="field"><label>Items</label><div id="f-items"></div><div class="ed-item"><input type="text" id="f-item-new" placeholder="Add an item…" /><button class="btn" id="f-item-add">Add</button></div></div>`
+        : `<div class="field"><label>${isNote?"Note":"Notes"}</label><textarea class="textarea" id="f-notes" ${isNote?'style="min-height:140px"':''}>${esc(c.notes)}</textarea></div>`)+
+      (isProject
+        ? `<div class="field"><div class="row">`+
+            `<div><label>Shoot date</label><input class="input" type="date" id="f-shoot" value="${esc(c.shootDate||"")}" /></div>`+
+            `<div><label>Status</label>${statusSelectHtml(c)}</div>`+
+          `</div></div>`+
+          `<div class="field"><label>File / folder path</label>`+
+            `<div class="row" style="gap:6px">`+
+              `<input class="input" id="f-filepath" value="${esc(c.filePath||"")}" placeholder="e.g. P:\\MURPHY\\1253 - Visual Standards" />`+
+              `<button class="btn" id="f-filepath-copy" title="Copy path" style="flex:0 0 auto">📋</button>`+
+            `</div>`+
+            `<div class="hint">Shows on the card with a copy button — paste it into File Explorer to open the folder.</div>`+
+          `</div>` : "")+
+      colourField +
+      (isCheck ? "" : linksField) +
+      (isCheck ? "" : imageField) +
+      (isProject
+        ? `<div class="field"><label>Time logs · total ${esc(fmtHuman(totalSeconds(c)))}</label><div class="log-list" id="f-logs"></div>`+
+            `<div class="addtime-row">`+
+              `<input class="input" id="f-at-amt" placeholder="90  or  1:30" style="flex:0 0 110px" />`+
+              `<input class="input" type="date" id="f-at-date" style="flex:0 0 150px" />`+
+              `<input class="input" id="f-at-note" placeholder="What did you do? (optional)" style="flex:1 1 160px" />`+
+              `<button class="btn" id="f-addlog">+ Add time</button>`+
+            `</div>`+
+            `<div class="hint">Enter minutes (e.g. 90) or H:MM (e.g. 1:30). Logs to the chosen date.</div>`+
+          `</div>` : "")+
+    `</div>`+
+    `<div class="modal-foot">`+
+      (isProject
+        ? `<button class="btn ${c.timer.st==='stopped'?'primary':''}" id="f-timer">${c.timer.st==='running'?'⏸ Pause timer':(c.timer.st==='paused'?'▶ Resume timer':'▶ Start timer')}</button>`+
+          (c.timer.st!=='stopped'?`<button class="btn" id="f-timer-stop">✓ Confirm time</button>`:``)
+        : "")+
+      `<button class="btn danger" id="f-delete" title="Delete this ${isNote?'note':(isCheck?'checklist':'card')}">🗑 Delete</button>`+
+      `<button class="btn" id="f-dup" title="Make a fresh copy (no time logs)">⧉ Duplicate</button>`+
+      `<button class="btn" id="f-archive" title="Move to Archive (kept)">${c.archived?'Unarchive':'🗄 Archive'}</button>`+
+      `<span style="flex:1"></span>`+
+      `<button class="btn primary" id="f-done">✓ Done</button>`+
+    `</div>`;
+  document.getElementById("overlay").classList.add("show");
+  document.getElementById("f-done").onclick = () => closeModal();
+  document.getElementById("f-dup").onclick = () => duplicateCard(c.id);
+  document.getElementById("f-delete").onclick = () => {
+    const snapshot = JSON.parse(JSON.stringify(c));
+    state.cards = state.cards.filter(x => x.id !== c.id);
+    save(); closeModal(); render();
+    showUndo(`Deleted “${c.title || (isNote?'note':(isCheck?'checklist':'card'))}”`, () => { state.cards.push(snapshot); save(); render(); });
+  };
+
+  const titleEl = document.getElementById("f-title");
+  titleEl.addEventListener("input", e => { c.title = e.target.value; save(); render(); });
+  titleEl.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); titleEl.blur(); } });
+  const projNumEl = document.getElementById("f-projnum");
+  if(projNumEl){ projNumEl.addEventListener("input", e => { c.projectNumber = e.target.value; save(); render(); }); projNumEl.addEventListener("keydown", e => { if(e.key==="Enter"){ e.preventDefault(); titleEl.focus(); } }); }
+  const notesEl = document.getElementById("f-notes");
+  if(notesEl) notesEl.addEventListener("input", e => { c.notes = e.target.value; save(); });
+  const shootEl = document.getElementById("f-shoot");
+  if(shootEl) shootEl.addEventListener("change", e => { c.shootDate = e.target.value || null; save(); render(); });
+  const statusEl = document.getElementById("f-status");
+  if(statusEl) statusEl.addEventListener("change", async e => {
+    if(e.target.value === "__add__"){
+      const name = await uiPrompt({ title:"Add a status", label:"New status", placeholder:"e.g. On Hold", okText:"Add" });
+      if(name && name.trim()){ const s = name.trim(); if(!state.statuses.includes(s)) state.statuses.push(s); c.status = s; save(); openCardEditor(c.id); render(); }
+      else { e.target.value = c.status || ""; }
+      return;
+    }
+    c.status = e.target.value; save(); render();
+  });
+  const fpEl = document.getElementById("f-filepath");
+  if(fpEl) fpEl.addEventListener("input", e => { c.filePath = e.target.value; save(); render(); });
+  const fpCopy = document.getElementById("f-filepath-copy");
+  if(fpCopy) fpCopy.addEventListener("click", () => { if(c.filePath) copyText(c.filePath); });
+  document.querySelectorAll("#f-colors .swatch").forEach(s => s.onclick = () => {
+    c.color = s.dataset.col || null; save();
+    document.querySelectorAll("#f-colors .swatch").forEach(x=>x.classList.remove("sel")); s.classList.add("sel");
+    render();
+  });
+
+  // checklist items editor
+  if(isCheck){
+    renderEditorItems(c);
+    const addItem = (refocus) => {
+      const inp = document.getElementById("f-item-new"); const v = inp.value.trim(); if(!v) return;
+      (c.items = c.items || []).push({ id:"i"+Math.random().toString(36).slice(2,9), text:v, done:false });
+      inp.value=""; save(); renderEditorItems(c); render();
+      if(refocus){ const again = document.getElementById("f-item-new"); if(again) again.focus(); }
+    };
+    document.getElementById("f-item-add").onclick = () => addItem(true);
+    const newItemEl = document.getElementById("f-item-new");
+    newItemEl.addEventListener("keydown", e => { if(e.key==="Enter") addItem(true); });
+    newItemEl.addEventListener("blur", () => addItem(false));  // clicking away also adds it
+  }
+
+  // links + image (project & note)
+  if(!isCheck){
+    renderEditorLinks(c);
+    document.getElementById("f-link-add").onclick = () => {
+      const url = document.getElementById("f-link-url").value.trim();
+      if(!url) return;
+      const label = document.getElementById("f-link-label").value.trim();
+      c.links.push({ label, url: /^https?:\/\//.test(url) ? url : "https://"+url });
+      document.getElementById("f-link-url").value = ""; document.getElementById("f-link-label").value = "";
+      save(); renderEditorLinks(c); render();
+    };
+    renderEditorImage(c);
+    document.getElementById("f-img-url-add").onclick = () => {
+      const u = document.getElementById("f-img-url").value.trim();
+      if(!u) return; c.image = u; save(); renderEditorImage(c); render();
+    };
+    document.getElementById("f-img-file").onchange = ev => {
+      const file = ev.target.files[0]; if(!file) return;
+      const r = new FileReader();
+      r.onload = () => { c.image = r.result; save(); renderEditorImage(c); render(); };
+      r.readAsDataURL(file);
+    };
+  }
+
+  // time logs + timer (project only)
+  if(isProject){
+    renderEditorLogs(c);
+    document.getElementById("f-at-date").value = isoDateInput(Date.now());
+    document.getElementById("f-timer").onclick = () => { toggleCardTimer(c.id); openCardEditor(c.id); };
+    const stopBtn = document.getElementById("f-timer-stop");
+    if(stopBtn) stopBtn.onclick = async () => { await confirmStopTimer(c.id); if(currentModal==="editor") openCardEditor(c.id); };
+    document.getElementById("f-addlog").onclick = () => {
+      const v = (document.getElementById("f-at-amt").value || "").trim();
+      if(!v){ document.getElementById("f-at-amt").focus(); return; }
+      let secs = 0;
+      if(v.includes(":")){ const [h,m] = v.split(":"); secs = (parseInt(h||0)*60 + parseInt(m||0))*60; }
+      else secs = Math.round(parseFloat(v)*60);
+      if(!(secs>0)) return;
+      const note = (document.getElementById("f-at-note").value || "").trim();
+      const dv = document.getElementById("f-at-date").value;
+      const end = endTsForDate(dv);
+      c.logs.push({ id:"l"+Math.random().toString(36).slice(2,9), seconds:secs, start:end-secs*1000, end, note });
+      save(); openCardEditor(c.id); render();
+    };
+  }
+
+  document.getElementById("f-archive").onclick = () => {
+    const wasArchived = c.archived;
+    c.archived = !c.archived; save(); closeModal(); render();
+    if(!wasArchived) showUndo(`Archived “${c.title || "card"}”`, () => { c.archived = false; save(); render(); });
+  };
+  if(focusTitle){ titleEl.focus(); titleEl.select(); }
+}
+function renderEditorItems(c){
+  const wrap = document.getElementById("f-items");
+  if(!wrap) return;
+  const items = c.items || [];
+  wrap.innerHTML = items.map(i =>
+    `<div class="ed-item"><input type="checkbox" data-done="${i.id}" ${i.done?'checked':''} /><input type="text" data-text="${i.id}" value="${esc(i.text)}" /><button class="im-up" data-up="${i.id}" title="Move up">↑</button><button class="im-down" data-down="${i.id}" title="Move down">↓</button><button class="rm" data-rm="${i.id}">✕</button></div>`
+  ).join("") || `<div class="hint">No items yet.</div>`;
+  wrap.querySelectorAll("[data-done]").forEach(cb => cb.onchange = () => { const it = items.find(x=>x.id===cb.dataset.done); if(it){ it.done = cb.checked; save(); render(); } });
+  wrap.querySelectorAll("[data-text]").forEach(tx => tx.oninput = () => { const it = items.find(x=>x.id===tx.dataset.text); if(it){ it.text = tx.value; save(); render(); } });
+  wrap.querySelectorAll("[data-up]").forEach(b => b.onclick = () => moveChecklistItem(c, b.dataset.up, -1));
+  wrap.querySelectorAll("[data-down]").forEach(b => b.onclick = () => moveChecklistItem(c, b.dataset.down, 1));
+  wrap.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => { c.items = items.filter(x=>x.id!==b.dataset.rm); save(); renderEditorItems(c); render(); });
+}
+// Move a checklist item up/down within its card (used by the editor's ↑/↓).
+function moveChecklistItem(c, itemId, dir){
+  const items = c.items || [];
+  const i = items.findIndex(x => x.id === itemId);
+  const j = i + dir;
+  if(i < 0 || j < 0 || j >= items.length) return;
+  [items[i], items[j]] = [items[j], items[i]];
+  save(); render();
+  if(currentModal === "editor" && editingId === c.id) renderEditorItems(c);
+}
+function getChkAfter(list, y){
+  const els = [...list.querySelectorAll(".chk-item:not(.chk-dragging)")];
+  let closest = { offset: -Infinity, el: null };
+  for(const child of els){
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height/2;
+    if(offset < 0 && offset > closest.offset) closest = { offset, el: child };
+  }
+  return closest.el;
+}
+// Read the drag-reordered checklist items back into the card.
+function commitChecklistOrder(c){
+  const list = document.querySelector(`[data-card-id="${c.id}"] .chk-list`); if(!list) return;
+  const ids = [...list.querySelectorAll(".chk-item")].map(el => el.dataset.item);
+  (c.items || []).sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+  save(); render();
+}
+function renderEditorLinks(c){
+  const wrap = document.getElementById("f-links");
+  wrap.innerHTML = (c.links||[]).map((l,i)=>`<div class="li"><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || hostOf(l.url))}</a><button class="rm" data-i="${i}">✕</button></div>`).join("") || `<div class="hint">No links yet.</div>`;
+  wrap.querySelectorAll(".rm").forEach(b => b.onclick = () => { c.links.splice(+b.dataset.i,1); save(); renderEditorLinks(c); render(); });
+}
+function renderEditorImage(c){
+  const wrap = document.getElementById("f-img-wrap");
+  wrap.innerHTML = c.image ? `<img class="img-preview" src="${esc(c.image)}" /><button class="btn" style="margin-top:6px" id="f-img-rm">Remove image</button>` : `<div class="hint">No image.</div>`;
+  const rm = document.getElementById("f-img-rm");
+  if(rm) rm.onclick = () => { c.image = null; save(); renderEditorImage(c); render(); };
+}
+function renderEditorLogs(c){
+  const wrap = document.getElementById("f-logs");
+  if(!(c.logs||[]).length){ wrap.innerHTML = `<div class="hint">No logged sessions yet.</div>`; return; }
+  wrap.innerHTML = c.logs.slice().sort((a,b)=>b.end-a.end).map(l=>
+    `<div class="log-item"><span class="dur">${esc(fmtClock(l.seconds))}</span>`+
+    `<span class="dt">${esc(fmtDate(l.end))}${l.note?' · '+esc(l.note):''}</span>`+
+    `<button class="log-note-edit" data-note="${l.id}" title="Edit note">💬</button>`+
+    `<button class="rm" data-id="${l.id}">✕</button></div>`).join("");
+  wrap.querySelectorAll(".rm").forEach(b => b.onclick = () => { c.logs = c.logs.filter(x=>x.id!==b.dataset.id); save(); openCardEditor(c.id); render(); });
+  wrap.querySelectorAll(".log-note-edit").forEach(b => b.onclick = async () => {
+    const l = c.logs.find(x=>x.id===b.dataset.note); if(!l) return;
+    const n = await uiPrompt({ title:"Session note", label:"What did you do?", value: l.note || "", placeholder:"e.g. modelling, client review…" });
+    if(n!==null){ l.note = n.trim(); save(); renderEditorLogs(c); }
+  });
+}
+function isoDateInput(ts){ const d = new Date(ts); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function endTsForDate(dv){
+  if(!dv) return Date.now();
+  const [y,m,d] = dv.split("-").map(Number);
+  const chosen = new Date(y, m-1, d, 12, 0, 0);
+  return sameDay(chosen.getTime(), Date.now()) ? Date.now() : chosen.getTime();
+}
+function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); if(wasEditing) render(); }
+function inEditable(el){ return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable)); }
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){ if(dlgCancelFn){ dlgCancelFn(); return; } closeModal(); hideCtx(); return; }
+  if((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")){ e.preventDefault(); saveNow(); return; }
+  if((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === "z" || e.key === "Z")){
+    if(inEditable(e.target)) return;   // let a text field do its own undo
+    e.preventDefault(); performUndo(); return;
+  }
+  // single-key shortcuts — only when not typing and no modal/menu is open
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  if(inEditable(e.target)) return;
+  if(document.getElementById("overlay").classList.contains("show")) return;
+  const firstCol = state.columns[0] && state.columns[0].id;
+  switch(e.key){
+    case "/": e.preventDefault(); { const s = document.getElementById("searchBox"); if(s){ s.focus(); s.select(); } } break;
+    case "n": case "N": if(firstCol) createCardAt("note", firstCol, null); break;
+    case "p": case "P": if(firstCol) createCardAt("project", firstCol, null); break;
+    case "c": case "C": if(firstCol) createCardAt("checklist", firstCol, null); break;
+    case "s": case "S": saveNow(); break;
+    case "t": case "T": if(lastTimerId && card(lastTimerId)) toggleCardTimer(lastTimerId); break;
+    case "f": case "F": openFocus(); break;
+    case "?": openShortcuts(); break;
+  }
+});
+function openShortcuts(){
+  currentModal = "help";
+  const SHORTCUTS = [
+    ["/", "Search cards"],
+    ["N", "New note"],
+    ["P", "New project"],
+    ["C", "New checklist"],
+    ["F", "Focus — what needs you now"],
+    ["T", "Start / stop last timer"],
+    ["S", "Save&nbsp;&nbsp;(or Ctrl+S)"],
+    ["Esc", "Close a dialog"],
+    ["?", "Open this help"],
+  ];
+  const TIPS = [
+    "Drag a card type from the left palette onto a column — or use <b>+ Add</b> on a column.",
+    "Drag the <b>⠿</b> grip on a column to move it left/right; the <b>⋯</b> menu recolours, collapses, compacts or deletes it.",
+    "Click a card to edit it. <b>Notes</b> type straight on the card; <b>checklists</b> tick on the card.",
+    "Timers run <b>one at a time</b> — starting one pauses the rest. Click the time in the tray to edit it; <b>Confirm</b> logs the session.",
+    "<b>📅 Today</b> tracks your 8h goal · <b>📅 Timesheet</b> = day/week · <b>📊 Totals</b> = all-time.",
+    "<b>🗂 Data</b> holds Backups / Export / Import; snapshots also save automatically.",
+    "<b>⧉ Duplicate</b> a card for recurring work · <b>🗄 Archive</b> keeps it, <b>🗑 Delete</b> (with Undo) removes it.",
+  ];
+  const rows = SHORTCUTS.map(([k,d]) => `<div class="k"><kbd>${esc(k)}</kbd></div><div class="d">${d}</div>`).join("");
+  const tips = TIPS.map(t => `<li>${t}</li>`).join("");
+  const modal = document.getElementById("modal");
+  modal.innerHTML =
+    `<div class="modal-head"><strong>⌨ Keyboard shortcuts &amp; quick guide</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="modal-body">`+
+      `<div class="help-sec-title">Keyboard shortcuts</div>`+
+      `<div class="help-grid">${rows}</div>`+
+      `<div class="help-sec-title">Quick guide</div>`+
+      `<ul class="help-tips">${tips}</ul>`+
+    `</div>`+
+    `<div class="modal-foot"><span style="flex:1"></span><button class="btn primary" onclick="closeModal()">✓ Got it</button></div>`;
+  document.getElementById("overlay").classList.add("show");
+}
+
+/* ============================ Timer tray ============================ */
+let trayOpen = false;
+let editingTimerId = null;
+// Click the time in the tray to edit it: pause the timer, then type a new value.
+function editTrayTime(id){
+  const t = card(id).timer;
+  if(t.st === "running"){ t.elapsed = timerValue(t); t.startedAt = null; t.st = "paused"; }
+  editingTimerId = id;
+  save(); renderTray();
+}
+function commitTrayEdit(id, value){
+  const c = card(id); if(!c) return;
+  c.timer.elapsed = Math.max(0, parseClock(value));
+  if(c.timer.st === "stopped") c.timer.st = "paused";
+  editingTimerId = null;
+  save(); render();
+}
+function cancelTrayEdit(){ editingTimerId = null; renderTray(); }
+function toggleTray(force){ trayOpen = (force===undefined) ? !trayOpen : force; document.getElementById("tray").classList.toggle("show", trayOpen); renderTray(); }
+function renderTray(){
+  const active = state.cards.filter(c => c.timer.st !== "stopped");
+  const pill = document.getElementById("runningPill");
+  const running = active.filter(c=>c.timer.st==="running").length;
+  if(active.length){ pill.style.display="inline-flex"; document.getElementById("runningPillText").textContent = running + " running" + (active.length>running?` · ${active.length-running} paused`:""); }
+  else pill.style.display = "none";
+
+  const body = document.getElementById("trayBody");
+  if(!active.length){ body.innerHTML = `<div class="tray-empty">No active timers.<br>Hit ▶ on any card to start one.</div>`; return; }
+  body.innerHTML = active.map(c => {
+    const t = c.timer;
+    const editing = editingTimerId === c.id;
+    const timeCell = editing
+      ? `<input class="tray-time-input" id="trayedit-${c.id}" value="${fmtClock(timerValue(t))}" spellcheck="false" />`
+      : `<span class="tray-time ${t.st}" data-traytime="${c.id}" title="Click to edit the time" onclick="editTrayTime('${c.id}')">${fmtClock(timerValue(t))}</span>`;
+    return `<div class="tray-item"${c.color?` style="--card-color:${c.color}"`:''}>`+
+      `<div class="ti-title">${esc(c.title)}</div>`+
+      `<div class="ti-row">`+
+        timeCell+
+        `<span style="flex:1"></span>`+
+        (editing
+          ? `<button class="mini-btn" onclick="commitTrayEdit('${c.id}', document.getElementById('trayedit-${c.id}').value)">Save</button>`
+          : (t.st==="running"
+              ? `<button class="mini-btn" onclick="pauseTimer('${c.id}')">Pause</button>`
+              : `<button class="mini-btn" onclick="resumeTimer('${c.id}')">Resume</button>`)
+        )+
+        `<button class="mini-btn stop" onclick="confirmStopTimer('${c.id}')">Confirm</button>`+
+      `</div></div>`;
+  }).join("");
+  if(editingTimerId){
+    const inp = document.getElementById("trayedit-" + editingTimerId);
+    if(inp){
+      inp.focus(); inp.select();
+      inp.addEventListener("keydown", e => {
+        if(e.key === "Enter"){ commitTrayEdit(editingTimerId, inp.value); }
+        else if(e.key === "Escape"){ cancelTrayEdit(); }
+      });
+      inp.addEventListener("blur", () => { if(editingTimerId) commitTrayEdit(editingTimerId, inp.value); });
+    }
+  }
+}
+
+/* ============================ Tick (live update, no re-render) ============================ */
+setInterval(() => {
+  if(!state) return;   // not booted/logged-in yet
+  let anyActive = false;
+  state.cards.forEach(c => {
+    if(c.timer.st === "stopped") return;
+    anyActive = true;
+    const live = timerValue(c.timer);
+    const badge = document.querySelector(`[data-timebadge="${c.id}"]`);
+    if(badge) badge.textContent = "⏱ " + fmtClock(totalSeconds(c));
+    const tt = document.querySelector(`[data-traytime="${c.id}"]`);
+    if(tt) tt.textContent = fmtClock(live);
+  });
+  if(anyActive){
+    renderTodayPill();
+    // keep an open timesheet live if it's showing a period that includes today
+    if(currentModal === "timesheet"){
+      const showsToday = tsView === "day" ? sameDay(tsAnchor, Date.now())
+                                          : (Date.now() >= startOfWeek(tsAnchor) && Date.now() < addDays(startOfWeek(tsAnchor), 7));
+      if(showsToday) renderTimesheet();
+    }
+  }
+}, 1000);
+
+/* ============================ Timesheet (daily / weekly) ============================ */
+let tsAnchor = startOfDay(Date.now());
+let tsView = "day";
+function openTimesheet(view){ tsView = view || "day"; tsAnchor = startOfDay(Date.now()); currentModal = "timesheet"; renderTimesheet(); document.getElementById("overlay").classList.add("show"); }
+function tsSwitch(v){ tsView = v; renderTimesheet(); }
+function tsNav(dir){ tsAnchor = addDays(tsAnchor, dir * (tsView==="week"?7:1)); renderTimesheet(); }
+function tsToday(){ tsAnchor = startOfDay(Date.now()); renderTimesheet(); }
+function tsGoDay(ts){ tsAnchor = startOfDay(ts); tsView = "day"; renderTimesheet(); }
+
+function progressBar(secs, big){
+  const pct = Math.min(100, secs/DAY_TARGET*100);
+  const done = secs >= DAY_TARGET;
+  const over = secs > DAY_TARGET ? ` <span class="over">+${esc(fmtHuman(secs-DAY_TARGET))} over 🎯</span>` : "";
+  if(big){
+    return `<div class="ts-bar"><div class="ts-bar-fill ${done?'done':''}" style="width:${pct}%"></div></div>`+
+           `<div class="ts-bar-label">${esc(fmtHuman(secs))} / 8h${over}</div>`;
+  }
+  return `<div class="ts-mini"><span class="${done?'done':''}" style="width:${pct}%"></span></div>`;
+}
+
+function renderTimesheet(){
+  const modal = document.getElementById("modal");
+  const head =
+    `<div class="modal-head"><strong>📅 Timesheet</strong>`+
+      `<div class="ts-tabs" style="margin-left:14px">`+
+        `<button class="ts-tab ${tsView==='day'?'active':''}" onclick="tsSwitch('day')">Day</button>`+
+        `<button class="ts-tab ${tsView==='week'?'active':''}" onclick="tsSwitch('week')">Week</button>`+
+      `</div>`+
+      `<button class="btn ghost x" onclick="closeModal()">✕</button>`+
+    `</div>`;
+
+  const nav =
+    `<div class="ts-nav">`+
+      `<button class="btn" onclick="tsNav(-1)">←</button>`+
+      `<span class="lbl">${tsView==='day'?dayLabel(tsAnchor):weekLabel(tsAnchor)}</span>`+
+      `<button class="btn" onclick="tsToday()">Today</button>`+
+      `<button class="btn" onclick="tsNav(1)">→</button>`+
+    `</div>`;
+
+  modal.innerHTML = head +
+    `<div class="modal-body">` + nav + (tsView==="day" ? dayViewHtml(tsAnchor) : weekViewHtml(tsAnchor)) + `</div>` +
+    `<div class="modal-foot">`+
+      `<button class="btn primary" onclick="exportCSV()">⤓ Export all logs (CSV)</button>`+
+      `<span style="flex:1"></span>`+
+      `<span class="hint" style="margin:0 6px">Clear logs older than</span>`+
+      `<button class="btn" onclick="pruneLogs(30)">1 month</button>`+
+      `<button class="btn" onclick="pruneLogs(90)">3 months</button>`+
+    `</div>`;
+}
+function dayLabel(ts){
+  const isToday = sameDay(ts, Date.now());
+  const d = new Date(ts);
+  return (isToday?"Today · ":"") + d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+}
+function weekLabel(ts){
+  const s = startOfWeek(ts), e = addDays(s,6);
+  const f = t => new Date(t).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+  const isThis = Date.now()>=s && Date.now()<addDays(s,7);
+  return (isThis?"This week · ":"") + f(s) + " – " + f(e);
+}
+function dayViewHtml(ts){
+  const summary = daySummary(ts);
+  const total = summary.reduce((s,x)=>s+x.secs,0);
+  let rows = summary.map(x =>
+    `<div class="ts-row"><span class="dot" style="background:${x.card.color||'#cbd2da'}"></span>`+
+      `<span class="nm"><div class="t">${esc(x.card.title)}</div>${x.notes.length?`<div class="n">${esc(x.notes.join(" · "))}</div>`:''}</span>`+
+      `<span class="tm">${esc(fmtHuman(x.secs))}</span></div>`
+  ).join("");
+  if(!rows) rows = `<div class="ts-empty">No time tracked on this day.</div>`;
+  return progressBar(total, true) + `<div style="margin-top:12px">` + rows + `</div>`;
+}
+function weekViewHtml(ts){
+  const wkStart = startOfWeek(ts);
+  let html = "", weekTotal = 0;
+  for(let i=0;i<7;i++){
+    const dts = addDays(wkStart, i);
+    const summary = daySummary(dts);
+    const dt = summary.reduce((s,x)=>s+x.secs,0);
+    weekTotal += dt;
+    const weekend = i>=5;
+    if(weekend && dt===0) continue; // hide empty weekend days
+    const isToday = sameDay(dts, Date.now());
+    const top = summary.slice(0,4).map(x=>esc(x.card.title)+" ("+fmtHuman(x.secs)+")").join(" · ");
+    html +=
+      `<div class="ts-day ${isToday?'today':''} ${dt===0?'empty':''}" onclick="tsGoDay(${dts})">`+
+        `<div class="ts-day-head"><span class="dname">${DAYNAMES[i]}</span>`+
+          `<span class="ddate">${new Date(dts).toLocaleDateString(undefined,{day:"numeric",month:"short"})}</span>`+
+          `<span class="dtot">${esc(fmtHuman(dt))}</span></div>`+
+        (weekend?"":progressBar(dt,false))+
+        (top?`<div class="ts-sub">${top}</div>`:(dt===0?`<div class="ts-sub">—</div>`:""))+
+      `</div>`;
+  }
+  const target = 5*DAY_TARGET;
+  html += `<div class="ts-row" style="border:none;margin-top:6px"><span class="nm"><div class="t">Week total</div>`+
+          `<div class="n">Mon–Fri target 40h</div></span>`+
+          `<span class="tm">${esc(fmtHuman(weekTotal))}</span></div>`;
+  return html;
+}
+async function pruneLogs(days){
+  if(!(await uiConfirm({ title:"Clear old time logs?", message:`Delete all time-log entries older than ${days} days?\nThis can't be undone — export first if unsure.`, okText:"Clear", danger:true }))) return;
+  const cutoff = startOfDay(addDays(Date.now(), -days));
+  let n = 0;
+  state.cards.forEach(c => { const before = c.logs.length; c.logs = c.logs.filter(l => l.end >= cutoff); n += before - c.logs.length; });
+  save(); renderTimesheet(); render();
+  flashToast(`${n} old log entr${n===1?"y":"ies"} cleared`);
+}
+
+/* ============================ Focus view (what needs you now) ============================ */
+function openFocus(){
+  currentModal = "focus";
+  const live = state.cards.filter(c => !c.archived && c.timer.st !== "stopped");
+  const crit = state.cards.filter(c => !c.archived && c.priority === "critical");
+  const high = state.cards.filter(c => !c.archived && c.priority === "high");
+  const soon = state.cards.filter(c => { if(c.archived || !c.shootDate) return false; const s = shootInfo(c); return s && s.days <= 7 && s.days >= -2; })
+    .sort((a,b) => (shootInfo(a).days) - (shootInfo(b).days));
+  const colName = id => { const k = column(id); return k ? k.title : ""; };
+  const row = (c, chip) =>
+    `<div class="ts-row focus-row" data-focus="${c.id}">`+
+      `<span class="dot" style="background:${c.color || '#cbd2da'}"></span>`+
+      `<span class="nm"><div class="t">${esc(c.title || "Untitled")}</div><div class="n">${esc(colName(c.columnId))}</div></span>`+
+      (chip || "")+
+    `</div>`;
+  const section = (title, cards, chipFn) => cards.length
+    ? `<div class="focus-sec-title">${title} <span class="focus-n">${cards.length}</span></div>` + cards.map(c => row(c, chipFn(c))).join("")
+    : "";
+  const timerChip = c => `<span class="tm ${c.timer.st === 'running' ? 'running' : 'paused'}">${c.timer.st === 'running' ? '▶ ' : '⏸ '}${esc(fmtClock(timerValue(c.timer)))}</span>`;
+  const shootChip = c => { const s = shootInfo(c); return `<span class="shoot-badge ${s.level}">🎬 ${esc(s.days < 0 ? Math.abs(s.days)+'d ago' : (s.days===0?'today':'in '+s.days+'d'))}</span>`; };
+  const prioChip = lvl => () => `<span class="prio-badge ${lvl==='critical'?'crit':'high'}">${lvl==='critical'?'🚨 Very urgent':'❗ Urgent'}</span>`;
+  const body =
+    section("⏱ Running now", live, timerChip) +
+    section("🚨 Very urgent", crit, prioChip("critical")) +
+    section("❗ Urgent", high, prioChip("high")) +
+    section("🎬 Shoot soon", soon, shootChip);
+  const modal = document.getElementById("modal");
+  modal.innerHTML =
+    `<div class="modal-head"><strong>🎯 Focus — what needs you now</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="modal-body">`+
+      (body || `<div class="ts-empty">Nothing urgent, running, or due soon — you're on top of it. 🎉</div>`)+
+    `</div>`+
+    `<div class="modal-foot"><span class="hint">Set priority via a card's right-click → Priority.</span></div>`;
+  document.getElementById("overlay").classList.add("show");
+  modal.querySelectorAll("[data-focus]").forEach(rowEl => rowEl.onclick = () => {
+    const c = card(rowEl.dataset.focus); if(!c) return;
+    closeModal();
+    if(c.type === "note"){ const b = document.querySelector(`[data-card-id="${c.id}"] .note-edit-body`); if(b) b.focus(); }
+    else openCardEditor(c.id);
+  });
+}
+
+/* ============================ Reports (all-time totals) ============================ */
+function openReports(){
+  currentModal = "reports";
+  const modal = document.getElementById("modal");
+  let rows = "", grand = 0;
+  state.columns.forEach(col => {
+    const cs = state.cards.filter(c => c.columnId===col.id && totalSeconds(c) > 0);
+    if(!cs.length) return;
+    const colTotal = cs.reduce((s,c)=>s+totalSeconds(c),0); grand += colTotal;
+    rows += `<tr class="rep-group"><td><span style="display:inline-block;width:9px;height:9px;border-radius:3px;background:${col.color};margin-right:7px"></span>${esc(col.title)}</td><td class="num">${esc(fmtHuman(colTotal))}</td></tr>`;
+    cs.sort((a,b)=>totalSeconds(b)-totalSeconds(a)).forEach(c => {
+      rows += `<tr><td style="padding-left:24px">${esc(c.title)}${c.archived?'<span class="archived-tag">arch</span>':''}</td><td class="num">${esc(fmtHuman(totalSeconds(c)))}</td></tr>`;
+    });
+  });
+  if(!rows) rows = `<tr><td colspan="2" class="hint" style="padding:16px">No time logged yet.</td></tr>`;
+  modal.innerHTML =
+    `<div class="modal-head"><strong>📊 Time Reports</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="modal-body"><table class="rep"><thead><tr><th>Project</th><th class="num">Total</th></tr></thead><tbody>${rows}`+
+      `<tr class="rep-group"><td>Grand total</td><td class="num">${esc(fmtHuman(grand))}</td></tr></tbody></table></div>`+
+    `<div class="modal-foot"><button class="btn primary" onclick="exportCSV()">⤓ Export time logs (CSV)</button></div>`;
+  document.getElementById("overlay").classList.add("show");
+}
+function exportCSV(){
+  const q = s => '"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  const lines = [["Date","Project","Column","Duration (h:mm)","Duration (h)","Note"].join(",")];
+  const all = [];
+  state.cards.forEach(c => { const col = column(c.columnId); (c.logs||[]).forEach(l => all.push({c,col,l})); });
+  all.sort((a,b)=>a.l.end-b.l.end).forEach(({c,col,l}) => {
+    lines.push([
+      q(isoDateInput(l.end)),
+      q(c.title),
+      q(col?col.title:""),
+      q(fmtClock(l.seconds)),
+      (l.seconds/3600).toFixed(2),
+      q(l.note||"")
+    ].join(","));
+  });
+  downloadBlob(lines.join("\n"), "time-logs.csv", "text/csv");
+}
+
+/* ============================ Import / export ============================ */
+function exportData(){ downloadBlob(JSON.stringify(state,null,2), "project-tracker-backup.json", "application/json"); }
+function importData(ev){
+  const file = ev.target.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    try {
+      const s = JSON.parse(r.result);
+      if(!s.columns || !s.cards) throw new Error("Not a valid backup file.");
+      if(!(await uiConfirm({ title:"Import backup?", message:"This replaces everything currently in the app. A snapshot of your current board is saved first, so you can undo via Backups.", okText:"Replace & import", danger:true }))) return;
+      makeBackup("before-import");
+      s.cards.forEach(c => { if(!c.timer) c.timer = newTimer(); if(!c.logs) c.logs=[]; if(!c.links) c.links=[]; if(!c.type) c.type="project"; if(!Array.isArray(c.items)) c.items=[]; });
+      state = s; save(); render();
+      flashToast("Backup imported");
+    } catch(e){ uiAlert({ title:"Import failed", message: e.message }); }
+  };
+  r.readAsText(file);
+  ev.target.value = "";
+}
+function downloadBlob(content, filename, type){
+  const blob = new Blob([content], { type });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ============================ Auto-save to a real file (survives clearing the browser) ============================ */
+let fileHandle = null, fileName = "";
+const fileSupported = typeof window !== "undefined" && typeof window.showSaveFilePicker === "function";
+// tiny IndexedDB key/value to remember the chosen file between sessions
+function idbSet(key, val){ return new Promise((res, rej) => { const o = indexedDB.open("ptracker-fs", 1); o.onupgradeneeded = () => o.result.createObjectStore("kv"); o.onsuccess = () => { const db = o.result, tx = db.transaction("kv", "readwrite"); tx.objectStore("kv").put(val, key); tx.oncomplete = () => { db.close(); res(); }; tx.onerror = () => { db.close(); rej(tx.error); }; }; o.onerror = () => rej(o.error); }); }
+function idbGet(key){ return new Promise((res, rej) => { const o = indexedDB.open("ptracker-fs", 1); o.onupgradeneeded = () => o.result.createObjectStore("kv"); o.onsuccess = () => { const db = o.result, tx = db.transaction("kv", "readonly"), q = tx.objectStore("kv").get(key); q.onsuccess = () => { res(q.result); db.close(); }; q.onerror = () => { db.close(); rej(q.error); }; }; o.onerror = () => rej(o.error); }); }
+// normalise a loaded state object (field defaults; no one-time migrations)
+function normalizeState(s){
+  if(!s || !Array.isArray(s.cards) || !Array.isArray(s.columns)) return false;
+  s.cards.forEach(c => { if(!c.timer) c.timer = newTimer(); if(!c.logs) c.logs = []; if(!c.links) c.links = []; if(c.shootDate===undefined) c.shootDate = null; if(c.status===undefined) c.status = ""; if(!c.type) c.type = "project"; if(!Array.isArray(c.items)) c.items = []; });
+  if(!Array.isArray(s.sideLinks)) s.sideLinks = [];
+  if(!Array.isArray(s.linkGroups)) s.linkGroups = [];
+  s.sideLinks.forEach(l => { if(l.groupId === undefined) l.groupId = null; });
+  return true;
+}
+async function writeStateToFile(){
+  if(!fileHandle) return;
+  try {
+    if((await fileHandle.queryPermission({ mode:"readwrite" })) !== "granted") return;
+    const w = await fileHandle.createWritable();
+    await w.write(JSON.stringify(state, null, 2));
+    await w.close();
+    fileSyncStamp();
+  } catch(e){ /* transient write error — localStorage still has it */ }
+}
+let fileStampTimer = null;
+function fileSyncStamp(){ const el = document.getElementById("fileStatus"); if(el){ el.dataset.ok = "1"; } }
+async function connectDataFile(){
+  if(!fileSupported){ uiAlert({ title:"Not available here", message:"This browser can't save straight to a file in this mode. Use 🗂 Data → Download .json regularly, or ask Claude about running it on localhost." }); return; }
+  try {
+    const h = await window.showSaveFilePicker({ id:"ptracker-data", startIn:"desktop", suggestedName:"project-tracker-data.json", types:[{ description:"Project Tracker data", accept:{ "application/json":[".json"] } }] });
+    fileHandle = h; fileName = h.name; await idbSet("handle", h);
+    await writeStateToFile();
+    hideReconnectBanner();
+    flashToast("Auto-saving to " + fileName);
+  } catch(e){ /* cancelled */ }
+}
+async function loadDataFile(){
+  if(!fileSupported){ uiAlert({ title:"Not available here", message:"This browser can't open a file in this mode. Use 🗂 Data → Import instead." }); return; }
+  try {
+    const [h] = await window.showOpenFilePicker({ id:"ptracker-data", startIn:"desktop", types:[{ description:"Project Tracker data", accept:{ "application/json":[".json"] } }] });
+    const f = await h.getFile();
+    const data = JSON.parse(await f.text());
+    if(!normalizeState(data)) throw new Error("That isn't a Project Tracker data file.");
+    if(!(await uiConfirm({ title:"Load this file?", message:"Replaces your current board with the file's contents, then keeps auto-saving to it.", okText:"Load" }))) return;
+    makeBackup("before-file-load");
+    state = data; fileHandle = h; fileName = h.name; await idbSet("handle", h);
+    save(); render(); hideReconnectBanner();
+    flashToast("Loaded from " + fileName + " — auto-saving");
+  } catch(e){ if(e && e.name !== "AbortError") uiAlert({ title:"Couldn't load file", message: e.message }); }
+}
+async function reconnectDataFile(){
+  if(!fileHandle) return;
+  try {
+    if((await fileHandle.requestPermission({ mode:"readwrite" })) === "granted"){
+      await writeStateToFile();   // resume mirroring (current board is what you've been editing)
+      hideReconnectBanner();
+      flashToast("Reconnected — auto-saving to " + fileName);
+    }
+  } catch(e){ /* ignore */ }
+}
+async function initFileSync(){
+  if(!fileSupported) return;
+  let h; try { h = await idbGet("handle"); } catch(_){ return; }
+  if(!h) return;
+  fileHandle = h; fileName = h.name || "your data file";
+  let perm = "prompt";
+  try { perm = await h.queryPermission({ mode:"readwrite" }); } catch(_){}
+  if(perm === "granted"){
+    try { const f = await h.getFile(); const data = JSON.parse(await f.text()); if(normalizeState(data)){ state = data; save(); render(); } } catch(_){}
+  } else {
+    showReconnectBanner();
+  }
+}
+function showReconnectBanner(){ const b = document.getElementById("reconnectBanner"); if(b){ b.querySelector(".rb-name").textContent = fileName; b.classList.add("show"); } }
+function hideReconnectBanner(){ const b = document.getElementById("reconnectBanner"); if(b) b.classList.remove("show"); }
+function fileStatusText(){ return fileHandle ? `Auto-saving to ${fileName}` : "Not connected — changes save in this browser only"; }
+
+/* ============================ Auto-backup (rolling snapshots in localStorage) ============================ */
+const SNAP_PREFIX = STORE_KEY + "__snap_";
+const SNAP_IDX = STORE_KEY + "__snapidx";
+const MAX_SNAPS = 8;
+function getSnapIdx(){ try { return JSON.parse(localStorage.getItem(SNAP_IDX)) || []; } catch(e){ return []; } }
+// Take a snapshot of the current board into localStorage (skips if unchanged since the last one).
+function makeBackup(reason){
+  if(!state) return;
+  let data;
+  try { data = JSON.stringify(state); } catch(e){ return; }
+  const idx = getSnapIdx();
+  const last = idx[idx.length-1];
+  if(last && localStorage.getItem(last.key) === data) return; // nothing changed
+  const ts = Date.now();
+  const key = SNAP_PREFIX + ts;
+  const entry = { ts, key, cards: state.cards.length, reason: reason || "auto" };
+  const writeIdx = arr => localStorage.setItem(SNAP_IDX, JSON.stringify(arr));
+  for(let attempt = 0; attempt < MAX_SNAPS + 2; attempt++){
+    try {
+      localStorage.setItem(key, data);
+      idx.push(entry);
+      while(idx.length > MAX_SNAPS){ const old = idx.shift(); try { localStorage.removeItem(old.key); } catch(_){} }
+      writeIdx(idx);
+      return;
+    } catch(e){
+      // quota — drop the oldest snapshot and retry
+      if(idx.length){ const old = idx.shift(); try { localStorage.removeItem(old.key); } catch(_){} writeIdx(idx); }
+      else return; // can't even fit one — give up quietly
+    }
+  }
+}
+async function restoreBackup(key){
+  const raw = localStorage.getItem(key); if(!raw){ uiAlert("That backup is no longer available."); return; }
+  let s; try { s = JSON.parse(raw); } catch(e){ uiAlert({ title:"Couldn't read backup", message: e.message }); return; }
+  if(!(await uiConfirm({ title:"Restore this backup?", message:"Your current board will be replaced. A snapshot of the current board is saved first, so you can undo.", okText:"Restore" }))) return;
+  makeBackup("before-restore");
+  s.cards.forEach(c => { if(!c.timer) c.timer = newTimer(); if(!c.logs) c.logs=[]; if(!c.links) c.links=[]; if(!c.type) c.type="project"; if(!Array.isArray(c.items)) c.items=[]; });
+  state = s; save(); render(); closeModal();
+  flashToast("Backup restored");
+}
+function openBackups(){
+  currentModal = "backups";
+  // gather rolling snapshots (newest first) + any emergency backups from a failed read
+  const snaps = getSnapIdx().slice().reverse();
+  const emergency = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.indexOf(STORE_KEY + "__backup_") === 0) emergency.push({ ts: +k.split("_").pop() || 0, key: k, reason: "recovered (read error)" });
+  }
+  const all = snaps.concat(emergency.sort((a,b)=>b.ts-a.ts));
+  const fmtWhen = ts => { const d = new Date(ts); return d.toLocaleDateString(undefined,{day:"numeric",month:"short"}) + " " + d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}); };
+  const rows = all.map(e =>
+    `<div class="ts-row"><span class="nm"><div class="t">${esc(fmtWhen(e.ts))}</div>`+
+      `<div class="n">${e.cards!=null?e.cards+" cards · ":""}${esc(e.reason||"auto")}</div></span>`+
+      `<button class="mini-btn" data-restore-key="${esc(e.key)}">Restore</button></div>`).join("");
+  const modal = document.getElementById("modal");
+  modal.innerHTML =
+    `<div class="modal-head"><strong>🕘 Backups</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="modal-body">`+
+      `<div class="hint" style="margin-bottom:10px">The app keeps the last ${MAX_SNAPS} automatic snapshots in this browser (on open + every 15 min) plus your manual ones. Restore any of them, or download a copy to keep off-device.</div>`+
+      (all.length ? rows : `<div class="ts-empty">No snapshots yet.</div>`)+
+    `</div>`+
+    `<div class="modal-foot">`+
+      `<button class="btn primary" onclick="makeBackup('manual'); openBackups();">＋ Back up now</button>`+
+      `<button class="btn" onclick="exportData()">⤓ Download .json</button>`+
+      `<button class="btn" onclick="document.getElementById('importFile').click()">⤒ Import file</button>`+
+    `</div>`;
+  document.getElementById("overlay").classList.add("show");
+  modal.querySelectorAll("[data-restore-key]").forEach(b => b.onclick = () => restoreBackup(b.dataset.restoreKey));
+}
+
+/* ============================ Sidebar: palette of draggable card types ============================ */
+let paletteType = null;
+let draggingLinkId = null;
+let draggingChkItem = null;
+const PALETTE = [
+  { type:"project",   icon:"📋", label:"Project", desc:"Timer, shoot date, links" },
+  { type:"note",      icon:"📝", label:"Note",    desc:"Plain text sticky" },
+  { type:"checklist", icon:"✓",  label:"Checklist", desc:"Tickable to-do list" },
+];
+function toggleSidebar(){ document.body.classList.toggle("sidebar-hidden"); state.sidebarHidden = document.body.classList.contains("sidebar-hidden"); save(); }
+function renderSidebar(){
+  const el = document.getElementById("sidebar");
+  if(!el) return;
+  document.body.classList.toggle("sidebar-hidden", !!state.sidebarHidden);
+  const links = state.sideLinks || (state.sideLinks = []);
+  const groups = state.linkGroups || (state.linkGroups = []);
+  const linksInGroup = gid => links.filter(l => (l.groupId || null) === (gid || null));
+  const linkRow = l =>
+    `<div class="sidelink" data-link="${l.id}" draggable="true">`+
+      `<span class="sl-grip" title="Drag to move">⠿</span>`+
+      `<a href="${esc(l.url)}" target="_blank" rel="noopener" draggable="false" title="${esc(l.url)}">${esc(l.label || smartLabel(l.url))}</a>`+
+      `<button class="sidelink-act sl-up" title="Move up">↑</button>`+
+      `<button class="sidelink-act sl-down" title="Move down">↓</button>`+
+      `<button class="sidelink-act sl-menu" title="Rename / move / remove">⋯</button>`+
+    `</div>`;
+  const folderHtml = g => {
+    const gl = linksInGroup(g.id);
+    return `<div class="link-folder" data-group="${g.id}">`+
+      `<div class="lf-head">`+
+        `<button class="lf-toggle" title="Show/hide">${g.collapsed ? "▸" : "▾"}</button>`+
+        `<span class="lf-name" data-g="${g.id}" title="Click to open/close · double-click to rename">${esc(g.name)}</span>`+
+        `<span class="lf-count">${gl.length}</span>`+
+        `<button class="lf-del" data-g="${g.id}" title="Delete folder (links move to Unsorted)">✕</button>`+
+      `</div>`+
+      (g.collapsed ? "" : `<div class="lf-links">${gl.length ? gl.map(linkRow).join("") : `<div class="side-empty">Empty — move links here via ⋯</div>`}</div>`)+
+    `</div>`;
+  };
+  const unsorted = linksInGroup(null);
+  const unsortedInner = unsorted.length
+    ? unsorted.map(linkRow).join("")
+    : `<div class="side-empty">${groups.length ? "Drag links here" : "No links yet — paste one above."}</div>`;
+  const unsortedHtml =
+    `<div class="link-folder" data-group="">`+
+      (groups.length ? `<div class="lf-head"><span class="lf-name plain">Unsorted</span><span class="lf-count">${unsorted.length}</span></div>` : "")+
+      `<div class="lf-links">${unsortedInner}</div>`+
+    `</div>`;
+  el.innerHTML =
+    `<div class="side-sec">`+
+      `<h3>➕ Add to board</h3>`+
+      `<div class="hint" style="margin-bottom:10px">Drag a card onto any column — or click it to drop one in the first column.</div>`+
+      PALETTE.map(p =>
+        `<div class="palette-item" draggable="true" data-ptype="${p.type}">`+
+          `<span class="pi-icon">${p.icon}</span>`+
+          `<span class="pi-text"><span class="pi-label">${p.label}</span><span class="pi-desc">${p.desc}</span></span>`+
+        `</div>`).join("")+
+      `<button class="add-col-btn" id="add-col-btn">＋ Add column</button>`+
+    `</div>`+
+    `<div class="side-sec">`+
+      `<h3>🔗 Links <button class="link-addfolder" id="link-addfolder" title="Add a client folder">+ Folder</button></h3>`+
+      `<div class="hint" style="margin-bottom:8px">Group links by client. Use ⋯ on a link to move it; ↑↓ to reorder.</div>`+
+      `<div class="sidelink-add"><input id="sidelink-input" placeholder="Paste a link…" spellcheck="false" /><button id="sidelink-add-btn" title="Add link">＋</button></div>`+
+      groups.map(folderHtml).join("")+
+      unsortedHtml+
+    `</div>`;
+  el.querySelectorAll(".palette-item").forEach(it => {
+    const type = it.dataset.ptype;
+    it.addEventListener("dragstart", e => { paletteType = type; it.classList.add("dragging"); e.dataTransfer.effectAllowed = "copy"; });
+    it.addEventListener("dragend", () => { paletteType = null; it.classList.remove("dragging"); document.querySelectorAll(".col-cards.drag-over").forEach(l=>l.classList.remove("drag-over")); });
+    it.addEventListener("click", () => { if(state.columns[0]) createCardAt(type, state.columns[0].id, null); });
+  });
+  const addColBtn = el.querySelector("#add-col-btn");
+  if(addColBtn) addColBtn.onclick = () => addColumn();
+  // Links section
+  const linkInput = el.querySelector("#sidelink-input");
+  let pastedTitle = "";   // a title pulled from the clipboard's rich content, if any
+  const addLink = () => {
+    let u = linkInput.value.trim(); if(!u) return;
+    if(!/^https?:\/\//i.test(u)) u = "https://" + u;
+    const label = (pastedTitle && pastedTitle !== u) ? pastedTitle : "";
+    links.push({ id:"sl"+Math.random().toString(36).slice(2,9), url:u, label, groupId:null });
+    linkInput.value = ""; pastedTitle = ""; save(); renderSidebar();
+    const again = document.getElementById("sidelink-input"); if(again) again.focus();
+  };
+  el.querySelector("#sidelink-add-btn").onclick = addLink;
+  linkInput.addEventListener("keydown", e => { if(e.key === "Enter") addLink(); });
+  linkInput.addEventListener("paste", e => {
+    pastedTitle = "";
+    try {
+      const html = (e.clipboardData || window.clipboardData).getData("text/html");
+      if(html){
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const a = doc.querySelector("a[href]");
+        let t = a ? (a.textContent || "").trim() : ((doc.body && doc.body.textContent) || "").trim();
+        if(t && !/^https?:\/\//i.test(t) && t.length <= 200) pastedTitle = t;
+      }
+    } catch(_){}
+  });
+  el.querySelector("#link-addfolder").onclick = () => addLinkFolder();
+  // folder controls
+  const toggleGroup = gid => { const g = groups.find(x => x.id === gid); if(g){ g.collapsed = !g.collapsed; save(); renderSidebar(); } };
+  // click the header (incl. name) to expand/collapse; the name's own handler covers single vs double click
+  el.querySelectorAll(".lf-head").forEach(h => h.addEventListener("click", e => {
+    if(e.target.closest(".lf-del, .lf-name")) return;   // delete + name handled separately
+    toggleGroup(h.closest(".link-folder").dataset.group);
+  }));
+  el.querySelectorAll(".lf-name[data-g]").forEach(n => {
+    let clickTimer = null;
+    // single click → open/close; double click → rename
+    n.addEventListener("click", e => {
+      e.stopPropagation();
+      if(n.getAttribute("contenteditable") === "true") return;   // currently editing → ignore
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => toggleGroup(n.dataset.g), 210);
+    });
+    n.addEventListener("dblclick", e => {
+      e.stopPropagation();
+      clearTimeout(clickTimer);   // cancel the pending open/close
+      n.setAttribute("contenteditable", "true"); n.focus();
+      const r = document.createRange(); r.selectNodeContents(n);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+    n.addEventListener("keydown", e => { if(e.key === "Enter" && n.getAttribute("contenteditable") === "true"){ e.preventDefault(); n.blur(); } });
+    n.addEventListener("blur", () => {
+      if(n.getAttribute("contenteditable") !== "true") return;
+      const g = groups.find(x => x.id === n.dataset.g); if(g){ g.name = n.textContent.trim() || "Untitled"; save(); }
+      n.removeAttribute("contenteditable"); renderSidebar();
+    });
+  });
+  el.querySelectorAll(".lf-del").forEach(b => b.onclick = () => deleteLinkFolder(b.dataset.g));
+  // link controls
+  el.querySelectorAll(".sidelink").forEach(row => {
+    const id = row.dataset.link;
+    row.querySelector(".sl-up").onclick = () => moveLink(id, -1);
+    row.querySelector(".sl-down").onclick = () => moveLink(id, 1);
+    row.querySelector(".sl-menu").onclick = e => { e.stopPropagation(); openLinkMenu(e, id); };
+    row.addEventListener("dragstart", e => { draggingLinkId = id; row.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+    row.addEventListener("dragend", () => { row.classList.remove("dragging"); if(draggingLinkId){ draggingLinkId = null; commitLinkOrder(); } });
+  });
+  // drop targets: each folder's link list (incl. Unsorted)
+  el.querySelectorAll(".lf-links").forEach(box => {
+    box.addEventListener("dragover", e => {
+      if(!draggingLinkId) return;
+      e.preventDefault();
+      box.classList.add("drop-over");
+      const dragging = el.querySelector(".sidelink.dragging");
+      if(!dragging) return;
+      const after = getLinkAfter(box, e.clientY);
+      if(after == null) box.appendChild(dragging);
+      else box.insertBefore(dragging, after);
+    });
+    box.addEventListener("dragleave", e => { if(!box.contains(e.relatedTarget)) box.classList.remove("drop-over"); });
+    box.addEventListener("drop", e => { if(draggingLinkId){ e.preventDefault(); box.classList.remove("drop-over"); } });
+  });
+}
+function getLinkAfter(box, y){
+  const els = [...box.querySelectorAll(".sidelink:not(.dragging)")];
+  let closest = { offset: -Infinity, el: null };
+  for(const child of els){
+    const r = child.getBoundingClientRect();
+    const offset = y - r.top - r.height/2;
+    if(offset < 0 && offset > closest.offset) closest = { offset, el: child };
+  }
+  return closest.el;
+}
+// Read drag-reordered links (and their new folder) back into state.
+function commitLinkOrder(){
+  const seen = new Set(), newArr = [];
+  document.querySelectorAll("#sidebar .link-folder").forEach(fEl => {
+    const gid = fEl.dataset.group || null;   // "" -> null (Unsorted)
+    fEl.querySelectorAll(".lf-links .sidelink").forEach(row => {
+      const l = state.sideLinks.find(x => x.id === row.dataset.link);
+      if(l && !seen.has(l.id)){ l.groupId = gid; newArr.push(l); seen.add(l.id); }
+    });
+  });
+  // keep any links not shown in the DOM (e.g. inside collapsed folders) as-is
+  state.sideLinks.forEach(l => { if(!seen.has(l.id)) newArr.push(l); });
+  state.sideLinks = newArr;
+  save(); renderSidebar();
+}
+function addLinkFolder(){
+  const g = { id:"g"+Math.random().toString(36).slice(2,9), name:"New client", collapsed:false };
+  (state.linkGroups = state.linkGroups || []).push(g);
+  save(); renderSidebar();
+  const n = document.querySelector(`.lf-name[data-g="${g.id}"]`);
+  if(n){ n.focus(); const r = document.createRange(); r.selectNodeContents(n); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+}
+async function deleteLinkFolder(gid){
+  const g = (state.linkGroups||[]).find(x => x.id === gid); if(!g) return;
+  const n = state.sideLinks.filter(l => (l.groupId||null) === gid).length;
+  if(n && !(await uiConfirm({ title:`Delete folder “${g.name}”?`, message:`Its ${n} link${n===1?"":"s"} will move to Unsorted.`, okText:"Delete folder", danger:true }))) return;
+  state.sideLinks.forEach(l => { if((l.groupId||null) === gid) l.groupId = null; });
+  state.linkGroups = state.linkGroups.filter(x => x.id !== gid);
+  save(); renderSidebar();
+}
+function moveLink(id, dir){
+  const arr = state.sideLinks;
+  const idx = arr.findIndex(l => l.id === id); if(idx < 0) return;
+  const gid = arr[idx].groupId || null;
+  let j = idx + dir;
+  while(j >= 0 && j < arr.length && (arr[j].groupId || null) !== gid) j += dir;  // nearest neighbour in same group
+  if(j < 0 || j >= arr.length) return;
+  [arr[idx], arr[j]] = [arr[j], arr[idx]];
+  save(); renderSidebar();
+}
+function assignLink(id, gid){
+  const arr = state.sideLinks;
+  const idx = arr.findIndex(l => l.id === id); if(idx < 0) return;
+  const [l] = arr.splice(idx, 1);
+  l.groupId = gid || null;
+  let lastIdx = -1;
+  arr.forEach((x, i) => { if((x.groupId||null) === (gid||null)) lastIdx = i; });
+  arr.splice(lastIdx + 1, 0, l);
+  save(); renderSidebar();
+}
+function openLinkMenu(e, id){
+  e.preventDefault(); e.stopPropagation();
+  const l = state.sideLinks.find(x => x.id === id); if(!l) return;
+  const groups = state.linkGroups || [];
+  const moveBtns = `<div class="ctx-label">Move to client</div>`+
+    `<button data-move="">📂 Unsorted</button>`+
+    groups.map(g => `<button data-move="${g.id}">📁 ${esc(g.name)}</button>`).join("");
+  ctx.innerHTML =
+    `<button data-a="open">↗ Open link</button>`+
+    `<button data-a="rename">✏️ Rename</button>`+
+    `<button data-a="copy">⧉ Copy link</button>`+
+    `<div class="sep"></div>`+ moveBtns +
+    `<div class="sep"></div>`+
+    `<button class="danger" data-a="remove">🗑 Remove link</button>`;
+  showCtx(e);
+  ctx.querySelector('[data-a="open"]').onclick = () => { hideCtx(); window.open(l.url, "_blank", "noopener"); };
+  ctx.querySelector('[data-a="copy"]').onclick = () => { hideCtx(); copyText(l.url); };
+  ctx.querySelector('[data-a="rename"]').onclick = async () => { hideCtx(); const name = await uiPrompt({ title:"Rename link", label:"Link name", value: l.label || smartLabel(l.url), placeholder:"e.g. Murphy induction sheet", okText:"Save" }); if(name !== null){ l.label = name.trim(); save(); renderSidebar(); } };
+  ctx.querySelector('[data-a="remove"]').onclick = () => { hideCtx(); state.sideLinks = state.sideLinks.filter(x => x.id !== id); save(); renderSidebar(); };
+  ctx.querySelectorAll("[data-move]").forEach(b => b.onclick = () => { hideCtx(); assignLink(id, b.dataset.move || null); });
+}
+// Real Google file titles, looked up from Drive (a local file can't fetch these itself).
+// Ask Claude to add more, or just rename a link with ✎.
+const GFILE_TITLES = {
+  "1AHqyY1_gSVGURjbpgY2OI0BpWBwfFqPA54XR9vJG1eU": "Satellite Induction Sites – Status",
+  "1xOacElZyVyO5rHELdhLITFgwI7MYfMcG8fuU57zMK14": "Murphy Site Inductions 2025/6",
+  "1sh4NylksW4G6K8N0Kn491CPX4iIjy76Qkq3mePrHCD8": "Stellantis EPA Assets",
+  "1xF8Qc0uUA5eCsP6nFD9o5siFiu9sC5bboTTC0Cc6r_0": "NWG Visual Standards",
+  "1PmnG-3AGVRSQGOE1mstmXOVAwS1essqOcaF1J3lwpL0": "Lifting Operations",
+  "1_n10r2tXMxrGIcNSI3PZCZKAUQBegG1dVihPYF7PgYA": "Bentley HV Interactive Desktop Application Storyboard",
+  "1G7hQ56UhHsASOQoMO9uh6ovsjWJ4CSB-ZTLLiY7rsm0": "Whitbread Fire v1",
+  "1-dcfiVup6b6ukRWO4WnWMuvZyA-j29rP4uqJ4tZhpIo": "Minworth – Induction",
+  "1SoAsdtHCyejxv-PT4BWX5x_afFK8OGJV9feVAW-Q2kg": "Lifting Operations – Confirmed Changes",
+  "1Tuv1fh1En8kUWLNtiP7BaPcbmUSu9GFXF4-IqNeNCUc": "Piling Visual Standard – Safety Hotspots",
+};
+function driveFileId(url){
+  const s = String(url);
+  const m = s.match(/\/d\/([a-zA-Z0-9_-]{20,})/) || s.match(/[?&]id=([a-zA-Z0-9_-]{20,})/);
+  return m ? m[1] : null;
+}
+// Friendly label from a URL when the clipboard didn't carry a real title.
+function smartLabel(url){
+  const id = driveFileId(url);
+  if(id && GFILE_TITLES[id]) return GFILE_TITLES[id];   // real Drive title if we know it
+  try {
+    const u = new URL(url);
+    const h = u.hostname.replace(/^www\./, "");
+    const p = u.pathname;
+    if(h === "docs.google.com"){
+      if(p.includes("/spreadsheets/")) return "Google Sheet";
+      if(p.includes("/document/")) return "Google Doc";
+      if(p.includes("/presentation/")) return "Google Slides";
+      if(p.includes("/forms/")) return "Google Form";
+      return "Google Docs";
+    }
+    if(h === "drive.google.com") return "Google Drive file";
+    if(h === "sheets.google.com") return "Google Sheet";
+    return h;
+  } catch(e){ return url; }
+}
+
+/* ============================ Archive pod (archived & deleted cards) ============================ */
+function openArchive(){
+  currentModal = "archive";
+  const modal = document.getElementById("modal");
+  const archived = state.cards.filter(c => c.archived).sort((a,b)=> (a.title>b.title?1:-1));
+  const rows = archived.map(c => {
+    const col = column(c.columnId);
+    const tot = totalSeconds(c);
+    return `<div class="ts-row"><span class="nm"><div class="t">${esc(c.title)}</div>`+
+      `<div class="n">from ${esc(col?col.title:"—")}${tot>0?` · ${esc(fmtHuman(tot))} logged`:""}</div></span>`+
+      `<button class="mini-btn" data-restore="${c.id}">Restore</button>`+
+      `<button class="mini-btn stop" data-del="${c.id}">Delete forever</button></div>`;
+  }).join("");
+  modal.innerHTML =
+    `<div class="modal-head"><strong>🗄 Archive</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
+    `<div class="modal-body">`+
+      `<div class="hint" style="margin-bottom:10px">Archived cards are hidden from the board but kept here with their time logs. Restore them, or remove them permanently.</div>`+
+      (archived.length ? rows : `<div class="ts-empty">Nothing archived. Cards you archive from the editor land here.</div>`)+
+    `</div>`+
+    `<div class="modal-foot"><span class="hint">${archived.length} archived</span></div>`;
+  document.getElementById("overlay").classList.add("show");
+  modal.querySelectorAll("[data-restore]").forEach(b => b.onclick = () => { const c = card(b.dataset.restore); if(c){ c.archived=false; save(); render(); openArchive(); } });
+  modal.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    const c = card(b.dataset.del); if(!c) return;
+    if(await uiConfirm({ title:`Permanently delete “${c.title||"card"}”?`, message:"This removes it and its time logs for good.", okText:"Delete forever", danger:true })){
+      const snapshot = JSON.parse(JSON.stringify(c));
+      state.cards = state.cards.filter(x=>x.id!==c.id); save(); render(); openArchive();
+      showUndo(`Deleted “${c.title || "card"}”`, () => { state.cards.push(snapshot); save(); render(); openArchive(); });
+    }
+  });
+}
+
+/* ============================ Induction info (baked from the sheet) ============================ */
+// Pulled once from the "Satellite Induction Sites – Status" sheet: induction link + shoot date.
+// Edit shoot dates on a card as they change, or click "Induction info" to (re)apply these.
+const INDUCTION_DATA = [
+  { name:"Mile End",        link:"https://murphy.induct360.com/induction/mile-end/",                    shootDate:"2026-06-16" },
+  { name:"Southport",       link:"https://share.boundlessimmersive.com/share/southport-induction/",     shootDate:"2026-06-19" },
+  { name:"Staveley",        link:"https://induct360.com/c/murphy/induction/staveley",                   shootDate:"2026-05-15" },
+  { name:"Briardale Road",  link:"",                                                                    shootDate:"2026-06-29" },
+  { name:"Fleetwood",       link:"",                                                                    shootDate:"2026-06-19" },
+  { name:"Davyhulme",       link:"https://murphy.induct360.com/induction/davyhulme/",                   shootDate:null },
+  { name:"Ferry PS",        link:"https://murphy.induct360.com/induction/ferry-ps/",                    shootDate:null },
+  { name:"Tally Ho",        link:"https://murphy.induct360.com/induction/tallyho/",                     shootDate:null },
+  { name:"SAL18",           link:"https://murphy.induct360.com/induction/sal18/",                       shootDate:null },
+  { name:"Flass Lane",      link:"https://murphy.induct360.com/induction/flass-lane/",                  shootDate:null },
+  { name:"Minworth",        link:"https://murphy.induct360.com/induction/minworth/",                    shootDate:null },
+  { name:"Pentonville",     link:"https://share.boundlessimmersive.com/share/pentonville-induction/",   shootDate:"2026-06-10" },
+];
+function normName(s){ return String(s).toLowerCase().replace(/https?:\/\/\S+/g," ").replace(/[^a-z0-9]+/g," ").replace(/\s+/g," ").trim(); }
+// Apply the baked induction data onto matching cards (link if missing, shoot date). Idempotent.
+function applyInductionData(cards, columns, announce){
+  const colTitle = id => (columns.find(k => k.id === id) || {}).title || "";
+  let linked = 0, dated = 0;
+  INDUCTION_DATA.forEach(d => {
+    const en = normName(d.name);
+    if(en.length < 3) return;
+    let match = null;
+    cards.forEach(c => {
+      if(c.archived) return;
+      if(normName(c.title).includes(en)){
+        const inInd = /induction/i.test(colTitle(c.columnId));
+        if(!match || (inInd && !match.inInd)) match = { card:c, inInd };
+      }
+    });
+    if(!match) return;
+    const c = match.card;
+    if(d.link){ const u = d.link.trim(); if(u && !(c.links||[]).some(l=>l.url===u)){ (c.links=c.links||[]).push({ label:"Induction", url:u }); linked++; } }
+    if(d.shootDate && c.shootDate !== d.shootDate){ c.shootDate = d.shootDate; dated++; }
+  });
+  if(announce){ save(); render(); flashToast(`Induction info applied — ${linked} link${linked===1?"":"s"}, ${dated} date${dated===1?"":"s"}`); }
+  return { linked, dated };
+}
+function loadInductionInfo(){ applyInductionData(state.cards, state.columns, true); }
+
+/* ============================ Board navigation (wheel + drag pan) ============================ */
+function setupBoardNav(){
+  const board = document.getElementById("board");
+
+  // Vertical wheel scrolls the board horizontally — unless the cursor is over a
+  // column that still has room to scroll vertically in that direction.
+  board.addEventListener("wheel", e => {
+    if(e.ctrlKey) return; // pinch-zoom gesture — leave it alone
+    const dom = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    // genuine horizontal trackpad swipe — let the browser handle it natively
+    if(Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    const list = e.target.closest && e.target.closest(".col-cards");
+    if(list && list.scrollHeight > list.clientHeight + 1){
+      const atTop = list.scrollTop <= 0;
+      const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 1;
+      const down = dom > 0;
+      if((down && !atBottom) || (!down && !atTop)) return; // let the column scroll
+    }
+    if(dom === 0) return;
+    e.preventDefault();
+    board.scrollLeft += dom;
+  }, { passive: false });
+
+  // Drag to pan: middle-mouse anywhere, or left-click on the empty board background.
+  let pan = null;
+  board.addEventListener("mousedown", e => {
+    const onBackground = e.target === board;
+    if(e.button === 1 || (e.button === 0 && onBackground)){
+      pan = { startX: e.clientX, startLeft: board.scrollLeft, moved: false };
+      board.classList.add("panning");
+      e.preventDefault();
+    }
+  });
+  window.addEventListener("mousemove", e => {
+    if(!pan) return;
+    const dx = e.clientX - pan.startX;
+    if(Math.abs(dx) > 2) pan.moved = true;
+    board.scrollLeft = pan.startLeft - dx;
+  });
+  window.addEventListener("mouseup", () => { if(pan){ pan = null; board.classList.remove("panning"); } });
+  // suppress middle-click autoscroll / paste
+  board.addEventListener("auxclick", e => { if(e.button === 1) e.preventDefault(); });
+
+  // Column drag-to-reorder (left/right). The dragged column is moved in the DOM as you go.
+  board.addEventListener("dragover", e => {
+    if(!draggingColEl) return;
+    e.preventDefault();
+    const after = getColumnAfter(board, e.clientX);
+    if(after == null){ board.appendChild(draggingColEl); }
+    else if(after !== draggingColEl){ board.insertBefore(draggingColEl, after); }
+  });
+  board.addEventListener("drop", e => { if(draggingColEl) e.preventDefault(); });
+}
+let draggingColEl = null;
+function wireColumnDrag(handle, colEl){
+  handle.setAttribute("draggable", "true");
+  handle.addEventListener("dragstart", e => {
+    draggingColEl = colEl;
+    colEl.classList.add("col-dragging");
+    e.dataTransfer.effectAllowed = "move";
+    try { e.dataTransfer.setData("text/plain", "column"); } catch(_){}
+    try { e.dataTransfer.setDragImage(colEl, 24, 16); } catch(_){}
+  });
+  handle.addEventListener("dragend", () => {
+    colEl.classList.remove("col-dragging");
+    if(draggingColEl){ draggingColEl = null; commitColumnOrder(); }
+  });
+}
+function getColumnAfter(board, x){
+  const els = [...board.querySelectorAll(".column:not(.col-dragging)")];
+  let closest = { offset: -Infinity, el: null };
+  for(const child of els){
+    const box = child.getBoundingClientRect();
+    const offset = x - box.left - box.width / 2;
+    if(offset < 0 && offset > closest.offset) closest = { offset, el: child };
+  }
+  return closest.el;
+}
+function commitColumnOrder(){
+  const order = [...document.getElementById("board").querySelectorAll(".column")].map(el => el.dataset.colId);
+  state.columns.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+  save(); render();
+}
+
+/* ============================ Cloud sync + login (Supabase) ============================ */
+/* Paste your Supabase Project URL + anon key below to turn on online sync + login.
+   Leave them blank and the app keeps working locally (browser + file) exactly as before. */
+const SUPA = {
+  url: "https://gwapbgeioendekkoavjx.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3YXBiZ2Vpb2VuZGVra29hdmp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMzk2MzksImV4cCI6MjA5NjcxNTYzOX0.1odwfAnpt1FoNlt5OWRr2_o0S0jgSugW4f0S4smc-fU"
+};
+const cloudEnabled = !!(SUPA.url && SUPA.anonKey && window.supabase);
+let sb = cloudEnabled ? window.supabase.createClient(SUPA.url, SUPA.anonKey) : null;
+let cloudUser = null, signupMode = false, cloudSaveTimer = null, bootStarted = false;
+
+async function cloudLoad(){
+  if(!sb || !cloudUser) return null;
+  try {
+    const { data, error } = await sb.from("boards").select("data").eq("user_id", cloudUser.id).maybeSingle();
+    if(error) throw error;
+    return data ? data.data : null;
+  } catch(e){ console.error("cloudLoad failed", e); return null; }
+}
+function cloudSave(){
+  if(!sb || !cloudUser) return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(async () => {
+    try { await sb.from("boards").upsert({ user_id: cloudUser.id, data: state, updated_at: new Date().toISOString() }); }
+    catch(e){ console.error("cloudSave failed", e); }
+  }, 700);
+}
+function hydrate(s){
+  normalizeState(s);
+  if(!Array.isArray(s.statuses)) s.statuses = ["In Progress", "Waiting Feedback", "On Hold", "Awaiting PO", "Completed"];
+  s.cards.forEach(c => { if(c.projectNumber===undefined) c.projectNumber=""; if(c.filePath===undefined) c.filePath=""; });
+  return s;
+}
+function showLogin(){ document.getElementById("loginScreen").classList.add("show"); }
+function hideLogin(){ document.getElementById("loginScreen").classList.remove("show"); }
+function updateLoginMode(){
+  document.getElementById("loginSub").textContent = signupMode ? "Create your account" : "Sign in to your tracker";
+  document.getElementById("loginBtn").textContent = signupMode ? "Create account" : "Sign in";
+  document.getElementById("loginToggleText").textContent = signupMode ? "Already have an account?" : "No account yet?";
+  document.getElementById("loginToggleLink").textContent = signupMode ? "Sign in" : "Create one";
+  document.getElementById("loginPass").setAttribute("autocomplete", signupMode ? "new-password" : "current-password");
+}
+function wireLogin(){
+  const email = document.getElementById("loginEmail"), pass = document.getElementById("loginPass");
+  const errEl = document.getElementById("loginErr"), btn = document.getElementById("loginBtn");
+  const submit = async () => {
+    errEl.textContent = ""; btn.disabled = true; btn.textContent = "Please wait…";
+    const e = email.value.trim(), p = pass.value;
+    try {
+      if(signupMode){
+        const { data, error } = await sb.auth.signUp({ email: e, password: p });
+        if(error) throw error;
+        if(!data.session){ errEl.style.color = "var(--accent)"; errEl.textContent = "Account created — if asked, confirm via email, then sign in."; signupMode = false; updateLoginMode(); btn.disabled = false; return; }
+        cloudUser = data.user;
+      } else {
+        const { data, error } = await sb.auth.signInWithPassword({ email: e, password: p });
+        if(error) throw error;
+        cloudUser = data.user;
+      }
+      await bootWithCloud();
+    } catch(ex){ errEl.style.color = "#d8473e"; errEl.textContent = ex.message || "Couldn't sign in."; }
+    btn.disabled = false; updateLoginMode();
+  };
+  btn.onclick = submit;
+  pass.addEventListener("keydown", ev => { if(ev.key === "Enter") submit(); });
+  document.getElementById("loginToggleLink").onclick = ev => { ev.preventDefault(); signupMode = !signupMode; errEl.textContent = ""; updateLoginMode(); };
+}
+async function cloudSignOut(){
+  try { await sb.auth.signOut(); } catch(e){}
+  cloudUser = null;
+  location.reload();
+}
+async function bootWithCloud(){
+  hideLogin();
+  const cloud = await cloudLoad();
+  state = cloud ? hydrate(cloud) : (load() || seed());
+  finishBoot();
+  if(!cloud) cloudSave();   // first run for this account → push current board up
+}
+function finishBoot(){
+  applyTheme();
+  setupBoardNav();
+  render();
+  makeBackup("startup");
+  if(!finishBoot._iv) finishBoot._iv = setInterval(() => makeBackup("auto"), 15 * 60 * 1000);
+  initFileSync();
+}
+async function init(){
+  if(cloudEnabled){
+    wireLogin(); updateLoginMode();
+    try {
+      const { data } = await sb.auth.getSession();
+      if(data && data.session){ cloudUser = data.session.user; await bootWithCloud(); }
+      else showLogin();
+    } catch(e){ showLogin(); }
+  } else {
+    state = load() || seed();
+    finishBoot();
+  }
+}
+init();
+</script>
+</body>
+</html>
