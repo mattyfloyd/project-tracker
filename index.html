@@ -74,6 +74,16 @@
   .btn.danger:hover { background: #fdecea; border-color: #f0c4be; }
   .btn.ghost { border-color: transparent; background: transparent; }
   .btn.ghost:hover { background: #eef1f6; }
+  /* toolbar icon buttons + view switcher */
+  .icon-btn { border: none; background: transparent; color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer; padding: 7px 9px; border-radius: 8px; transition: background .12s; }
+  .icon-btn:hover { background: #eef1f6; }
+  .viewswitch { display: inline-flex; background: #eef1f6; border-radius: 10px; padding: 3px; gap: 2px; }
+  .vs-btn { border: none; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; transition: background .12s, color .12s; }
+  .vs-btn:hover { color: var(--ink); }
+  .vs-btn.active { background: #fff; color: var(--ink); box-shadow: var(--shadow); }
+  body.dark .icon-btn:hover { background: #222b38; }
+  body.dark .viewswitch { background: #1c2532; }
+  body.dark .vs-btn.active { background: #2c3848; color: var(--ink); }
   .running-pill {
     display: inline-flex; align-items: center; gap: 7px;
     background: #fff2f2; color: #c0392b; border: 1px solid #f3c7c2;
@@ -710,9 +720,15 @@
 </head>
 <body>
   <header class="topbar">
-    <button class="btn ghost" id="sidebarToggle" onclick="toggleSidebar()" title="Show/hide sidebar" style="padding:7px 9px">☰</button>
+    <button class="icon-btn" id="sidebarToggle" onclick="toggleSidebar()" title="Menu" aria-label="Menu">☰</button>
     <div class="brand"><div class="dot"></div> Project Tracker</div>
-    <input id="searchBox" class="search-box" type="search" placeholder="🔍 Search cards…" oninput="setSearch(this.value)" autocomplete="off" />
+    <nav class="viewswitch" id="viewswitch" aria-label="View">
+      <button class="vs-btn active" data-view="board" onclick="setView('board')">Board</button>
+      <button class="vs-btn" data-view="focus" onclick="setView('focus')">Focus</button>
+      <button class="vs-btn" data-view="timesheet" onclick="setView('timesheet')">Timesheet</button>
+    </nav>
+    <div class="spacer"></div>
+    <input id="searchBox" class="search-box" type="search" placeholder="🔍 Search…" oninput="setSearch(this.value)" autocomplete="off" />
     <span id="searchCount" class="search-count"></span>
     <div class="today-pill" onclick="openTimesheet('day')" title="Today's timesheet">
       📅 Today <strong id="todayPillText">0m / 8h</strong>
@@ -721,16 +737,8 @@
     <div class="running-pill" id="runningPill" style="display:none" onclick="toggleTray(true)">
       <span class="live"></span><span id="runningPillText">0 running</span>
     </div>
-    <button class="btn ghost" onclick="openFocus()" title="What needs you now (F)">🎯 Focus</button>
-    <button class="btn ghost" onclick="toggleTray()" title="Timers">⏱ Timers</button>
-    <button class="btn ghost" onclick="openTimesheet('day')" title="Timesheet">📅 Timesheet</button>
-    <button class="btn ghost" onclick="openReports()" title="All-time totals">📊 Totals</button>
-    <button class="btn ghost" onclick="openArchive()" title="Archived &amp; deleted cards">🗄 Archive</button>
-    <div class="spacer"></div>
-    <button class="btn ghost" id="dataMenuBtn" onclick="openDataMenu(event)" title="Backups, export &amp; import">🗂 Data ▾</button>
+    <button class="icon-btn" onclick="openMoreMenu(event)" title="More — Timers, Archive, Data, theme…" aria-label="More">⋯</button>
     <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)" />
-    <button class="btn ghost" onclick="openShortcuts()" title="Keyboard shortcuts &amp; quick guide" style="padding:7px 9px">⌨</button>
-    <button class="btn ghost" id="themeBtn" onclick="toggleTheme()" title="Light / dark" style="padding:7px 9px">🌙</button>
   </header>
 
   <div class="workspace">
@@ -1669,6 +1677,51 @@ function openDataMenu(e){
   wire('[data-a="import"]', () => document.getElementById("importFile").click());
   wire('[data-a="signout"]', cloudSignOut);
 }
+function setView(view){
+  closeModal();                       // leave whatever was open
+  if(view === "focus") openFocus();
+  else if(view === "timesheet") openTimesheet("day");
+  // "board" = just the board with nothing open
+  document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  if(typeof isMobileView === "function" && isMobileView()) closeMobileNav();
+}
+function openMoreMenu(e){
+  e.stopPropagation();
+  const dark = document.body.classList.contains("dark");
+  ctx.innerHTML =
+    `<button data-m="timers">⏱ Timers</button>`+
+    `<button data-m="archive">🗄 Archive</button>`+
+    `<div class="sep"></div>`+
+    `<div class="ctx-label">${esc(fileStatusText())}</div>`+
+    (fileSupported
+      ? (fileHandle
+          ? `<button data-m="reconnect">🔌 Reconnect / save now</button>`
+          : `<button data-m="connect">💾 Auto-save to a file…</button>`)+
+        `<button data-m="loadfile">📂 Load from a file…</button>`
+      : "")+
+    `<button data-m="backups">🕘 Backups &amp; restore</button>`+
+    `<button data-m="export">⤓ Export (.json)</button>`+
+    `<button data-m="import">⤒ Import (.json)</button>`+
+    `<div class="sep"></div>`+
+    `<button data-m="shortcuts">⌨ Shortcuts &amp; guide</button>`+
+    `<button data-m="theme">${dark ? "☀️ Light mode" : "🌙 Dark mode"}</button>`+
+    ((typeof cloudEnabled !== "undefined" && cloudEnabled && cloudUser)
+      ? `<div class="sep"></div><div class="ctx-label">${esc(cloudUser.email||"signed in")}</div><button class="danger" data-m="signout">⎋ Sign out</button>`
+      : "");
+  showCtx(e);
+  const wire = (sel, fn) => { const b = ctx.querySelector(sel); if(b) b.onclick = () => { hideCtx(); fn(); }; };
+  wire('[data-m="timers"]', () => toggleTray());
+  wire('[data-m="archive"]', openArchive);
+  wire('[data-m="connect"]', connectDataFile);
+  wire('[data-m="reconnect"]', () => writeStateToFile().then(() => flashToast("Saved to " + fileName)));
+  wire('[data-m="loadfile"]', loadDataFile);
+  wire('[data-m="backups"]', openBackups);
+  wire('[data-m="export"]', exportData);
+  wire('[data-m="import"]', () => document.getElementById("importFile").click());
+  wire('[data-m="shortcuts"]', openShortcuts);
+  wire('[data-m="theme"]', toggleTheme);
+  wire('[data-m="signout"]', cloudSignOut);
+}
 function addColumn(){
   const id = "k"+Math.random().toString(36).slice(2,9);
   state.columns.unshift({ id, title:"New Column", color: COLORS[Math.floor(state.columns.length)%COLORS.length].value });
@@ -2089,7 +2142,7 @@ function endTsForDate(dv){
   const chosen = new Date(y, m-1, d, 12, 0, 0);
   return sameDay(chosen.getTime(), Date.now()) ? Date.now() : chosen.getTime();
 }
-function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); const m = document.getElementById("modal"); if(m) m.classList.remove("qn-modal"); if(wasEditing) render(); }
+function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); const m = document.getElementById("modal"); if(m) m.classList.remove("qn-modal"); document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("active", b.dataset.view === "board")); if(wasEditing) render(); }
 function inEditable(el){ return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable)); }
 document.addEventListener("keydown", e => {
   if(e.key === "Escape"){ if(dlgCancelFn){ dlgCancelFn(); return; } closeModal(); hideCtx(); return; }
