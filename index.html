@@ -320,6 +320,12 @@
   .card-titlerow .card-title { flex: 1; min-width: 0; padding-right: 0; }
   .proj-num { flex: 0 0 auto; font-size: 13px; font-weight: 800; font-family: ui-monospace, Menlo, Consolas, monospace; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--panel)); border-radius: 6px; padding: 2px 7px; }
   .cc-num { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 800; color: var(--accent); font-size: 11px; }
+  .client-pill { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; background: color-mix(in srgb, var(--accent) 16%, var(--panel)); color: var(--accent); border-radius: 6px; padding: 2px 7px; }
+  .card-render { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); margin-top: 5px; }
+  .card-render .cr-icon { flex: 0 0 auto; }
+  .card-render .cr-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .client-filter { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; font-size: 12.5px; padding: 6px 8px; font-family: inherit; cursor: pointer; max-width: 160px; }
+  body.dark .client-filter { background: #2c3848; }
   .card-path { display: flex; align-items: center; gap: 5px; margin-top: 7px; font-size: 11.5px; }
   .card-path .cp-icon { flex: 0 0 auto; }
   .card-path .cp-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; }
@@ -730,6 +736,7 @@
     <div class="spacer"></div>
     <input id="searchBox" class="search-box" type="search" placeholder="🔍 Search…" oninput="setSearch(this.value)" autocomplete="off" />
     <span id="searchCount" class="search-count"></span>
+    <select id="clientFilter" class="client-filter" onchange="setClientFilter(this.value)" title="Filter by client" aria-label="Filter by client" style="display:none"></select>
     <div class="today-pill" onclick="openTimesheet('day')" title="Today's timesheet">
       📅 Today <strong id="todayPillText">0m / 8h</strong>
       <span class="today-pill-bar"><span id="todayPillBar"></span></span>
@@ -814,6 +821,7 @@ const COLORS = [
 let state;  // initialised at the bottom, once all definitions (incl. INDUCTION_DATA) exist
 let showArchived = false;
 let searchQuery = "";
+let clientFilter = "";
 
 /* ---- search / filter ---- */
 function setSearch(v){ searchQuery = v || ""; applySearch(); }
@@ -822,18 +830,32 @@ function cardMatches(c, q){
   const hay = [c.title, c.notes, c.status, (c.links||[]).map(l => (l.label||"") + " " + (l.url||"")).join(" "), (c.items||[]).map(i => i.text).join(" ")].join(" ").toLowerCase();
   return hay.indexOf(q) >= 0;
 }
+function setClientFilter(v){ clientFilter = v || ""; applySearch(); }
 function applySearch(){
   const q = (searchQuery || "").trim().toLowerCase();
+  const cf = clientFilter || "";
   let matches = 0;
   document.querySelectorAll("#board .card").forEach(el => {
     const c = card(el.dataset.cardId);
-    const show = !q || (c && cardMatches(c, q));
+    const okQ = !q || (c && cardMatches(c, q));
+    const okC = !cf || (c && c.client === cf);
+    const show = okQ && okC;
     el.style.display = show ? "" : "none";
-    if(q && show) matches++;
+    if((q || cf) && show) matches++;
   });
   const ind = document.getElementById("searchCount");
-  if(ind) ind.textContent = q ? (matches + " match" + (matches === 1 ? "" : "es")) : "";
-  document.body.classList.toggle("searching", !!q);
+  if(ind) ind.textContent = (q || cf) ? (matches + " match" + (matches === 1 ? "" : "es")) : "";
+  document.body.classList.toggle("searching", !!(q || cf));
+}
+// Populate the toolbar client filter; hide it entirely when there are no clients yet.
+function renderClientFilter(){
+  const sel = document.getElementById("clientFilter");
+  if(!sel) return;
+  const list = clientList();
+  if(clientFilter && !list.includes(clientFilter)) clientFilter = "";   // client no longer exists
+  sel.innerHTML = `<option value="">All clients</option>` +
+    list.map(s => `<option value="${esc(s)}" ${clientFilter===s?"selected":""}>${esc(s)}</option>`).join("");
+  sel.style.display = list.length ? "" : "none";
 }
 
 /* ---- theme (light / dark) ---- */
@@ -966,7 +988,7 @@ function load(){
   // bug must never discard the user's cards (incl. archived ones).
   if(!Array.isArray(s.statuses)) s.statuses = ["In Progress", "Waiting Feedback", "On Hold", "Awaiting PO", "Completed"];
   try {
-    s.cards.forEach(c => { if(!c.timer) c.timer = newTimer(); if(!c.logs) c.logs = []; if(!c.links) c.links = []; if(c.shootDate===undefined) c.shootDate = null; if(c.status===undefined) c.status = ""; if(!c.type) c.type = "project"; if(!Array.isArray(c.items)) c.items = []; if(c.projectNumber===undefined) c.projectNumber = ""; if(c.filePath===undefined) c.filePath = ""; });
+    s.cards.forEach(c => { if(!c.timer) c.timer = newTimer(); if(!c.logs) c.logs = []; if(!c.links) c.links = []; if(c.shootDate===undefined) c.shootDate = null; if(c.status===undefined) c.status = ""; if(!c.type) c.type = "project"; if(!Array.isArray(c.items)) c.items = []; if(c.projectNumber===undefined) c.projectNumber = ""; if(c.filePath===undefined) c.filePath = ""; if(c.client===undefined) c.client = ""; if(c.renderSpec===undefined) c.renderSpec = ""; });
     // one-time: split "1499 - Name" titles into a separate project number + name
     if(!s._mig_projnum){
       s.cards.forEach(c => {
@@ -1259,6 +1281,7 @@ function render(){
   renderTray();
   renderTodayPill();
   renderSidebar();
+  renderClientFilter();
   applySearch();
 }
 
@@ -1368,6 +1391,21 @@ function statusSelectHtml(c){
     `<option value="__add__">＋ Add status…</option>`+
   `</select>`;
 }
+// Clients: explicitly-added (state.clients) plus any already used on a card, sorted.
+function clientList(){
+  const set = new Set(state.clients || []);
+  (state.cards || []).forEach(c => { if(c.client) set.add(c.client); });
+  return [...set].sort((a,b) => a.localeCompare(b));
+}
+function clientSelectHtml(c){
+  const list = clientList();
+  if(c.client && !list.includes(c.client)) list.push(c.client);
+  return `<select class="input" id="f-client">`+
+    `<option value="" ${!c.client?"selected":""}>— none —</option>`+
+    list.map(s => `<option value="${esc(s)}" ${c.client===s?"selected":""}>${esc(s)}</option>`).join("")+
+    `<option value="__add__">＋ Add client…</option>`+
+  `</select>`;
+}
 // light sanitiser so rich-text notes can't carry anything nasty
 function sanitizeHtml(html){
   const d = document.createElement("div");
@@ -1429,12 +1467,14 @@ function renderCard(c){
     return el;
   }
 
-  const metaHtml = (c.status || si) ? `<div class="card-meta">` +
+  const metaHtml = (c.status || c.client || si) ? `<div class="card-meta">` +
+    (c.client ? `<span class="client-pill" title="Client">${esc(c.client)}</span>` : "") +
     (c.status ? `<span class="status-pill">${esc(c.status)}</span>` : "") +
     (si ? `<span class="shoot-badge ${si.level}" data-shoot="${c.id}">🎬 ${esc(si.label)}</span>` : "") +
     `</div>` : "";
 
   const pathHtml = c.filePath ? `<div class="card-path"><span class="cp-icon">📁</span><span class="cp-text" title="${esc(c.filePath)}">${esc(c.filePath)}</span><button class="cp-copy" title="Copy path to paste in File Explorer">📋</button></div>` : "";
+  const renderHtml = c.renderSpec ? `<div class="card-render"><span class="cr-icon">🖥</span><span class="cr-text" title="${esc(c.renderSpec)}">${esc(c.renderSpec)}</span></div>` : "";
   el.innerHTML =
     `<div class="card-ctrls"><button class="card-edit" title="Edit">✏️</button><button class="card-menu" title="More options">⋯</button></div>` +
     prioBadge +
@@ -1446,6 +1486,7 @@ function renderCard(c){
     (c.archived ? `<span class="archived-tag">archived</span>` : "") +
     (c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : "") +
     pathHtml +
+    renderHtml +
     metaHtml +
     (linksHtml ? `<div class="card-links">${linksHtml}</div>` : "") +
     `<div class="card-foot">` +
@@ -1599,7 +1640,7 @@ function commitOrder(){
 /* ============================ Card factory / quick add / columns ============================ */
 function newCard(type, colId, order, extra){
   const base = { id:"c"+Math.random().toString(36).slice(2,9), type: type||"project", title: "", projectNumber: "",
-    notes:"", color:null, links:[], image:null, archived:false, logs:[], timer:newTimer(), shootDate:null, status:"", filePath:"", items:[],
+    notes:"", color:null, links:[], image:null, archived:false, logs:[], timer:newTimer(), shootDate:null, status:"", filePath:"", client:"", renderSpec:"", items:[],
     columnId: colId, order: order||0 };
   return Object.assign(base, extra||{});
 }
@@ -1930,6 +1971,10 @@ function openCardEditor(id, focusTitle){
             `<div><label>Shoot date</label><input class="input" type="date" id="f-shoot" value="${esc(c.shootDate||"")}" /></div>`+
             `<div><label>Status</label>${statusSelectHtml(c)}</div>`+
           `</div></div>`+
+          `<div class="field"><div class="row">`+
+            `<div><label>Client</label>${clientSelectHtml(c)}</div>`+
+            `<div><label>Render / output</label><input class="input" id="f-render" value="${esc(c.renderSpec||"")}" placeholder="e.g. 3840×2160 · MP4 · 30s" /></div>`+
+          `</div></div>`+
           `<div class="field"><label>File / folder path</label>`+
             `<div class="row" style="gap:6px">`+
               `<input class="input" id="f-filepath" value="${esc(c.filePath||"")}" placeholder="e.g. P:\\MURPHY\\1253 - Visual Standards" />`+
@@ -1991,6 +2036,18 @@ function openCardEditor(id, focusTitle){
     }
     c.status = e.target.value; save(); render();
   });
+  const clientEl = document.getElementById("f-client");
+  if(clientEl) clientEl.addEventListener("change", async e => {
+    if(e.target.value === "__add__"){
+      const name = await uiPrompt({ title:"Add a client", label:"Client name", placeholder:"e.g. Northumbrian Water", okText:"Add" });
+      if(name && name.trim()){ const s = name.trim(); state.clients = state.clients || []; if(!state.clients.includes(s)) state.clients.push(s); c.client = s; save(); openCardEditor(c.id); render(); }
+      else { e.target.value = c.client || ""; }
+      return;
+    }
+    c.client = e.target.value; save(); render();
+  });
+  const renderEl = document.getElementById("f-render");
+  if(renderEl) renderEl.addEventListener("input", e => { c.renderSpec = e.target.value; save(); render(); });
   const fpEl = document.getElementById("f-filepath");
   if(fpEl) fpEl.addEventListener("input", e => { c.filePath = e.target.value; save(); render(); });
   const fpCopy = document.getElementById("f-filepath-copy");
@@ -3210,7 +3267,8 @@ function cloudSave(){
 function hydrate(s){
   normalizeState(s);
   if(!Array.isArray(s.statuses)) s.statuses = ["In Progress", "Waiting Feedback", "On Hold", "Awaiting PO", "Completed"];
-  s.cards.forEach(c => { if(c.projectNumber===undefined) c.projectNumber=""; if(c.filePath===undefined) c.filePath=""; });
+  s.cards.forEach(c => { if(c.projectNumber===undefined) c.projectNumber=""; if(c.filePath===undefined) c.filePath=""; if(c.client===undefined) c.client=""; if(c.renderSpec===undefined) c.renderSpec=""; });
+  if(!Array.isArray(s.clients)) s.clients = [];
   return s;
 }
 function showLogin(){ document.getElementById("loginScreen").classList.add("show"); }
