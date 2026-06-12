@@ -811,20 +811,12 @@
     <nav class="viewswitch" id="viewswitch" aria-label="View">
       <button class="vs-btn active" data-view="board" onclick="setView('board')">Board</button>
       <button class="vs-btn" data-view="focus" onclick="openFocus()">Focus</button>
-      <button class="vs-btn" data-view="timesheet" onclick="openTimesheet('week')">Timesheet</button>
     </nav>
     <div class="spacer"></div>
     <input id="searchBox" class="search-box" type="search" placeholder="🔍 Search…" oninput="setSearch(this.value)" autocomplete="off" />
     <span id="searchCount" class="search-count"></span>
     <select id="clientFilter" class="client-filter" onchange="setClientFilter(this.value)" title="Filter by client" aria-label="Filter by client" style="display:none"></select>
-    <div class="today-pill" onclick="openTimesheet('day')" title="Today's timesheet">
-      📅 Today <strong id="todayPillText">0m / 8h</strong>
-      <span class="today-pill-bar"><span id="todayPillBar"></span></span>
-    </div>
-    <div class="running-pill" id="runningPill" style="display:none" onclick="toggleTray(true)">
-      <span class="live"></span><span id="runningPillText">0 running</span>
-    </div>
-    <button class="icon-btn" onclick="openMoreMenu(event)" title="More — Timers, Archive, Data, theme…" aria-label="More">⋯</button>
+    <button class="icon-btn" onclick="openMoreMenu(event)" title="More — Archive, Data, theme…" aria-label="More">⋯</button>
     <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)" />
   </header>
 
@@ -832,7 +824,6 @@
     <aside class="sidebar" id="sidebar"></aside>
     <div class="board" id="board"></div>
     <div class="page" id="focusPage" style="display:none"></div>
-    <div class="page" id="timesheetPage" style="display:none"></div>
   </div>
 
   <!-- mobile drawer backdrop + close (only visible on small screens when the menu is open) -->
@@ -1536,17 +1527,13 @@ function renderCard(c){
     const shootCell = si
       ? `<span class="cc-shoot ${si.level}" data-shootshort="${c.id}" title="${esc(si.label)}">🎬 ${esc(si.days===0?"today":shootShort)}</span>`
       : `<span class="cc-shoot none" title="No shoot date — click the card to set one">🎬 set date</span>`;
-    const hasTime = totalSeconds(c) > 0 || t.st !== "stopped";
     el.innerHTML =
       (prioBadge ? `<div class="cc-prio">${prioBadge}</div>` : "") +
       `<div class="cc">` +
         `<span class="cc-title">${c.projectNumber?`<span class="cc-num">${esc(c.projectNumber)}</span> `:""}${esc(c.title)}${c.archived?'<span class="archived-tag">arch</span>':''}</span>` +
         shootCell +
         (firstLink ? `<a class="cc-link" href="${esc(firstLink.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${esc(firstLink.url)}">🔗</a>` : "") +
-        (hasTime ? `<span class="${badgeClass} cc-time" data-timebadge="${c.id}">⏱ ${esc(fmtClock(totalSeconds(c)))}</span>` : `<span class="cc-time" data-timebadge="${c.id}"></span>`) +
-        `<button class="${playClass} cc-play" title="${t.st==='running'?'Pause':(t.st==='paused'?'Resume':'Start timer')}">${playIcon}</button>` +
       `</div>`;
-    el.querySelector(".play-btn").addEventListener("click", e => toggleCardTimer(c.id, e));
     el.addEventListener("click", () => openCardEditor(c.id));
     el.addEventListener("dragstart", e => { el.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
     el.addEventListener("dragend", () => { el.classList.remove("dragging"); commitOrder(); });
@@ -1574,13 +1561,8 @@ function renderCard(c){
     pathHtml +
     renderHtml +
     metaHtml +
-    (linksHtml ? `<div class="card-links">${linksHtml}</div>` : "") +
-    `<div class="card-foot">` +
-      `<span class="${badgeClass}" data-timebadge="${c.id}">⏱ ${live}</span>` +
-      `<button class="${playClass}" title="${t.st==='running'?'Pause':(t.st==='paused'?'Resume':'Start timer')}">${playIcon}</button>` +
-    `</div>`;
+    (linksHtml ? `<div class="card-links">${linksHtml}</div>` : "");
 
-  el.querySelector(".play-btn").addEventListener("click", e => toggleCardTimer(c.id, e));
   const cpBtn = el.querySelector(".cp-copy");
   if(cpBtn) cpBtn.addEventListener("click", e => { e.stopPropagation(); copyText(c.filePath); });
   wireCardBase(el, c); wireInlineTitle(el, c); wireCardMenu(el, c);
@@ -1842,7 +1824,6 @@ function openMoreMenu(e){
   e.stopPropagation();
   const dark = document.body.classList.contains("dark");
   ctx.innerHTML =
-    `<button data-m="timers">⏱ Timers</button>`+
     `<button data-m="archive">🗄 Archive</button>`+
     `<div class="sep"></div>`+
     `<div class="ctx-label">${esc(fileStatusText())}</div>`+
@@ -1863,7 +1844,6 @@ function openMoreMenu(e){
       : "");
   showCtx(e);
   const wire = (sel, fn) => { const b = ctx.querySelector(sel); if(b) b.onclick = () => { hideCtx(); fn(); }; };
-  wire('[data-m="timers"]', () => toggleTray());
   wire('[data-m="archive"]', openArchive);
   wire('[data-m="connect"]', connectDataFile);
   wire('[data-m="reconnect"]', () => writeStateToFile().then(() => flashToast("Saved to " + fileName)));
@@ -2097,22 +2077,8 @@ function openCardEditor(id, focusTitle){
       colourField +
       (isCheck ? "" : linksField) +
       (isCheck ? "" : imageField) +
-      (isProject
-        ? `<div class="field"><label>Time logs · total ${esc(fmtHuman(totalSeconds(c)))}</label><div class="log-list" id="f-logs"></div>`+
-            `<div class="addtime-row">`+
-              `<input class="input" id="f-at-amt" placeholder="90  or  1:30" style="flex:0 0 110px" />`+
-              `<input class="input" type="date" id="f-at-date" style="flex:0 0 150px" />`+
-              `<input class="input" id="f-at-note" placeholder="What did you do? (optional)" style="flex:1 1 160px" />`+
-              `<button class="btn" id="f-addlog">+ Add time</button>`+
-            `</div>`+
-            `<div class="hint">Enter minutes (e.g. 90) or H:MM (e.g. 1:30). Logs to the chosen date.</div>`+
-          `</div>` : "")+
     `</div>`+
     `<div class="modal-foot">`+
-      (isProject
-        ? `<button class="btn ${c.timer.st==='stopped'?'primary':''}" id="f-timer">${c.timer.st==='running'?'⏸ Pause timer':(c.timer.st==='paused'?'▶ Resume timer':'▶ Start timer')}</button>`+
-          (c.timer.st!=='stopped'?`<button class="btn" id="f-timer-stop">✓ Confirm time</button>`:``)
-        : "")+
       `<button class="btn danger" id="f-delete" title="Delete this ${isNote?'note':(isCheck?'checklist':'card')}">🗑 Delete</button>`+
       `<button class="btn" id="f-dup" title="Make a fresh copy (no time logs)">⧉ Duplicate</button>`+
       `<button class="btn" id="f-archive" title="Move to Archive (kept)">${c.archived?'Unarchive':'🗄 Archive'}</button>`+
@@ -2206,28 +2172,6 @@ function openCardEditor(id, focusTitle){
       const r = new FileReader();
       r.onload = () => { c.image = r.result; save(); renderEditorImage(c); render(); };
       r.readAsDataURL(file);
-    };
-  }
-
-  // time logs + timer (project only)
-  if(isProject){
-    renderEditorLogs(c);
-    document.getElementById("f-at-date").value = isoDateInput(Date.now());
-    document.getElementById("f-timer").onclick = () => { toggleCardTimer(c.id); openCardEditor(c.id); };
-    const stopBtn = document.getElementById("f-timer-stop");
-    if(stopBtn) stopBtn.onclick = async () => { await confirmStopTimer(c.id); if(currentModal==="editor") openCardEditor(c.id); };
-    document.getElementById("f-addlog").onclick = () => {
-      const v = (document.getElementById("f-at-amt").value || "").trim();
-      if(!v){ document.getElementById("f-at-amt").focus(); return; }
-      let secs = 0;
-      if(v.includes(":")){ const [h,m] = v.split(":"); secs = (parseInt(h||0)*60 + parseInt(m||0))*60; }
-      else secs = Math.round(parseFloat(v)*60);
-      if(!(secs>0)) return;
-      const note = (document.getElementById("f-at-note").value || "").trim();
-      const dv = document.getElementById("f-at-date").value;
-      const end = endTsForDate(dv);
-      c.logs.push({ id:"l"+Math.random().toString(36).slice(2,9), seconds:secs, start:end-secs*1000, end, note });
-      save(); openCardEditor(c.id); render();
     };
   }
 
@@ -2474,8 +2418,9 @@ function commitTrayEdit(id, value){
 function cancelTrayEdit(){ editingTimerId = null; renderTray(); }
 function toggleTray(force){ trayOpen = (force===undefined) ? !trayOpen : force; document.getElementById("tray").classList.toggle("show", trayOpen); renderTray(); }
 function renderTray(){
-  const active = state.cards.filter(c => c.timer.st !== "stopped");
   const pill = document.getElementById("runningPill");
+  if(!pill) return;   // time-tracking UI removed — nothing to render
+  const active = state.cards.filter(c => c.timer.st !== "stopped");
   const running = active.filter(c=>c.timer.st==="running").length;
   if(active.length){ pill.style.display="inline-flex"; document.getElementById("runningPillText").textContent = running + " running" + (active.length>running?` · ${active.length-running} paused`:""); }
   else pill.style.display = "none";
@@ -2722,7 +2667,6 @@ function renderFocusPage(){
   const shootChip = c => { const s = shootInfo(c); return `<span class="shoot-badge ${s.level}">🎬 ${esc(s.days < 0 ? Math.abs(s.days)+'d ago' : (s.days===0?'today':'in '+s.days+'d'))}</span>`; };
   const prioChip = lvl => () => `<span class="prio-badge ${lvl==='critical'?'crit':'high'}">${lvl==='critical'?'🚨 Very urgent':'❗ Urgent'}</span>`;
   const body =
-    sec("⏱ Running now", live, timerChip) +
     sec("🚨 Very urgent", crit, prioChip("critical")) +
     sec("❗ Urgent", high, prioChip("high")) +
     sec("🎬 Shoot soon", soon, shootChip);
