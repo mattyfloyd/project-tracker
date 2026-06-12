@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#3b6fd6" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Don't Panic" />
-<title>Don't Panic</title>
+<meta name="apple-mobile-web-app-title" content="Project Tracker" />
+<title>Project Tracker</title>
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Project%20Tracker%22%2C%22short_name%22%3A%22Tracker%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230e1218%22%2C%22theme_color%22%3A%22%233b6fd6%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI%2BPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjM2I2ZmQ2Ii8%2BPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNmY0ZmQ2Ii8%2BPC9saW5lYXJHcmFkaWVudD48L2RlZnM%2BPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjcuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNiAxNiBWMTAuNSBNMTYgMTYgTDIwLjUgMTguNSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8%2BPC9zdmc%2B%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" />
 <link rel="apple-touch-icon" href="icon.png" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -807,7 +807,7 @@
 <body>
   <header class="topbar">
     <button class="icon-btn" id="sidebarToggle" onclick="toggleSidebar()" title="Menu" aria-label="Menu">☰</button>
-    <div class="brand"><div class="dot"></div> Don't Panic</div>
+    <div class="brand"><div class="dot"></div> Project Tracker</div>
     <nav class="viewswitch" id="viewswitch" aria-label="View">
       <button class="vs-btn active" data-view="board" onclick="setView('board')">Board</button>
       <button class="vs-btn" data-view="focus" onclick="openFocus()">Focus</button>
@@ -858,8 +858,8 @@
   <!-- login screen (shown only when the cloud backend is configured) -->
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
-      <div class="login-brand"><div class="dot"></div> Don't Panic</div>
-      <div class="login-sub" id="loginSub">Sign in to Don't Panic</div>
+      <div class="login-brand"><div class="dot"></div> Project Tracker</div>
+      <div class="login-sub" id="loginSub">Sign in to your tracker</div>
       <input class="login-input" id="loginEmail" type="email" placeholder="Email" autocomplete="username" />
       <input class="login-input" id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
       <button class="btn primary login-btn" id="loginBtn">Sign in</button>
@@ -2721,7 +2721,7 @@ function exportCSV(){
 }
 
 /* ============================ Import / export ============================ */
-function exportData(){ downloadBlob(JSON.stringify(state,null,2), "dont-panic-backup.json", "application/json"); }
+function exportData(){ downloadBlob(JSON.stringify(state,null,2), "project-tracker-backup.json", "application/json"); }
 function importData(ev){
   const file = ev.target.files[0]; if(!file) return;
   const r = new FileReader();
@@ -3395,7 +3395,7 @@ function hydrate(s){
 function showLogin(){ document.getElementById("loginScreen").classList.add("show"); }
 function hideLogin(){ document.getElementById("loginScreen").classList.remove("show"); }
 function updateLoginMode(){
-  document.getElementById("loginSub").textContent = signupMode ? "Create your account" : "Sign in to Don't Panic";
+  document.getElementById("loginSub").textContent = signupMode ? "Create your account" : "Sign in to your tracker";
   document.getElementById("loginBtn").textContent = signupMode ? "Create account" : "Sign in";
   document.getElementById("loginPass").setAttribute("autocomplete", signupMode ? "new-password" : "current-password");
 }
@@ -3470,23 +3470,24 @@ function drawAppIcon(size){
   const hl = x.createLinearGradient(0, 0, 0, 300);
   hl.addColorStop(0, "rgba(255,255,255,.16)"); hl.addColorStop(1, "rgba(255,255,255,0)");
   x.fillStyle = hl; rr(0, 0, 512, 512, 112); x.fill();
-  // orbital ring (Hitchhiker's planet) — drawn behind the hand
-  x.save();
-  x.translate(256, 168); x.rotate(-22 * Math.PI/180);
-  x.beginPath(); x.ellipse(0, 0, 196, 68, 0, 0, Math.PI*2);
-  x.lineWidth = 13; x.strokeStyle = "rgba(255,255,255,.92)"; x.stroke();
-  x.restore();
-  // thumbs-up (Material thumb_up path), white, in front of the ring
-  const thumb = new Path2D("M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z");
-  x.save();
-  x.translate(162, 50); x.scale(8.4, 8.4);
-  x.fillStyle = "#fff"; x.fill(thumb);
-  x.restore();
-  // "DON'T PANIC" in big friendly letters
-  x.fillStyle = "#fff"; x.textAlign = "center"; x.textBaseline = "alphabetic";
-  x.font = "800 86px system-ui, -apple-system, 'Segoe UI', Arial, sans-serif";
-  x.fillText("DON'T", 256, 374);
-  x.fillText("PANIC", 256, 456);
+  // "MF" monogram (upper third)
+  x.fillStyle = "#ffffff"; x.textAlign = "center"; x.textBaseline = "middle";
+  x.font = "800 184px system-ui, -apple-system, 'Segoe UI', Arial, sans-serif";
+  x.fillText("MF", 256, 176);
+  // mini kanban board underneath
+  const colW = 92, gap = 26, n = 3, totalW = n*colW + (n-1)*gap, startX = (512 - totalW)/2;
+  const colY = 300, colH = 150, pad = 13, cardH = 23, cardGap = 12, cardW = colW - pad*2;
+  const counts = [2, 1, 3];
+  for(let i = 0; i < n; i++){
+    const cx = startX + i*(colW + gap);
+    x.fillStyle = "rgba(255,255,255,.22)"; rr(cx, colY, colW, colH, 14); x.fill();
+    x.fillStyle = "rgba(255,255,255,.93)";
+    for(let k = 0; k < counts[i]; k++){
+      const cy = colY + pad + k*(cardH + cardGap);
+      if(cy + cardH > colY + colH - pad) break;
+      rr(cx + pad, cy, cardW, cardH, 7); x.fill();
+    }
+  }
   return c;
 }
 function installIcons(){
@@ -3497,10 +3498,10 @@ function installIcons(){
       if(!el){ el = document.createElement("link"); el.rel = rel; document.head.appendChild(el); }
       if(type) el.type = type; el.href = h;
     };
-    setLink("icon", href, "image/png");
-    setLink("apple-touch-icon", href);
+    setLink("icon", drawAppIcon(64).toDataURL("image/png"), "image/png");   // browser-tab favicon = generated MF + kanban mark
+    setLink("apple-touch-icon", href);                                       // iOS home screen = the custom planet icon
     const abs = new URL(href, location.href).href;   // manifest needs an absolute icon URL
-    const man = { name:"Don't Panic", short_name:"Don't Panic", start_url:".", display:"standalone",
+    const man = { name:"Project Tracker", short_name:"Tracker", start_url:".", display:"standalone",
       background_color:"#000000", theme_color:"#3b6fd6",
       icons:[ { src:abs, sizes:"512x512", type:"image/png", purpose:"any" } ] };
     const url = URL.createObjectURL(new Blob([JSON.stringify(man)], { type:"application/json" }));
