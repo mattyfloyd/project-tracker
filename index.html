@@ -335,8 +335,20 @@
   .card-render { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); margin-top: 5px; }
   .card-render .cr-icon { flex: 0 0 auto; }
   .card-render .cr-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .client-filter { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; font-size: 12.5px; padding: 6px 8px; font-family: inherit; cursor: pointer; max-width: 160px; }
-  body.dark .client-filter { background: #2c3848; }
+  .client-filter {
+    appearance: none; -webkit-appearance: none;
+    flex: 0 0 auto; width: 152px; max-width: 44vw;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+    border-radius: 9px; font-size: 12.5px; font-weight: 600; font-family: inherit; cursor: pointer;
+    padding: 7px 28px 7px 11px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a93a0' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    transition: border-color .12s, box-shadow .12s;
+  }
+  .client-filter:hover { border-color: var(--accent); }
+  .client-filter:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,111,214,.16); }
+  body.dark .client-filter { background: #2c3848; border-color: #3a4859; }
   .card-path { display: flex; align-items: center; gap: 5px; margin-top: 7px; font-size: 11.5px; }
   .card-path .cp-icon { flex: 0 0 auto; }
   .card-path .cp-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; }
@@ -900,7 +912,7 @@ let clientFilter = "";
 function setSearch(v){ searchQuery = v || ""; applySearch(); }
 function cardMatches(c, q){
   if(!q) return true;
-  const hay = [c.title, c.notes, c.status, (c.links||[]).map(l => (l.label||"") + " " + (l.url||"")).join(" "), (c.items||[]).map(i => i.text).join(" ")].join(" ").toLowerCase();
+  const hay = [c.title, c.notes, c.status, c.client, (c.links||[]).map(l => (l.label||"") + " " + (l.url||"")).join(" "), (c.items||[]).map(i => String(i.text||"").replace(/<[^>]*>/g, " ")).join(" ")].join(" ").toLowerCase();
   return hay.indexOf(q) >= 0;
 }
 function setClientFilter(v){ clientFilter = v || ""; applySearch(); }
@@ -1426,6 +1438,7 @@ function renderColumn(col){
     if(draggingColEl || draggingChk) return;
     e.preventDefault();
     list.classList.remove("drag-over");
+    if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){ addImageFiles(e.dataTransfer.files, col.id); return; }
     if(paletteType){
       const after = getDragAfter(list, e.clientY);
       const index = after ? [...list.querySelectorAll(".card")].indexOf(after) : cardsIn(col.id).length;
@@ -1554,7 +1567,7 @@ function renderCard(c){
     (c.image ? `<img class="card-img" src="${esc(c.image)}" alt="" />` : "") +
     `<div class="card-titlerow">`+
       (c.projectNumber ? `<span class="proj-num">${esc(c.projectNumber)}</span>` : "") +
-      `<div class="card-title" contenteditable="true" data-ph="Untitled" spellcheck="false">${esc(c.title)}</div>` +
+      `<div class="card-title" data-ph="Untitled" title="Double-click to rename" spellcheck="false">${esc(c.title)}</div>` +
     `</div>` +
     (c.archived ? `<span class="archived-tag">archived</span>` : "") +
     (c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : "") +
@@ -1577,15 +1590,26 @@ function wireCardBase(el, c){
     openCardEditor(c.id);
   });
 }
-// Edit the title straight on the card (contenteditable). No modal.
+// Put a card title into edit mode (used by double-click and when creating a new card).
+function startTitleEdit(el, t, c){
+  t.setAttribute("contenteditable", "true");
+  if(el) el.draggable = false;
+  t.focus();
+  const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+// Title edits with a DOUBLE-CLICK; a single click / drag still moves the card.
 function wireInlineTitle(el, c){
   const t = el.querySelector(".card-title");
   if(!t) return;
-  t.addEventListener("mousedown", () => { el.draggable = false; });
-  t.addEventListener("blur", () => { el.draggable = true; c.title = t.innerText.trim(); save(); });
-  t.addEventListener("input", () => { c.title = t.innerText; save(); });
-  t.addEventListener("click", e => e.stopPropagation());
-  t.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); t.blur(); } });
+  t.addEventListener("dblclick", e => { e.stopPropagation(); startTitleEdit(el, t, c); });
+  t.addEventListener("keydown", e => { if(t.isContentEditable && e.key === "Enter"){ e.preventDefault(); t.blur(); } });
+  t.addEventListener("blur", () => {
+    if(!t.isContentEditable) return;
+    t.removeAttribute("contenteditable");
+    el.draggable = true;
+    const v = t.innerText.trim();
+    if(v !== (c.title || "")){ c.title = v; save(); }
+  });
 }
 function wireCardMenu(el, c){
   const m = el.querySelector(".card-menu");
@@ -1630,14 +1654,14 @@ function renderChecklistCard(el, c){
   const itemsHtml = items.map(i =>
     `<div class="chk-item ${i.done?'done':''}" data-item="${i.id}" draggable="true">`+
       `<input type="checkbox" class="chk-cb" data-chk="${i.id}" ${i.done?'checked':''} />`+
-      `<span class="chk-txt" data-chk="${i.id}" title="Drag to move · double-click to edit">${esc(i.text)}</span>`+
+      `<span class="chk-txt" data-chk="${i.id}" title="Drag to move · double-click to edit">${sanitizeHtml(i.text)}</span>`+
     `</div>`
   ).join("") || `<div class="chk-empty">No items yet.</div>`;
   el.innerHTML =
     `<div class="card-ctrls"><button class="card-edit" title="Edit">✏️</button><button class="card-menu" title="More options">⋯</button></div>` +
     prioBadgeHtml(c) +
     `<div class="card-topline">`+
-      `<div class="card-title" contenteditable="true" data-ph="Checklist" spellcheck="false">${esc(c.title)}</div>` +
+      `<div class="card-title" data-ph="Checklist" title="Double-click to rename" spellcheck="false">${esc(c.title)}</div>` +
       `<span class="chk-count">${items.length?done+"/"+items.length:""}</span>` +
     `</div>` +
     (c.archived ? `<span class="archived-tag">archived</span>` : "") +
@@ -1663,9 +1687,10 @@ function renderChecklistCard(el, c){
       sp.removeAttribute("contenteditable");
       if(itemEl) itemEl.draggable = true;
       const it = (c.items||[]).find(x=>x.id===sp.dataset.chk); if(!it) return;
-      const v = sp.textContent.trim();
-      if(!v){ c.items = (c.items||[]).filter(x=>x.id!==it.id); save(); render(); return; }
-      if(v !== it.text){ it.text = v; save(); render(); }
+      const plain = sp.textContent.trim();
+      if(!plain){ c.items = (c.items||[]).filter(x=>x.id!==it.id); save(); render(); return; }   // empty → delete
+      const html = sanitizeHtml(sp.innerHTML).trim();   // keep bold/italic formatting
+      if(html !== it.text){ it.text = html; save(); render(); }
     });
   });
   // Drag items LIVE: the dragged row moves through the lists as you hover (across cards too),
@@ -1742,12 +1767,69 @@ function createCardAt(type, colId, index){
   list.splice(index, 0, c);
   list.forEach((x,i) => x.order = i);
   save(); render();
-  // No modal — just drop the card in and let the user type its name straight on it.
-  const sel = type === "note" ? ".note-edit-body" : ".card-title";
-  const target = document.querySelector(`[data-card-id="${c.id}"] ${sel}`);
-  if(target){ target.focus(); }
+  // No modal — drop the card in and let the user type its name straight away.
+  const cardEl = document.querySelector(`[data-card-id="${c.id}"]`);
+  if(type === "note"){ const b = cardEl && cardEl.querySelector(".note-edit-body"); if(b) b.focus(); }
+  else { const t = cardEl && cardEl.querySelector(".card-title"); if(t) startTitleEdit(cardEl, t, c); }
 }
 function quickAddCard(colId){ createCardAt("project", colId, null); }
+// ---- Drop / paste an image straight onto the board (Milanote-style quick capture) ----
+// Shrinks big images so they don't bloat saved data (max ~1100px, JPEG).
+function scaleImageToDataURL(blob, maxDim){
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+      const scale = Math.min(1, maxDim / Math.max(w, h));
+      w = Math.max(1, Math.round(w*scale)); h = Math.max(1, Math.round(h*scale));
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      cv.getContext("2d").drawImage(img, 0, 0, w, h);
+      try { resolve(cv.toDataURL("image/jpeg", 0.85)); } catch(e){ reject(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Couldn't read image")); };
+    img.src = url;
+  });
+}
+function addImageCard(dataURL, colId){
+  const col = colId || (state.columns[0] && state.columns[0].id);
+  if(!col || !dataURL) return;
+  const c = newCard("project", col, 0, { image: dataURL });
+  state.cards.push(c);
+  const others = cardsIn(col).filter(x => x.id !== c.id);
+  [c, ...others].forEach((x, i) => x.order = i);   // new image card goes to the top of the column
+  save(); render();
+  flashToast("🖼 Image added to board");
+}
+async function addImageFiles(files, colId){
+  const imgs = [...files].filter(f => f.type && f.type.indexOf("image/") === 0);
+  if(!imgs.length) return;
+  for(const f of imgs){ try { const d = await scaleImageToDataURL(f, 1100); addImageCard(d, colId); } catch(e){} }
+}
+// Paste an image anywhere (but not while typing in a field) → new card.
+document.addEventListener("paste", e => {
+  if(typeof state === "undefined" || !state) return;
+  if(e.target.closest && e.target.closest('input, textarea, [contenteditable="true"]')) return;
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  for(const it of items){
+    if(it.type && it.type.indexOf("image/") === 0){
+      const blob = it.getAsFile();
+      if(blob){ e.preventDefault(); scaleImageToDataURL(blob, 1100).then(d => addImageCard(d, state.columns[0] && state.columns[0].id)).catch(()=>{}); return; }
+    }
+  }
+});
+// Stop the browser opening a dropped file; route board-area drops to the first column.
+document.addEventListener("dragover", e => { if(e.dataTransfer && [...(e.dataTransfer.types||[])].includes("Files")) e.preventDefault(); });
+document.addEventListener("drop", e => {
+  if(typeof state === "undefined" || !state) return;
+  if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+    if(!(e.target.closest && e.target.closest(".col-cards"))){   // column drops are handled by the column itself
+      e.preventDefault();
+      addImageFiles(e.dataTransfer.files, state.columns[0] && state.columns[0].id);
+    }
+  }
+});
 // Duplicate a card (fresh copy — no time logs, reset checklist ticks). Great for recurring work.
 function duplicateCard(id){
   const c = card(id); if(!c) return;
