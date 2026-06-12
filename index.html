@@ -1419,7 +1419,7 @@ function renderColumn(col){
   cards.forEach(c => list.appendChild(renderCard(c)));
   // drag targets
   list.addEventListener("dragover", e => {
-    if(draggingColEl) return;   // a column is being reordered — let the board handle it
+    if(draggingColEl || draggingChk) return;   // column reorder or checklist-item drag — not a card move
     e.preventDefault();
     list.classList.add("drag-over");
     const after = getDragAfter(list, e.clientY);
@@ -1430,7 +1430,7 @@ function renderColumn(col){
   });
   list.addEventListener("dragleave", () => list.classList.remove("drag-over"));
   list.addEventListener("drop", e => {
-    if(draggingColEl) return;
+    if(draggingColEl || draggingChk) return;
     e.preventDefault();
     list.classList.remove("drag-over");
     if(paletteType){
@@ -1644,10 +1644,9 @@ function renderChecklistCard(el, c){
   const items = c.items || [];
   const done = items.filter(i=>i.done).length;
   const itemsHtml = items.map(i =>
-    `<div class="chk-item ${i.done?'done':''}" data-item="${i.id}">`+
-      `<span class="chk-grip" title="Drag to reorder, or onto another list to move it">⠿</span>`+
+    `<div class="chk-item ${i.done?'done':''}" data-item="${i.id}" draggable="true">`+
       `<input type="checkbox" class="chk-cb" data-chk="${i.id}" ${i.done?'checked':''} />`+
-      `<span class="chk-txt" data-chk="${i.id}" contenteditable="true" spellcheck="false">${esc(i.text)}</span>`+
+      `<span class="chk-txt" data-chk="${i.id}" title="Drag to move · double-click to edit">${esc(i.text)}</span>`+
     `</div>`
   ).join("") || `<div class="chk-empty">No items yet.</div>`;
   el.innerHTML =
@@ -1664,30 +1663,33 @@ function renderChecklistCard(el, c){
     e.stopPropagation();
     const it = (c.items||[]).find(x=>x.id===cb.dataset.chk); if(it){ it.done = cb.checked; save(); render(); }
   }));
-  // click the text to EDIT it; save on blur (Enter commits, empty deletes)
+  // DOUBLE-CLICK the text to edit it (single press-and-drag moves it instead)
   el.querySelectorAll(".chk-txt").forEach(sp => {
-    sp.addEventListener("mousedown", e => { e.stopPropagation(); el.draggable = false; });   // edit, don't drag the card
-    sp.addEventListener("click", e => e.stopPropagation());
-    sp.addEventListener("dblclick", e => e.stopPropagation());
-    sp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); sp.blur(); } });
+    const itemEl = sp.closest(".chk-item");
+    sp.addEventListener("dblclick", e => {
+      e.stopPropagation(); e.preventDefault();
+      sp.setAttribute("contenteditable", "true");
+      if(itemEl) itemEl.draggable = false;
+      sp.focus();
+      const r = document.createRange(); r.selectNodeContents(sp); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+    sp.addEventListener("keydown", e => { if(sp.isContentEditable && e.key === "Enter"){ e.preventDefault(); sp.blur(); } });
     sp.addEventListener("blur", () => {
-      el.draggable = true;
+      if(!sp.isContentEditable) return;
+      sp.removeAttribute("contenteditable");
+      if(itemEl) itemEl.draggable = true;
       const it = (c.items||[]).find(x=>x.id===sp.dataset.chk); if(!it) return;
       const v = sp.textContent.trim();
       if(!v){ c.items = (c.items||[]).filter(x=>x.id!==it.id); save(); render(); return; }
       if(v !== it.text){ it.text = v; save(); render(); }
     });
   });
-  // drag a single item by its grip — reorder within, or drop onto another list to move it
+  // Drag items LIVE: the dragged row moves through the lists as you hover (across cards too),
+  // committed once on dragend — mirrors the links behaviour, no mid-drag re-render = no flicker.
   const chkList = el.querySelector(".chk-list");
   el.querySelectorAll(".chk-item").forEach(it => {
-    const grip = it.querySelector(".chk-grip");
-    if(grip){
-      grip.addEventListener("mousedown", e => { e.stopPropagation(); it.draggable = true; });
-      grip.addEventListener("mouseup", () => { it.draggable = false; });
-    }
-    it.addEventListener("dragstart", e => { e.stopPropagation(); draggingChk = { id: it.dataset.item, from: c.id }; it.classList.add("chk-dragging"); e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", it.dataset.item); } catch(_){} });
-    it.addEventListener("dragend", e => { e.stopPropagation(); it.classList.remove("chk-dragging"); it.draggable = false; draggingChk = null; document.querySelectorAll(".chk-list.chk-over").forEach(l => l.classList.remove("chk-over")); });
+    it.addEventListener("dragstart", e => { e.stopPropagation(); draggingChk = it.dataset.item; it.classList.add("chk-dragging"); e.dataTransfer.effectAllowed = "move"; });
+    it.addEventListener("dragend", e => { e.stopPropagation(); it.classList.remove("chk-dragging"); document.querySelectorAll(".chk-list.chk-over").forEach(l => l.classList.remove("chk-over")); if(draggingChk){ draggingChk = null; commitChkOrder(); } });
   });
   if(chkList){
     chkList.addEventListener("dragover", e => {
@@ -1695,16 +1697,13 @@ function renderChecklistCard(el, c){
       e.preventDefault(); e.stopPropagation();
       e.dataTransfer.dropEffect = "move";
       chkList.classList.add("chk-over");
+      const empty = chkList.querySelector(".chk-empty"); if(empty) empty.style.display = "none";
+      const dragging = document.querySelector(".chk-item.chk-dragging"); if(!dragging) return;
+      const after = getChkAfter(chkList, e.clientY);
+      if(after == null) chkList.appendChild(dragging); else chkList.insertBefore(dragging, after);
     });
-    chkList.addEventListener("dragleave", e => { if(e.target === chkList) chkList.classList.remove("chk-over"); });
-    chkList.addEventListener("drop", e => {
-      if(!draggingChk) return;
-      e.preventDefault(); e.stopPropagation();
-      chkList.classList.remove("chk-over");
-      const afterEl = getChkAfter(chkList, e.clientY);
-      moveChkItem(draggingChk.from, draggingChk.id, c.id, afterEl ? afterEl.dataset.item : null);
-      draggingChk = null;
-    });
+    chkList.addEventListener("dragleave", e => { if(!chkList.contains(e.relatedTarget)) chkList.classList.remove("chk-over"); });
+    chkList.addEventListener("drop", e => { if(draggingChk){ e.preventDefault(); e.stopPropagation(); chkList.classList.remove("chk-over"); } });
   }
   const addInput = el.querySelector(".chk-add-input");
   addInput.addEventListener("click", e => e.stopPropagation());
@@ -2277,17 +2276,21 @@ function commitChecklistOrder(c){
   (c.items || []).sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
   save(); render();
 }
-// Move a checklist item within its list or onto another checklist card, before `beforeItemId` (null = end).
-function moveChkItem(fromCardId, itemId, toCardId, beforeItemId){
-  const from = card(fromCardId), to = card(toCardId);
-  if(!from || !to) return;
-  const idx = (from.items || []).findIndex(x => x.id === itemId);
-  if(idx < 0) return;
-  const [item] = from.items.splice(idx, 1);
-  to.items = to.items || [];
-  let at = to.items.length;
-  if(beforeItemId){ const b = to.items.findIndex(x => x.id === beforeItemId); if(b >= 0) at = b; }
-  to.items.splice(at, 0, item);
+// After a live drag, read each checklist card's DOM order back into its items —
+// this captures both reordering and moves BETWEEN checklist cards in one pass.
+function commitChkOrder(){
+  const pool = new Map();
+  state.cards.forEach(c => { if(c.type === "checklist") (c.items || []).forEach(it => pool.set(it.id, it)); });
+  const placed = new Set();
+  document.querySelectorAll("#board .checklist-card").forEach(cardEl => {
+    const c = card(cardEl.dataset.cardId); if(!c) return;
+    const items = [];
+    cardEl.querySelectorAll(".chk-item").forEach(elx => {
+      const it = pool.get(elx.dataset.item);
+      if(it && !placed.has(it.id)){ items.push(it); placed.add(it.id); }
+    });
+    c.items = items;
+  });
   save(); render();
 }
 function renderEditorLinks(c){
