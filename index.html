@@ -649,10 +649,79 @@
   body.dark ::-webkit-scrollbar-thumb { background: #3a4654; background-clip: padding-box; }
   body.dark ::-webkit-scrollbar-thumb:hover { background: #4a5868; background-clip: padding-box; }
 
+  /* ---------- Focus & Timesheet pages ---------- */
+  .page { flex: 1 1 auto; overflow-y: auto; padding: 22px 24px 60px; min-width: 0; }
+  .page-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
+  .page-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+  .page-head .ph-sub { color: var(--muted); font-size: 13px; }
+  .ph-spacer { flex: 1; }
+  .ph-nav { display: inline-flex; gap: 4px; }
+  .ph-nav .btn { padding: 6px 12px; }
+  .ph-toggle { display: inline-flex; background: #eef1f6; border-radius: 9px; padding: 3px; gap: 2px; }
+  .ph-toggle button { border: none; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  .ph-toggle button.active { background: #fff; color: var(--ink); box-shadow: var(--shadow); }
+  body.dark .ph-toggle { background: #1c2532; }
+  body.dark .ph-toggle button.active { background: #2c3848; }
+  /* timesheet week grid */
+  .tsg-grid { display: flex; gap: 12px; align-items: stretch; overflow-x: auto; padding-bottom: 8px; }
+  .tsg-person { flex: 0 0 138px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+  .tsg-avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg,#3b6fd6,#6f4fd6); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; }
+  .tsg-pname { font-weight: 700; font-size: 13px; margin-top: 5px; }
+  .tsg-pmeta { font-size: 14px; font-weight: 800; color: var(--accent); }
+  .tsg-pmeta.sub { color: var(--muted); font-weight: 600; font-size: 12px; }
+  .tsg-col { flex: 1 1 0; min-width: 152px; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .tsg-col.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .tsg-colhead { display: flex; align-items: baseline; justify-content: space-between; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  .tsg-dname { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  .tsg-ddate { color: var(--muted); font-size: 13px; font-weight: 700; }
+  .tsg-blocks { flex: 1 1 auto; padding: 8px; display: flex; flex-direction: column; gap: 7px; cursor: pointer; min-height: 90px; }
+  .tsg-block { border-left: 3px solid #9aa6b4; background: var(--bg); border-radius: 7px; padding: 7px 9px; }
+  .tsg-b-title { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+  .tsg-b-title b { color: var(--accent); font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .tsg-b-sub, .tsg-b-note { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .tsg-b-time { font-size: 11.5px; font-weight: 700; margin-top: 3px; }
+  .tsg-empty { color: var(--muted); font-size: 12px; text-align: center; padding: 18px 0; }
+  .tsg-colfoot { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 9px 12px; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--line) 16%, var(--panel)); }
+  .tsg-dtot { font-weight: 800; font-size: 13px; }
+  .tsg-diff { font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 20px; }
+  .tsg-diff.under { background: #fdecea; color: #c0392b; }
+  .tsg-diff.over { background: #e7f6ec; color: #1d8a4c; }
+  body.dark .tsg-diff.under { background: #4a2420; color: #f1948a; }
+  body.dark .tsg-diff.over { background: #1e3a2a; color: #74d99f; }
+  .tsg-weektot { margin-top: 16px; font-size: 14px; color: var(--muted); }
+  .tsg-weektot b { color: var(--ink); font-size: 16px; }
+  /* timesheet day list */
+  .tsd-wrap { max-width: 640px; }
+  .tsd-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .tsd-row { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid #9aa6b4; border-radius: 9px; padding: 10px 13px; }
+  .tsd-main { flex: 1; min-width: 0; }
+  .tsd-t { font-size: 14px; font-weight: 600; }
+  .tsd-t b { color: var(--accent); font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .tsd-sub, .tsd-note { font-size: 12px; color: var(--muted); }
+  .tsd-time { font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; }
+  /* focus page */
+  .focus-page-sec { margin-bottom: 22px; }
+  .focus-page-sec h3 { margin: 0 0 10px; font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .focus-page-sec h3 .focus-n { background: var(--line); color: var(--muted); border-radius: 20px; font-size: 11px; padding: 1px 8px; }
+  .focus-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+  .focus-card { display: flex; align-items: center; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid #9aa6b4; border-radius: 11px; padding: 11px 14px; cursor: pointer; }
+  .focus-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+  .focus-card .fc-main { flex: 1; min-width: 0; }
+  .focus-card .fc-t { font-weight: 600; font-size: 13.5px; }
+  .focus-card .fc-sub { font-size: 11.5px; color: var(--muted); }
+  .focus-empty { color: var(--muted); font-size: 14px; padding: 44px 0; text-align: center; }
+
   /* ============================================================
      PHONE / SMALL SCREENS  — placed last so it overrides desktop
      ============================================================ */
   @media (max-width: 640px) {
+    .page { padding: 16px 14px calc(40px + env(safe-area-inset-bottom)); }
+    .tsg-grid { flex-direction: column; }
+    .tsg-person { flex: 0 0 auto; flex-direction: row; justify-content: flex-start; gap: 12px; }
+    .tsg-person .tsg-pname { margin-top: 0; }
+    .tsg-col { min-width: 0; }
+    .focus-cards { grid-template-columns: 1fr; }
+    .page-head h2 { font-size: 17px; }
     /* iPhone safe areas: keep the bar clear of the status bar / Dynamic Island
        (selector must be header.topbar to beat the base rule's specificity) */
     header.topbar { flex-wrap: wrap; gap: 7px; row-gap: 8px;
@@ -730,8 +799,8 @@
     <div class="brand"><div class="dot"></div> Project Tracker</div>
     <nav class="viewswitch" id="viewswitch" aria-label="View">
       <button class="vs-btn active" data-view="board" onclick="setView('board')">Board</button>
-      <button class="vs-btn" data-view="focus" onclick="setView('focus')">Focus</button>
-      <button class="vs-btn" data-view="timesheet" onclick="setView('timesheet')">Timesheet</button>
+      <button class="vs-btn" data-view="focus" onclick="openFocus()">Focus</button>
+      <button class="vs-btn" data-view="timesheet" onclick="openTimesheet('week')">Timesheet</button>
     </nav>
     <div class="spacer"></div>
     <input id="searchBox" class="search-box" type="search" placeholder="🔍 Search…" oninput="setSearch(this.value)" autocomplete="off" />
@@ -751,6 +820,8 @@
   <div class="workspace">
     <aside class="sidebar" id="sidebar"></aside>
     <div class="board" id="board"></div>
+    <div class="page" id="focusPage" style="display:none"></div>
+    <div class="page" id="timesheetPage" style="display:none"></div>
   </div>
 
   <!-- mobile drawer backdrop + close (only visible on small screens when the menu is open) -->
@@ -1283,6 +1354,10 @@ function render(){
   renderSidebar();
   renderClientFilter();
   applySearch();
+  if(typeof currentView !== "undefined"){
+    if(currentView === "timesheet") renderTimesheet();
+    else if(currentView === "focus") renderFocusPage();
+  }
 }
 
 function renderTodayPill(){
@@ -1718,12 +1793,17 @@ function openDataMenu(e){
   wire('[data-a="import"]', () => document.getElementById("importFile").click());
   wire('[data-a="signout"]', cloudSignOut);
 }
+let currentView = "board";
 function setView(view){
-  closeModal();                       // leave whatever was open
-  if(view === "focus") openFocus();
-  else if(view === "timesheet") openTimesheet("day");
-  // "board" = just the board with nothing open
+  currentView = view;
+  closeModal();                       // close any modal that was open over the page
+  const show = (id, on) => { const el = document.getElementById(id); if(el) el.style.display = on ? "" : "none"; };
+  show("board", view === "board");
+  show("focusPage", view === "focus");
+  show("timesheetPage", view === "timesheet");
   document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  if(view === "focus") renderFocusPage();
+  else if(view === "timesheet") renderTimesheet();
   if(typeof isMobileView === "function" && isMobileView()) closeMobileNav();
 }
 function openMoreMenu(e){
@@ -2199,7 +2279,7 @@ function endTsForDate(dv){
   const chosen = new Date(y, m-1, d, 12, 0, 0);
   return sameDay(chosen.getTime(), Date.now()) ? Date.now() : chosen.getTime();
 }
-function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); const m = document.getElementById("modal"); if(m) m.classList.remove("qn-modal"); document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("active", b.dataset.view === "board")); if(wasEditing) render(); }
+function closeModal(){ const wasEditing = editingId; editingId = null; currentModal = null; document.getElementById("overlay").classList.remove("show"); const m = document.getElementById("modal"); if(m) m.classList.remove("qn-modal"); document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("active", b.dataset.view === (typeof currentView !== "undefined" ? currentView : "board"))); if(wasEditing) render(); }
 function inEditable(el){ return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable)); }
 document.addEventListener("keydown", e => {
   if(e.key === "Escape"){ if(dlgCancelFn){ dlgCancelFn(); return; } closeModal(); hideCtx(); return; }
@@ -2401,11 +2481,13 @@ setInterval(() => {
   });
   if(anyActive){
     renderTodayPill();
-    // keep an open timesheet live if it's showing a period that includes today
-    if(currentModal === "timesheet"){
+    // keep the active page live while a timer runs
+    if(currentView === "timesheet"){
       const showsToday = tsView === "day" ? sameDay(tsAnchor, Date.now())
                                           : (Date.now() >= startOfWeek(tsAnchor) && Date.now() < addDays(startOfWeek(tsAnchor), 7));
       if(showsToday) renderTimesheet();
+    } else if(currentView === "focus"){
+      renderFocusPage();
     }
   }
 }, 1000);
@@ -2413,7 +2495,7 @@ setInterval(() => {
 /* ============================ Timesheet (daily / weekly) ============================ */
 let tsAnchor = startOfDay(Date.now());
 let tsView = "day";
-function openTimesheet(view){ tsView = view || "day"; tsAnchor = startOfDay(Date.now()); currentModal = "timesheet"; renderTimesheet(); document.getElementById("overlay").classList.add("show"); }
+function openTimesheet(view){ if(view) tsView = view; tsAnchor = startOfDay(Date.now()); setView("timesheet"); }
 function tsSwitch(v){ tsView = v; renderTimesheet(); }
 function tsNav(dir){ tsAnchor = addDays(tsAnchor, dir * (tsView==="week"?7:1)); renderTimesheet(); }
 function tsToday(){ tsAnchor = startOfDay(Date.now()); renderTimesheet(); }
@@ -2430,34 +2512,84 @@ function progressBar(secs, big){
   return `<div class="ts-mini"><span class="${done?'done':''}" style="width:${pct}%"></span></div>`;
 }
 
+function tsPerson(){
+  let name = "Me", initials = "MF";
+  if(typeof cloudUser !== "undefined" && cloudUser && cloudUser.email){
+    const handle = cloudUser.email.split("@")[0];
+    name = handle.replace(/[._]+/g, " ").replace(/\b\w/g, m => m.toUpperCase());
+  }
+  return { name, initials };
+}
+// Timesheet now renders as a full PAGE (not a modal).
 function renderTimesheet(){
-  const modal = document.getElementById("modal");
+  const el = document.getElementById("timesheetPage");
+  if(!el) return;
   const head =
-    `<div class="modal-head"><strong>📅 Timesheet</strong>`+
-      `<div class="ts-tabs" style="margin-left:14px">`+
-        `<button class="ts-tab ${tsView==='day'?'active':''}" onclick="tsSwitch('day')">Day</button>`+
-        `<button class="ts-tab ${tsView==='week'?'active':''}" onclick="tsSwitch('week')">Week</button>`+
-      `</div>`+
-      `<button class="btn ghost x" onclick="closeModal()">✕</button>`+
+    `<div class="page-head">`+
+      `<h2>📅 Timesheet</h2>`+
+      `<span class="ph-sub">${tsView==='day'?dayLabel(tsAnchor):weekLabel(tsAnchor)}</span>`+
+      `<span class="ph-spacer"></span>`+
+      `<span class="ph-nav"><button class="btn" onclick="tsNav(-1)">‹ Prev</button>`+
+        `<button class="btn" onclick="tsToday()">Today</button>`+
+        `<button class="btn" onclick="tsNav(1)">Next ›</button></span>`+
+      `<span class="ph-toggle"><button class="${tsView==='day'?'active':''}" onclick="tsSwitch('day')">Day</button>`+
+        `<button class="${tsView==='week'?'active':''}" onclick="tsSwitch('week')">Week</button></span>`+
+      `<button class="btn ghost" onclick="exportCSV()" title="Export all logs (CSV)">⤓ Export</button>`+
     `</div>`;
-
-  const nav =
-    `<div class="ts-nav">`+
-      `<button class="btn" onclick="tsNav(-1)">←</button>`+
-      `<span class="lbl">${tsView==='day'?dayLabel(tsAnchor):weekLabel(tsAnchor)}</span>`+
-      `<button class="btn" onclick="tsToday()">Today</button>`+
-      `<button class="btn" onclick="tsNav(1)">→</button>`+
+  el.innerHTML = head + (tsView==="week" ? tsWeekGridHtml(tsAnchor) : tsDayHtml(tsAnchor));
+  el.scrollTop = 0;
+}
+function tsWeekGridHtml(ts){
+  const wkStart = startOfWeek(ts);
+  const days = [];
+  let weekTotal = 0;
+  for(let i=0;i<7;i++){
+    const dts = addDays(wkStart, i);
+    const summary = daySummary(dts);
+    const dt = summary.reduce((s,x)=>s+x.secs,0);
+    const weekend = i>=5;
+    if(weekend && dt===0) continue;
+    weekTotal += dt;
+    days.push({ i, dts, summary, dt, weekend });
+  }
+  const p = tsPerson();
+  const target = 5*DAY_TARGET;
+  const pct = target ? Math.round(weekTotal/target*100) : 0;
+  const person =
+    `<div class="tsg-person"><div class="tsg-avatar">${esc(p.initials)}</div>`+
+      `<div><div class="tsg-pname">${esc(p.name)}</div><div class="tsg-pmeta">${pct}%</div><div class="tsg-pmeta sub">${esc(fmtHuman(weekTotal))}</div></div></div>`;
+  const cols = days.map(d => {
+    const isToday = sameDay(d.dts, Date.now());
+    const blocks = d.summary.length ? d.summary.map(x =>
+      `<div class="tsg-block" style="border-left-color:${x.card.color||'#9aa6b4'}">`+
+        `<div class="tsg-b-title">${x.card.projectNumber?`<b>${esc(x.card.projectNumber)}</b> `:""}${esc(x.card.title||"Untitled")}</div>`+
+        (x.card.client?`<div class="tsg-b-sub">${esc(x.card.client)}</div>`:"")+
+        (x.notes.length?`<div class="tsg-b-note">${esc(x.notes.join(" · "))}</div>`:"")+
+        `<div class="tsg-b-time">${esc(fmtHuman(x.secs))}</div>`+
+      `</div>`).join("") : `<div class="tsg-empty">—</div>`;
+    const diffPill = d.weekend ? "" :
+      (d.dt>=DAY_TARGET ? `<span class="tsg-diff over">+${esc(fmtHuman(d.dt-DAY_TARGET))}</span>`
+                        : `<span class="tsg-diff under">-${esc(fmtHuman(DAY_TARGET-d.dt))}</span>`);
+    return `<div class="tsg-col ${isToday?'today':''}">`+
+      `<div class="tsg-colhead"><span class="tsg-dname">${DAYNAMES[d.i]}</span><span class="tsg-ddate">${new Date(d.dts).toLocaleDateString(undefined,{day:"numeric",month:"short"})}</span></div>`+
+      `<div class="tsg-blocks" onclick="tsGoDay(${d.dts})" title="Open this day">${blocks}</div>`+
+      `<div class="tsg-colfoot"><span class="tsg-dtot">${esc(fmtHuman(d.dt))}</span>${diffPill}</div>`+
     `</div>`;
-
-  modal.innerHTML = head +
-    `<div class="modal-body">` + nav + (tsView==="day" ? dayViewHtml(tsAnchor) : weekViewHtml(tsAnchor)) + `</div>` +
-    `<div class="modal-foot">`+
-      `<button class="btn primary" onclick="exportCSV()">⤓ Export all logs (CSV)</button>`+
-      `<span style="flex:1"></span>`+
-      `<span class="hint" style="margin:0 6px">Clear logs older than</span>`+
-      `<button class="btn" onclick="pruneLogs(30)">1 month</button>`+
-      `<button class="btn" onclick="pruneLogs(90)">3 months</button>`+
-    `</div>`;
+  }).join("");
+  return `<div class="tsg-grid">${person}${cols}</div>`+
+    `<div class="tsg-weektot">Week total <b>${esc(fmtHuman(weekTotal))}</b> · Mon–Fri target 40h</div>`;
+}
+function tsDayHtml(ts){
+  const summary = daySummary(ts);
+  const total = summary.reduce((s,x)=>s+x.secs,0);
+  const rows = summary.length ? summary.map(x =>
+    `<div class="tsd-row" style="border-left-color:${x.card.color||'#9aa6b4'}">`+
+      `<div class="tsd-main"><div class="tsd-t">${x.card.projectNumber?`<b>${esc(x.card.projectNumber)}</b> `:""}${esc(x.card.title||"Untitled")}</div>`+
+        (x.card.client?`<div class="tsd-sub">${esc(x.card.client)}</div>`:"")+
+        (x.notes.length?`<div class="tsd-note">${esc(x.notes.join(" · "))}</div>`:"")+`</div>`+
+      `<div class="tsd-time">${esc(fmtHuman(x.secs))}</div>`+
+    `</div>`).join("") : `<div class="ts-empty">No time tracked on this day.</div>`;
+  return `<div class="tsd-wrap">`+progressBar(total, true)+`<div class="tsd-list">`+rows+`</div></div>`;
 }
 function dayLabel(ts){
   const isToday = sameDay(ts, Date.now());
@@ -2518,43 +2650,39 @@ async function pruneLogs(days){
 }
 
 /* ============================ Focus view (what needs you now) ============================ */
-function openFocus(){
-  currentModal = "focus";
+function openFocus(){ setView("focus"); }
+function renderFocusPage(){
+  const el = document.getElementById("focusPage");
+  if(!el) return;
   const live = state.cards.filter(c => !c.archived && c.timer.st !== "stopped");
   const crit = state.cards.filter(c => !c.archived && c.priority === "critical");
   const high = state.cards.filter(c => !c.archived && c.priority === "high");
   const soon = state.cards.filter(c => { if(c.archived || !c.shootDate) return false; const s = shootInfo(c); return s && s.days <= 7 && s.days >= -2; })
     .sort((a,b) => (shootInfo(a).days) - (shootInfo(b).days));
   const colName = id => { const k = column(id); return k ? k.title : ""; };
-  const row = (c, chip) =>
-    `<div class="ts-row focus-row" data-focus="${c.id}">`+
-      `<span class="dot" style="background:${c.color || '#cbd2da'}"></span>`+
-      `<span class="nm"><div class="t">${esc(c.title || "Untitled")}</div><div class="n">${esc(colName(c.columnId))}</div></span>`+
+  const fcard = (c, chip) =>
+    `<div class="focus-card" data-focus="${c.id}" style="border-left-color:${c.color || '#9aa6b4'}">`+
+      `<div class="fc-main"><div class="fc-t">${c.projectNumber?`<b style="color:var(--accent)">${esc(c.projectNumber)}</b> `:""}${esc(c.title || "Untitled")}</div>`+
+        `<div class="fc-sub">${esc(colName(c.columnId))}${c.client?" · "+esc(c.client):""}</div></div>`+
       (chip || "")+
     `</div>`;
-  const section = (title, cards, chipFn) => cards.length
-    ? `<div class="focus-sec-title">${title} <span class="focus-n">${cards.length}</span></div>` + cards.map(c => row(c, chipFn(c))).join("")
+  const sec = (title, cards, chipFn) => cards.length
+    ? `<div class="focus-page-sec"><h3>${title} <span class="focus-n">${cards.length}</span></h3><div class="focus-cards">${cards.map(c => fcard(c, chipFn(c))).join("")}</div></div>`
     : "";
   const timerChip = c => `<span class="tm ${c.timer.st === 'running' ? 'running' : 'paused'}">${c.timer.st === 'running' ? '▶ ' : '⏸ '}${esc(fmtClock(timerValue(c.timer)))}</span>`;
   const shootChip = c => { const s = shootInfo(c); return `<span class="shoot-badge ${s.level}">🎬 ${esc(s.days < 0 ? Math.abs(s.days)+'d ago' : (s.days===0?'today':'in '+s.days+'d'))}</span>`; };
   const prioChip = lvl => () => `<span class="prio-badge ${lvl==='critical'?'crit':'high'}">${lvl==='critical'?'🚨 Very urgent':'❗ Urgent'}</span>`;
   const body =
-    section("⏱ Running now", live, timerChip) +
-    section("🚨 Very urgent", crit, prioChip("critical")) +
-    section("❗ Urgent", high, prioChip("high")) +
-    section("🎬 Shoot soon", soon, shootChip);
-  const modal = document.getElementById("modal");
-  modal.innerHTML =
-    `<div class="modal-head"><strong>🎯 Focus — what needs you now</strong><button class="btn ghost x" onclick="closeModal()">✕</button></div>`+
-    `<div class="modal-body">`+
-      (body || `<div class="ts-empty">Nothing urgent, running, or due soon — you're on top of it. 🎉</div>`)+
-    `</div>`+
-    `<div class="modal-foot"><span class="hint">Set priority via a card's right-click → Priority.</span></div>`;
-  document.getElementById("overlay").classList.add("show");
-  modal.querySelectorAll("[data-focus]").forEach(rowEl => rowEl.onclick = () => {
+    sec("⏱ Running now", live, timerChip) +
+    sec("🚨 Very urgent", crit, prioChip("critical")) +
+    sec("❗ Urgent", high, prioChip("high")) +
+    sec("🎬 Shoot soon", soon, shootChip);
+  el.innerHTML =
+    `<div class="page-head"><h2>🎯 Focus</h2><span class="ph-sub">what needs you now</span></div>`+
+    (body || `<div class="focus-empty">Nothing urgent, running, or due soon — you're on top of it. 🎉</div>`);
+  el.querySelectorAll("[data-focus]").forEach(rowEl => rowEl.onclick = () => {
     const c = card(rowEl.dataset.focus); if(!c) return;
-    closeModal();
-    if(c.type === "note"){ const b = document.querySelector(`[data-card-id="${c.id}"] .note-edit-body`); if(b) b.focus(); }
+    if(c.type === "note"){ setView("board"); const b = document.querySelector(`[data-card-id="${c.id}"] .note-edit-body`); if(b) b.focus(); }
     else openCardEditor(c.id);
   });
 }
