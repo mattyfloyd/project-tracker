@@ -230,13 +230,22 @@
   body.dark .note-archive, body.dark .note-dup { background: rgba(0,0,0,.25); }
   .checklist-card .chk-count { font-size: 11px; color: var(--muted); font-weight: 700; }
   .chk-list { display: flex; flex-direction: column; gap: 1px; margin-top: 7px; }
-  .chk-item { display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.35; padding: 4px 4px; border-radius: 6px; cursor: grab; }
+  .chk-list.chk-over { background: rgba(59,111,214,.08); border-radius: 8px; outline: 1px dashed #b9c6e6; }
+  .chk-item { display: flex; align-items: flex-start; gap: 6px; font-size: 12.5px; line-height: 1.35; padding: 4px 4px; border-radius: 6px; }
   .chk-item:hover { background: #f6f7f9; }
-  .chk-item:active { cursor: grabbing; }
   .chk-item.chk-dragging { opacity: .4; }
-  .chk-item input { margin-top: 2px; width: 14px; height: 14px; flex: 0 0 auto; accent-color: var(--accent); cursor: pointer; }
+  .chk-grip { flex: 0 0 auto; cursor: grab; color: #c2c9d2; font-size: 11px; line-height: 1.5; user-select: none; opacity: 0; }
+  .chk-item:hover .chk-grip { opacity: 1; }
+  .chk-grip:active { cursor: grabbing; }
+  .chk-cb { appearance: none; -webkit-appearance: none; margin: 1px 0 0; width: 17px; height: 17px; flex: 0 0 auto; border: 1.5px solid #c2cad4; border-radius: 5px; background: var(--panel); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .12s, border-color .12s; }
+  .chk-cb:hover { border-color: var(--accent); }
+  .chk-cb:checked { background: var(--accent); border-color: var(--accent); }
+  .chk-cb:checked::after { content: ""; width: 4.5px; height: 8.5px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+  body.dark .chk-cb { background: #1c2532; border-color: #3a4859; }
+  body.dark .chk-cb:checked { background: var(--accent); border-color: var(--accent); }
   .chk-item.done .chk-txt { text-decoration: line-through; color: var(--muted); }
-  .chk-txt { flex: 1; min-width: 0; word-break: break-word; cursor: pointer; }
+  .chk-txt { flex: 1; min-width: 0; word-break: break-word; cursor: text; outline: none; border-radius: 4px; padding: 0 3px; }
+  .chk-txt:focus { background: color-mix(in srgb, var(--accent) 11%, var(--panel)); }
   .chk-empty { font-size: 12px; color: var(--muted); padding: 2px; }
   .chk-add { margin-top: 6px; }
   .chk-add-input { width: 100%; border: 1px solid var(--line); border-radius: 7px; padding: 5px 8px; font-size: 12px; font-family: inherit; outline: none; }
@@ -772,7 +781,7 @@
     /* bigger, easier tap targets inside the drawer */
     .sidelink { padding: 10px 6px; }
     .sidelink a { font-size: 13.5px; }
-    .sidelink-act, .sl-grip { opacity: 1; }
+    .sidelink-act, .sl-grip, .chk-grip { opacity: 1; }
     .palette-item { padding: 12px 12px; }
 
     .save-fab { display: none; }   /* mobile auto-saves to the cloud, so the manual Save button is redundant */
@@ -1635,9 +1644,10 @@ function renderChecklistCard(el, c){
   const items = c.items || [];
   const done = items.filter(i=>i.done).length;
   const itemsHtml = items.map(i =>
-    `<div class="chk-item ${i.done?'done':''}" data-item="${i.id}" draggable="true">`+
+    `<div class="chk-item ${i.done?'done':''}" data-item="${i.id}">`+
+      `<span class="chk-grip" title="Drag to reorder, or onto another list to move it">⠿</span>`+
       `<input type="checkbox" class="chk-cb" data-chk="${i.id}" ${i.done?'checked':''} />`+
-      `<span class="chk-txt" data-chk="${i.id}">${esc(i.text)}</span>`+
+      `<span class="chk-txt" data-chk="${i.id}" contenteditable="true" spellcheck="false">${esc(i.text)}</span>`+
     `</div>`
   ).join("") || `<div class="chk-empty">No items yet.</div>`;
   el.innerHTML =
@@ -1654,26 +1664,47 @@ function renderChecklistCard(el, c){
     e.stopPropagation();
     const it = (c.items||[]).find(x=>x.id===cb.dataset.chk); if(it){ it.done = cb.checked; save(); render(); }
   }));
-  // click the text toggles done too (kept from the old <label> behaviour)
-  el.querySelectorAll(".chk-txt").forEach(sp => sp.addEventListener("click", e => {
-    e.stopPropagation();
-    const it = (c.items||[]).find(x=>x.id===sp.dataset.chk); if(it){ it.done = !it.done; save(); render(); }
-  }));
-  // drag items to reorder (no buttons)
+  // click the text to EDIT it; save on blur (Enter commits, empty deletes)
+  el.querySelectorAll(".chk-txt").forEach(sp => {
+    sp.addEventListener("mousedown", e => { e.stopPropagation(); el.draggable = false; });   // edit, don't drag the card
+    sp.addEventListener("click", e => e.stopPropagation());
+    sp.addEventListener("dblclick", e => e.stopPropagation());
+    sp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); sp.blur(); } });
+    sp.addEventListener("blur", () => {
+      el.draggable = true;
+      const it = (c.items||[]).find(x=>x.id===sp.dataset.chk); if(!it) return;
+      const v = sp.textContent.trim();
+      if(!v){ c.items = (c.items||[]).filter(x=>x.id!==it.id); save(); render(); return; }
+      if(v !== it.text){ it.text = v; save(); render(); }
+    });
+  });
+  // drag a single item by its grip — reorder within, or drop onto another list to move it
   const chkList = el.querySelector(".chk-list");
   el.querySelectorAll(".chk-item").forEach(it => {
-    it.addEventListener("dragstart", e => { e.stopPropagation(); draggingChkItem = it.dataset.item; it.classList.add("chk-dragging"); e.dataTransfer.effectAllowed = "move"; });
-    it.addEventListener("dragend", e => { e.stopPropagation(); it.classList.remove("chk-dragging"); if(draggingChkItem){ draggingChkItem = null; commitChecklistOrder(c); } });
+    const grip = it.querySelector(".chk-grip");
+    if(grip){
+      grip.addEventListener("mousedown", e => { e.stopPropagation(); it.draggable = true; });
+      grip.addEventListener("mouseup", () => { it.draggable = false; });
+    }
+    it.addEventListener("dragstart", e => { e.stopPropagation(); draggingChk = { id: it.dataset.item, from: c.id }; it.classList.add("chk-dragging"); e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", it.dataset.item); } catch(_){} });
+    it.addEventListener("dragend", e => { e.stopPropagation(); it.classList.remove("chk-dragging"); it.draggable = false; draggingChk = null; document.querySelectorAll(".chk-list.chk-over").forEach(l => l.classList.remove("chk-over")); });
   });
   if(chkList){
     chkList.addEventListener("dragover", e => {
-      if(!draggingChkItem) return;
+      if(!draggingChk) return;
       e.preventDefault(); e.stopPropagation();
-      const dragging = chkList.querySelector(".chk-item.chk-dragging"); if(!dragging) return;
-      const after = getChkAfter(chkList, e.clientY);
-      if(after == null) chkList.appendChild(dragging); else chkList.insertBefore(dragging, after);
+      e.dataTransfer.dropEffect = "move";
+      chkList.classList.add("chk-over");
     });
-    chkList.addEventListener("drop", e => { if(draggingChkItem){ e.preventDefault(); e.stopPropagation(); } });
+    chkList.addEventListener("dragleave", e => { if(e.target === chkList) chkList.classList.remove("chk-over"); });
+    chkList.addEventListener("drop", e => {
+      if(!draggingChk) return;
+      e.preventDefault(); e.stopPropagation();
+      chkList.classList.remove("chk-over");
+      const afterEl = getChkAfter(chkList, e.clientY);
+      moveChkItem(draggingChk.from, draggingChk.id, c.id, afterEl ? afterEl.dataset.item : null);
+      draggingChk = null;
+    });
   }
   const addInput = el.querySelector(".chk-add-input");
   addInput.addEventListener("click", e => e.stopPropagation());
@@ -2244,6 +2275,19 @@ function commitChecklistOrder(c){
   const list = document.querySelector(`[data-card-id="${c.id}"] .chk-list`); if(!list) return;
   const ids = [...list.querySelectorAll(".chk-item")].map(el => el.dataset.item);
   (c.items || []).sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+  save(); render();
+}
+// Move a checklist item within its list or onto another checklist card, before `beforeItemId` (null = end).
+function moveChkItem(fromCardId, itemId, toCardId, beforeItemId){
+  const from = card(fromCardId), to = card(toCardId);
+  if(!from || !to) return;
+  const idx = (from.items || []).findIndex(x => x.id === itemId);
+  if(idx < 0) return;
+  const [item] = from.items.splice(idx, 1);
+  to.items = to.items || [];
+  let at = to.items.length;
+  if(beforeItemId){ const b = to.items.findIndex(x => x.id === beforeItemId); if(b >= 0) at = b; }
+  to.items.splice(at, 0, item);
   save(); render();
 }
 function renderEditorLinks(c){
@@ -2905,7 +2949,7 @@ function openBackups(){
 /* ============================ Sidebar: palette of draggable card types ============================ */
 let paletteType = null;
 let draggingLinkId = null;
-let draggingChkItem = null;
+let draggingChk = null;
 const PALETTE = [
   { type:"project",   icon:"📋", label:"Project", desc:"Timer, shoot date, links" },
   { type:"note",      icon:"📝", label:"Note",    desc:"Plain text sticky" },
