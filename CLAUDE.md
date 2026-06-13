@@ -66,6 +66,9 @@ PWA.**
 - **Board wheel scroll** (`setupBoardNav`): a vertical wheel pans the board horizontally **only over the
   empty board background** — over a column it stays vertical and rests at the column's top/bottom edge (no
   spill into horizontal scroll). Genuine horizontal trackpad swipes pass through natively.
+- **No overscroll bounce**: `.board` uses `overscroll-behavior` (`contain` on desktop — also stops the
+  browser back-swipe; `none` on mobile — stops the iPhone rubber-band when swiping past the first/last
+  column), and `html, body` use `overscroll-behavior: none`.
 - **iPhone swipe nav** (`setupTouchNav`): swipe in from the **left edge** to open the sidebar drawer, swipe
   left to close. Commit-on-release (not a finger-tracking drag) so it never fights the board's touch-scroll.
 
@@ -80,7 +83,9 @@ PWA.**
   double-click**, stored in `state.tabLabels`) · search · **client filter** dropdown · `•••` overflow menu
   (Archive, file-save, Backups, Export, Import, Shortcuts, theme, Sign out).
 - **Cards**: project / note / checklist. **Card titles**: a single click/drag moves the card;
-  **double-click the title to rename** (project & checklist). New cards open straight into title-editing.
+  **double-click the title to rename** (project & checklist). The column's **+ Add card** button creates a
+  project and opens the **editor popup** (focused on the title) so details can be filled in immediately;
+  palette drag-drop instead drops the card in for inline title typing.
   Whole-card colour tint; priority levels (Low/Medium/Urgent/Very-urgent) with auto-sort-to-top.
 - **Checklist items**: tick the custom checkbox to mark done; **double-click the text to edit** (supports
   **bold/italic** via Ctrl+B/I, stored as sanitised HTML); **drag by the row** to reorder or drop onto

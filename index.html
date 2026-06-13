@@ -24,7 +24,7 @@
     --shadow-lg: 0 10px 30px rgba(16,24,40,.18);
   }
   * { box-sizing: border-box; }
-  html, body { height: 100%; }
+  html, body { height: 100%; overscroll-behavior: none; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -264,6 +264,7 @@
     flex: 1 1 auto;
     overflow-x: auto;
     overflow-y: hidden;
+    overscroll-behavior-x: contain;   /* don't chain horizontal overscroll to the page / browser back-swipe */
     display: flex;
     gap: 16px;
     padding: 18px;
@@ -869,7 +870,7 @@
     .today-pill-bar { width: 40px; }
 
     /* board fills the whole screen now (sidebar is an overlay drawer) */
-    .board { padding: 14px calc(12px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); gap: 14px; align-items: stretch; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+    .board { padding: 14px calc(12px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); gap: 14px; align-items: stretch; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; overscroll-behavior: none; }
     .column { flex: 0 0 88vw; width: 88vw; height: 100%; scroll-snap-align: start; }
     .column .col-cards { flex: 1 1 auto; }   /* cards grow to fill, pinning "+ Add card" to the bottom — no empty gap under it */
 
@@ -1885,7 +1886,15 @@ function createCardAt(type, colId, index){
   if(type === "note"){ const b = cardEl && cardEl.querySelector(".note-edit-body"); if(b) b.focus(); }
   else { const t = cardEl && cardEl.querySelector(".card-title"); if(t) startTitleEdit(cardEl, t, c); }
 }
-function quickAddCard(colId){ createCardAt("project", colId, null); }
+function quickAddCard(colId){
+  const c = newCard("project", colId, 0);
+  state.cards.push(c);
+  const list = cardsIn(colId).filter(x => x.id !== c.id);
+  list.push(c);
+  list.forEach((x,i) => x.order = i);
+  save(); render();
+  openCardEditor(c.id, true);   // open the editor straight away (focused on the title) so info can be filled in immediately
+}
 // ---- Drop / paste an image straight onto the board (Milanote-style quick capture) ----
 // Shrinks big images so they don't bloat saved data (max ~1100px, JPEG).
 function scaleImageToDataURL(blob, maxDim){
