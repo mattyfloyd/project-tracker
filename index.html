@@ -734,6 +734,96 @@
   .focus-card .fc-sub { font-size: 11.5px; color: var(--muted); }
   .focus-empty { color: var(--muted); font-size: 14px; padding: 44px 0; text-align: center; }
 
+  /* ============================ Inductions dashboard ============================ */
+  body.ind-mode .sidebar { display: none; }                 /* the tab takes over the workspace */
+  #inductionsPage { padding: 0; overflow: hidden; display: flex; }
+  .ind-rail { flex: 0 0 212px; border-right: 1px solid var(--line); overflow-y: auto; padding: 16px 12px; background: var(--panel); }
+  .ir-sec { margin-bottom: 18px; }
+  .ir-h { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 0 8px 8px; }
+  .ir-view { width: 100%; display: flex; align-items: center; gap: 9px; border: none; background: transparent; color: var(--ink); font-size: 13px; font-weight: 500; padding: 7px 9px; border-radius: 8px; cursor: pointer; text-align: left; }
+  .ir-view:hover { background: var(--line); }
+  .ir-view.active { background: var(--accent-weak, rgba(91,141,239,.14)); color: var(--accent); font-weight: 600; }
+  .ir-view .iv-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+  .ir-view .iv-l { flex: 1; }
+  .ir-view .iv-n { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .ir-view.active .iv-n { color: var(--accent); }
+  .ir-sel { width: 100%; margin-bottom: 8px; }
+  .ir-h-row { display: flex; align-items: center; justify-content: space-between; }
+  .ir-edit { border: none; background: transparent; color: var(--accent); font-size: 11px; font-weight: 600; cursor: pointer; padding: 0 4px; }
+  .ir-catrow { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .ir-catrow .input { flex: 1; }
+  .ir-catdel { flex: 0 0 auto; width: 26px; height: 28px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 7px; cursor: pointer; font-size: 15px; line-height: 1; }
+  .ir-catdel:hover { border-color: #d8473e; color: #d8473e; }
+  .ir-catadd { width: 100%; margin-top: 2px; border: 1px dashed var(--line); background: transparent; color: var(--muted); font-size: 12px; font-weight: 600; padding: 6px; border-radius: 8px; cursor: pointer; }
+  .ir-catadd:hover { border-color: var(--accent); color: var(--accent); }
+  .ind-sortsel { flex: 0 0 auto; max-width: 180px; }
+  .ind-main { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: 20px 22px 40px; }
+  .ind-head2 { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+  .ind-head2 h2 { margin: 0; font-size: 19px; font-weight: 800; }
+  .ind-head2 .ind-sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .ind-add2 { margin-left: auto; flex: 0 0 auto; }
+  .ind-toolbar2 { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .ind-search2 { flex: 1; max-width: 320px; }
+  .ind-mobsel { display: none; }
+  .ind-table { min-width: 0; }
+  .ind-thead, .ind-trow { display: grid; grid-template-columns: 1.5fr 92px 110px 1.4fr 130px 56px 120px 86px 120px 86px; gap: 10px; align-items: center; }
+  .ind-thead { padding: 0 12px 8px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  .ind-trow { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer; margin-bottom: 7px; }
+  .ind-trow:hover { border-color: var(--accent); }
+  .ind-trow.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .ind-c { min-width: 0; font-size: 12.5px; overflow-wrap: anywhere; }
+  .ind-c.center { text-align: center; }
+  .ind-c.site { display: flex; align-items: center; gap: 8px; }
+  .ind-dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+  .ind-name { font-weight: 600; font-size: 13px; }
+  .ind-dim { color: var(--muted); }
+  .ind-muted { color: var(--muted); }
+  .ind-trow .ind-k { display: none; }
+  .ind-contact .ic-name { font-weight: 600; font-size: 12.5px; }
+  .ind-contact .ic-sub { font-size: 11px; color: var(--muted); }
+  .ind-days { font-weight: 700; }
+  .ind-days.neg { color: #d8473e; }
+  .ind-days.soon { color: #c87f1a; }
+  .ind-check { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border: 1.5px solid var(--line); border-radius: 5px; font-size: 12px; color: transparent; }
+  .ind-check.on { background: #2f9e5b; border-color: #2f9e5b; color: #fff; }
+  .ind-check.prop { color: var(--muted); }
+  .ag { display: inline-flex; gap: 6px; }
+  .ag-ic { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--line); display: inline-block; }
+  .ag-ic.on { background: #2f9e5b; border-color: #2f9e5b; }
+  .ind-tlink { font-size: 12px; font-weight: 600; text-decoration: none; color: var(--accent); }
+  .ind-empty { color: var(--muted); font-size: 13px; padding: 20px 12px; }
+  .plan-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; white-space: nowrap; background: #eef1f5; color: #56616e; }
+  .plan-pill.plan-gold { background: #fbf0d0; color: #a9821a; }
+  .plan-pill.plan-silver { background: #e9edf2; color: #6b7785; }
+  .plan-pill.plan-micro { background: #e6effb; color: #2f6fd0; }
+  body.dark .plan-pill { background: #36445a; color: #c8d3e0; }
+  body.dark .plan-pill.plan-gold { background: #3a3115; color: #e6b34d; }
+  body.dark .plan-pill.plan-silver { background: #313e4f; color: #aebdcc; }
+  body.dark .plan-pill.plan-micro { background: #1f324a; color: #7db0f0; }
+  /* detail panel */
+  .ind-detail { flex: 0 0 380px; border-left: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
+  .id-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  .id-head strong { font-size: 16px; flex: 1; }
+  .id-head .x { margin-left: auto; }
+  .id-body { flex: 1; overflow-y: auto; padding: 16px 18px; }
+  .id-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .id-sum { display: flex; flex-direction: column; gap: 3px; }
+  .id-sum .id-sl { font-size: 11px; color: var(--muted); }
+  .id-sum .id-sv { font-size: 14px; font-weight: 700; }
+  .id-sum .id-sv.neg { color: #d8473e; }
+  .id-sec { margin-bottom: 16px; }
+  .id-h { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 9px; }
+  .id-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .id-grid label, .id-sec > label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); }
+  .id-grid label.full { grid-column: 1 / -1; }
+  .id-grid label.ck { grid-column: 1 / -1; display: flex; align-items: center; gap: 7px; color: var(--ink); font-size: 12.5px; font-weight: 500; }
+  .id-grid .input, .id-sec .input { margin-top: 4px; width: 100%; }
+  .id-w3w { margin: 0 0 8px; padding-left: 18px; font-size: 12.5px; }
+  .id-w3w li { margin: 2px 0; overflow-wrap: anywhere; }
+  .id-foot { padding: 12px 18px; border-top: 1px solid var(--line); }
+  .ind-detail textarea.input { resize: vertical; min-height: 52px; font-family: inherit; line-height: 1.4; }
+  .ind-open { font-size: 11px; font-weight: 600; }
+
   /* ============================================================
      PHONE / SMALL SCREENS  — placed last so it overrides desktop
      ============================================================ */
@@ -745,6 +835,24 @@
     .tsg-col { min-width: 0; }
     .focus-cards { grid-template-columns: 1fr; }
     .page-head h2 { font-size: 17px; }
+    /* Inductions: phone gets an adapted layout — no left rail, table rows become cards, detail is full-screen */
+    #inductionsPage { display: block; overflow-y: auto; padding: 14px 14px calc(40px + env(safe-area-inset-bottom)); }
+    .ind-rail { display: none; }
+    .ind-main { overflow: visible; padding: 0; }
+    .ind-head2 h2 { font-size: 17px; }
+    .ind-toolbar2 { flex-wrap: wrap; }
+    .ind-search2 { max-width: none; flex: 1 1 100%; }
+    .ind-mobsel { display: block; flex: 1 1 45%; }
+    .ind-thead { display: none; }
+    .ind-trow { grid-template-columns: 1fr 1fr; gap: 5px 10px; padding: 13px 14px; }
+    .ind-trow .ind-c.site { grid-column: 1 / -1; }
+    .ind-trow .ind-c { font-size: 13px; }
+    .ind-trow .ind-c.center { text-align: left; }
+    .ind-trow .ind-k { display: block; min-width: 0; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 1px; }
+    .ind-trow .ind-name { font-size: 15px; }
+    .ind-detail { position: fixed; inset: 0; z-index: 60; flex: none; border-left: none; }
+    .id-body { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+    .id-summary, .id-grid { grid-template-columns: 1fr 1fr; }
     /* iPhone safe areas: keep the bar clear of the status bar / Dynamic Island
        (selector must be header.topbar to beat the base rule's specificity) */
     header.topbar { flex-wrap: wrap; gap: 7px; row-gap: 8px;
@@ -822,6 +930,7 @@
     <div class="brand"><div class="dot"></div> Project Tracker</div>
     <nav class="viewswitch" id="viewswitch" aria-label="View">
       <button class="vs-btn active" data-view="board" onclick="setView('board')">Board</button>
+      <button class="vs-btn" data-view="inductions" onclick="setView('inductions')">Inductions</button>
       <button class="vs-btn" data-view="focus" onclick="openFocus()">Focus</button>
     </nav>
     <div class="spacer"></div>
@@ -835,6 +944,7 @@
   <div class="workspace">
     <aside class="sidebar" id="sidebar"></aside>
     <div class="board" id="board"></div>
+    <div class="page" id="inductionsPage" style="display:none"></div>
     <div class="page" id="focusPage" style="display:none"></div>
   </div>
 
@@ -1125,6 +1235,8 @@ function load(){
       }
       s._mig_liftops = true;
     }
+    // one-time: seed the Inductions tab from the sheet (cloud users get this via hydrate())
+    ensureInductions(s);
   } catch(e){ console.error("Migration skipped due to error (data preserved):", e); }
   return s;
 }
@@ -1371,6 +1483,7 @@ function render(){
   if(typeof currentView !== "undefined"){
     if(currentView === "timesheet") renderTimesheet();
     else if(currentView === "focus") renderFocusPage();
+    else if(currentView === "inductions") renderInductions();
   }
 }
 
@@ -1895,10 +2008,13 @@ function setView(view){
   closeModal();                       // close any modal that was open over the page
   const show = (id, on) => { const el = document.getElementById(id); if(el) el.style.display = on ? "" : "none"; };
   show("board", view === "board");
+  show("inductionsPage", view === "inductions");
   show("focusPage", view === "focus");
   show("timesheetPage", view === "timesheet");
+  document.body.classList.toggle("ind-mode", view === "inductions");   // inductions takes over the workspace (hides the links sidebar)
   document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
   if(view === "focus") renderFocusPage();
+  else if(view === "inductions") renderInductions();
   else if(view === "timesheet") renderTimesheet();
   if(typeof isMobileView === "function" && isMobileView()) closeMobileNav();
 }
@@ -2841,6 +2957,7 @@ function normalizeState(s){
   if(!Array.isArray(s.sideLinks)) s.sideLinks = [];
   if(!Array.isArray(s.linkGroups)) s.linkGroups = [];
   s.sideLinks.forEach(l => { if(l.groupId === undefined) l.groupId = null; });
+  if(!Array.isArray(s.inductions)) s.inductions = [];
   return true;
 }
 async function writeStateToFile(){
@@ -3356,24 +3473,360 @@ function applyInductionData(cards, columns, announce){
 }
 function loadInductionInfo(){ applyInductionData(state.cards, state.columns, true); }
 
+/* ============================ Inductions tab ============================ */
+// A dedicated tab (after Board) tracking Murphy site inductions. Stored in state.inductions
+// so it syncs via Supabase and rides along in backups/export. Seeded once from the sheet.
+function newInduction(o){ return Object.assign({
+  id:"ind"+Math.random().toString(36).slice(2,9), group:"aerial", name:"", inductionLink:"",
+  plan:"", nextShoot:null, confirmed:"", what3words:"", frequency:"", contact:"", email:"", phone:"",
+  aerialAllowed:"", groundAllowed:"", notesForShoot:"", nextProposed:"", formReceived:"",
+  reviewStudioLink:"", siteInfoLink:"", inductionInfoFilled:"", notes:"", onHold:false
+}, o||{}); }
+// One-time seed of the sheet's contents. Gated by a flag so it never re-seeds once the
+// user has the tab (even if they later delete every row).
+const INDUCTIONS_SEED = [
+  /* ── Aerial ── */
+  { group:"aerial", name:"Staveley", plan:"Gold", frequency:"2 Months", nextShoot:"2026-05-15", nextProposed:"15/7/2026", confirmed:"confirmed",
+    contact:"Aidan Jenkins", email:"aidanjenkins@murphygroup.co.uk", phone:"07756223026",
+    inductionLink:"https://induct360.com/c/murphy/induction/staveley",
+    reviewStudioLink:"https://boundless.reviewstudio.com/review/513945031/file/11568245",
+    formReceived:"Yes", inductionInfoFilled:"Yes",
+    notesForShoot:"combining.vivid.eyeline – centre of wastewater treatment works, 360 view. remembers.trio.credited – start of pipeline; 30m otter-holt exclusion zone, above-ground pipe, overheads, ~200m W/E. ivory.spud.bracing – mid pipeline; public right-of-way diversion, cluster of trees, ~200m W/E. drill.blotches.lively – end of pipeline; flood zone, works close to river, ~200m W/E. leaflet.slung.carry – village works: playground, Gowan Terrace & river crossing, 360 view.",
+    notes:"Currently awaiting Review Studio overlays. Site-info: form sent via email. [Status: Awaiting Drone Scan]" },
+  { group:"aerial", name:"Pentonville", plan:"Silver", frequency:"2 Months", nextShoot:"2026-06-14", nextProposed:"14/8/2026", confirmed:"confirmed",
+    contact:"Mary Griffin", email:"marygriffin@murphygroup.co.uk", phone:"07725215740",
+    inductionLink:"https://share.boundlessimmersive.com/share/pentonville-induction/",
+    what3words:"///scans.movie.state – Main Compound; ///oval.leads.pushed – Lloyd Baker Street" },
+  { group:"aerial", name:"Mile End", plan:"Gold", frequency:"2 months", nextShoot:"2026-06-16", nextProposed:"16/8/2026", confirmed:"confirmed",
+    contact:"Zarah Agao", email:"zarahagao@murphygroup.co.uk", phone:"07341563171",
+    aerialAllowed:"5 (we cover 7 on this site)", groundAllowed:"15",
+    inductionLink:"https://murphy.induct360.com/induction/mile-end/" },
+  { group:"aerial", name:"Fleetwood", plan:"Micro Drone", nextShoot:"2026-06-19", confirmed:"proposed",
+    contact:"Unknown (currently Kelly Riding)", email:"kellyriding@murphygroup.co.uk", phone:"07849569007",
+    what3words:"///iteration.formally.socket – Main Compound, Jameson Rd, FY7 8TW; ///recall.contemplate.releases – Shaft 1, W of Amounderness Way, FY7 7PF; ///functions.shrub.pipes – Shaft 2, Broadwater Wood off Copse Rd, FY7 7PS; ///nooks.surfaces.searching – Shafts 3 & 4, Cardinal Allen HS, Melbourne Ave, FY7 8AY; ///factored.possibly.remainder – Shaft 5, Rossall Field, West Way, FY7 8JJ; ///cheered.rebounded.students – Shaft 7, Rossall Field, West Way, FY7 8JH; ///releasing.workforce.organic – King Georges Playing Field; ///rationing.supporter.router" },
+  { group:"aerial", name:"Southport", plan:"Gold", frequency:"2 months", nextShoot:"2026-06-19", nextProposed:"19/8/2026", confirmed:"proposed",
+    contact:"Kelly Riding", email:"kellyriding@murphygroup.co.uk", phone:"07849569007",
+    inductionLink:"https://share.boundlessimmersive.com/share/southport-induction/",
+    notesForShoot:"Client has requested the site entrance 360 to be updated. Site closes at 2:30." },
+  { group:"aerial", name:"Ellesmere Port", plan:"Silver", frequency:"Monthly", nextShoot:"2026-06-19", confirmed:"proposed",
+    notesForShoot:"exams.valid.input" },
+  { group:"aerial", name:"Briardale Road", frequency:"3 Months", nextShoot:"2026-06-29", nextProposed:"4/9/2026", confirmed:"confirmed",
+    contact:"Angus Wilson", email:"anguswilson@murphygroup.co.uk", phone:"07771913470",
+    aerialAllowed:"1", groundAllowed:"5",
+    notesForShoot:"Awaiting What3Words. Client requesting RAMS. Flight delayed – w/c 29th June (check with Tom for date)." },
+  /* ── Satellite ── */
+  { group:"satellite", name:"SAL18 – Peel Green Road", contact:"Colin Pratt", email:"colinpratt@murphygroup.co.uk",
+    what3words:"///tuck.income.grew – Main Compound; ///crazy.charmingly.dollar – Peel Green Road",
+    inductionLink:"https://murphy.induct360.com/induction/sal18/",
+    reviewStudioLink:"https://boundless.reviewstudio.com/review/987163566/file/11653882",
+    siteInfoLink:"https://docs.google.com/spreadsheets/d/1PrsV1zpmyEAju6xB3tw_F4Zmr6B1-u6CtY1nCbyc52A/edit?usp=sharing",
+    formReceived:"No", inductionInfoFilled:"No", notes:"[Status: Awaiting both Overlays, Text & Form]" },
+  { group:"satellite", name:"Flass Lane", contact:"Leif Smith", email:"leifsmith@murphygroup.co.uk",
+    what3words:"///last.latter.table",
+    inductionLink:"https://murphy.induct360.com/induction/flass-lane/",
+    siteInfoLink:"https://docs.google.com/spreadsheets/d/1of-ctJ9ClxxL5JAAkVqjGIqxethEkPKLzCivpiP_BVE/edit?gid=0#gid=0",
+    formReceived:"No", inductionInfoFilled:"Yes", notes:"[Status: Awaiting Overlays, Text & Form]" },
+  { group:"satellite", name:"Ellesmere Port", contact:"Joseph Relihan", email:"josephrelihan@murphygroup.co.uk",
+    reviewStudioLink:"https://boundless.reviewstudio.com/review/901116432/file/11317430",
+    siteInfoLink:"https://docs.google.com/spreadsheets/d/1h1j3ZmbhHIdslfYRk2Vfr9dVhjLiDOegac3taVU1dT8/edit?usp=sharing",
+    formReceived:"No", inductionInfoFilled:"No", notes:"Currently awaiting the form & site-specific text information. [Status: Awaiting both Overlays & Text]" },
+  { group:"satellite", name:"Tally Ho", contact:"Justin Evans", email:"justinevans@murphygroup.co.uk",
+    what3words:"///tend.pint.water",
+    inductionLink:"https://murphy.induct360.com/induction/tallyho/",
+    reviewStudioLink:"https://boundless.reviewstudio.com/cube/437105259/file/11385976",
+    siteInfoLink:"https://docs.google.com/spreadsheets/d/1E0S4Wsxob2yBXzikp897X0hA-rY9zGVSZIi55KKBA-w/edit?usp=sharing",
+    formReceived:"Yes", inductionInfoFilled:"Yes – client added to Review Studio instead", notes:"[Status: Completed]" },
+  { group:"satellite", name:"Ferry PS", contact:"Alexandru Gheorghe", email:"alexandrugheorghe@murphygroup.co.uk",
+    what3words:"weedy.others.breath",
+    inductionLink:"https://murphy.induct360.com/induction/ferry-ps/",
+    reviewStudioLink:"https://boundless.reviewstudio.com/review/555338240/file/11386307",
+    siteInfoLink:"https://docs.google.com/spreadsheets/d/1sOzvquhkGlkBtDhnjpAU0a64eubrvQzM-vPLXuIt3Us/edit?usp=sharing",
+    formReceived:"Yes", inductionInfoFilled:"No", notes:"[Status: Completed]" },
+  { group:"satellite", name:"Davyhulme", contact:"Iulian Carcea", email:"iuliancarcea@murphygroup.co.uk",
+    what3words:"///globe.roof.hush",
+    inductionLink:"https://murphy.induct360.com/induction/davyhulme/" },
+  { group:"satellite", name:"Minworth", contact:"Paul Edwards & Peter Lambeth", email:"pauledwards@murphygroup.co.uk & peterlambeth@murphygroup.co.uk",
+    what3words:"///acute.posed.copper",
+    inductionLink:"https://murphy.induct360.com/induction/minworth/" },
+  { group:"satellite", name:"Oxford STW", what3words:"///hiking.venue.heads",
+    inductionLink:"https://murphy.induct360.com/induction/oxford-stw/" },
+];
+function ensureInductions(s){
+  if(!Array.isArray(s.inductions)) s.inductions = [];
+  // editable categories (was hardcoded Aerial/Satellite); ids match the old group strings
+  if(!Array.isArray(s.inductionGroups) || !s.inductionGroups.length) s.inductionGroups = [{ id:"aerial", name:"Aerial" }, { id:"satellite", name:"Satellite" }];
+  // editable top-tab labels
+  if(!s.tabLabels || typeof s.tabLabels !== "object") s.tabLabels = {};
+  s.tabLabels.board = s.tabLabels.board || "Board";
+  s.tabLabels.inductions = s.tabLabels.inductions || "Inductions";
+  s.tabLabels.focus = s.tabLabels.focus || "Focus";
+  if(!s._mig_inductions_tab){
+    if(s.inductions.length === 0) s.inductions = INDUCTIONS_SEED.map(d => newInduction(d));
+    s._mig_inductions_tab = true;
+  }
+  return s;
+}
+// ---- editable top-tab labels (double-click a tab to rename) ----
+function renderTabs(){
+  if(!state || !state.tabLabels) return;
+  document.querySelectorAll(".vs-btn").forEach(b => {
+    const k = b.dataset.view;
+    if(state.tabLabels[k]) b.textContent = state.tabLabels[k];
+    b.title = "Double-click to rename";
+    b.ondblclick = e => { e.preventDefault(); renameTab(k); };
+  });
+}
+async function renameTab(key){
+  const name = await uiPrompt({ title:"Rename tab", label:"Tab name", value: state.tabLabels[key] || "", okText:"Save" });
+  if(name === null) return;
+  const t = name.trim(); if(!t) return;
+  state.tabLabels[key] = t; save(); renderTabs();
+}
+
+// ---- dashboard state (not persisted, like the board's search/filter) ----
+let indView = "all", indGroup = "all", indPlan = "all", indSearch = "", indSelected = null, indSort = "shoot", indCatEdit = false;
+function induction(id){ return (state.inductions||[]).find(i => i.id === id); }
+function planClass(p){ p=String(p||"").toLowerCase(); return p.includes("gold")?"plan-gold":p.includes("silver")?"plan-silver":p.includes("micro")?"plan-micro":""; }
+function indDateLabel(iso){ if(!iso) return ""; const p=String(iso).split("-").map(Number); if(p.length<3||!p[0]) return ""; return new Date(p[0],p[1]-1,p[2]).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}); }
+function indDays(ind){ if(!ind.nextShoot) return null; const s = shootInfo({ shootDate: ind.nextShoot }); return s ? s.days : null; }
+function indSeg(i){ const d = indDays(i); return { needsDate:!i.nextShoot, confirmed:i.confirmed==="confirmed", overdue:i.nextShoot&&d<0, dueWeek:i.nextShoot&&d>=0&&d<=7, live:!!i.inductionLink, onHold:!!i.onHold }; }
+// derived "views" — segments of the same data (mostly computed; only On Hold is a manual flag)
+const IND_VIEWS = [
+  { key:"all",       label:"All Sites",       color:"#5b8def", test:()=>true },
+  { key:"needsDate", label:"Needs Date",      color:"#e0a32e", test:i=>indSeg(i).needsDate },
+  { key:"confirmed", label:"Shoot Confirmed", color:"#2f9e5b", test:i=>indSeg(i).confirmed },
+  { key:"dueWeek",   label:"Due This Week",   color:"#8b6fe0", test:i=>indSeg(i).dueWeek },
+  { key:"overdue",   label:"Overdue",         color:"#d8473e", test:i=>indSeg(i).overdue },
+  { key:"live",      label:"Live Inductions", color:"#2bb3a3", test:i=>indSeg(i).live },
+  { key:"onHold",    label:"On Hold",         color:"#9aa6b4", test:i=>indSeg(i).onHold },
+];
+function indCount(key, base){ const v = IND_VIEWS.find(x=>x.key===key); return key==="all" ? base.length : base.filter(v.test).length; }
+function indGroupName(id){ const g = (state.inductionGroups||[]).find(x => x.id === id); return g ? g.name : (id || "—"); }
+function indSearchMatch(i){ const q = indSearch.trim().toLowerCase(); if(!q) return true; return [i.name,i.contact,i.email,i.phone,i.notes,i.notesForShoot,i.what3words].join(" ").toLowerCase().indexOf(q) >= 0; }
+// plan + search only (used for category counts, which shouldn't collapse when a category is picked)
+function indBaseNoGroup(){ return (state.inductions||[]).filter(i => (indPlan==="all"||(i.plan||"")===indPlan) && indSearchMatch(i)); }
+// group + plan + search (NOT the active view) so view counts reflect the current filters
+function indBaseList(){ return indBaseNoGroup().filter(i => indGroup==="all" || i.group===indGroup); }
+function indVisibleList(){
+  const v = IND_VIEWS.find(x => x.key === indView) || IND_VIEWS[0];
+  const list = indBaseList().filter(v.test);
+  const byDate = (a,b) => (a.nextShoot?Date.parse(a.nextShoot):Infinity) - (b.nextShoot?Date.parse(b.nextShoot):Infinity);
+  if(indSort === "name") list.sort((a,b) => String(a.name||"").localeCompare(String(b.name||"")));
+  else if(indSort === "plan") list.sort((a,b) => String(a.plan||"~").localeCompare(String(b.plan||"~")) || byDate(a,b));
+  else if(indSort === "category") list.sort((a,b) => indGroupName(a.group).localeCompare(indGroupName(b.group)) || byDate(a,b));
+  else if(indSort === "added"){ /* keep insertion order */ }
+  else list.sort(byDate);
+  return list;
+}
+function indStatusColor(i){ const s = indSeg(i); return s.onHold?"#9aa6b4":s.overdue?"#d8473e":s.dueWeek?"#8b6fe0":s.confirmed?"#2f9e5b":s.needsDate?"#e0a32e":"#5b8def"; }
+function setIndView(k){ indView = k; renderInductions(); }
+function setIndGroup(v){ indGroup = v; renderInductions(); }
+function setIndPlan(v){ indPlan = v; renderInductions(); }
+function setIndSearch(v){ indSearch = v||""; refreshIndData(); const el = document.getElementById("indSearch"); if(el){ el.focus(); const t = el.value; el.value = ""; el.value = t; } }
+function setIndSort(v){ indSort = v; refreshIndData(); }
+function toggleCatEdit(){ indCatEdit = !indCatEdit; renderInductions(); }
+function addIndGroup(){ const id = "g"+Math.random().toString(36).slice(2,9); state.inductionGroups.push({ id, name:"New category" }); save(); renderInductions(); }
+function renameIndGroup(id, name){ const g = (state.inductionGroups||[]).find(x => x.id === id); if(!g) return; const t = String(name||"").trim(); if(t){ g.name = t; save(); } refreshIndData(); }
+async function deleteIndGroup(id){
+  if((state.inductionGroups||[]).length <= 1){ uiAlert({ title:"Keep at least one", message:"You need at least one category." }); return; }
+  const g = state.inductionGroups.find(x => x.id === id); if(!g) return;
+  const fallback = state.inductionGroups.find(x => x.id !== id);
+  const used = state.inductions.filter(i => i.group === id).length;
+  if(used && !(await uiConfirm({ title:`Delete “${g.name}”?`, message:`${used} site${used===1?"":"s"} will move to “${fallback.name}”.`, okText:"Delete", danger:true }))) return;
+  state.inductions.forEach(i => { if(i.group === id) i.group = fallback.id; });
+  state.inductionGroups = state.inductionGroups.filter(x => x.id !== id);
+  if(indGroup === id) indGroup = "all";
+  save(); renderInductions();
+}
+
+function indRailHTML(base){
+  const views = IND_VIEWS.map(v => `<button class="ir-view${indView===v.key?" active":""}" onclick="setIndView('${v.key}')"><span class="iv-dot" style="background:${v.color}"></span><span class="iv-l">${v.label}</span><span class="iv-n">${indCount(v.key,base)}</span></button>`).join("");
+  const catBase = indBaseNoGroup();
+  let cats;
+  if(indCatEdit){
+    cats = (state.inductionGroups||[]).map(g => `<div class="ir-catrow"><input class="input" value="${esc(g.name)}" onchange="renameIndGroup('${g.id}', this.value)" /><button class="ir-catdel" onclick="deleteIndGroup('${g.id}')" title="Delete category">×</button></div>`).join("")+
+      `<button class="ir-catadd" onclick="addIndGroup()">＋ Add category</button>`;
+  } else {
+    cats = `<button class="ir-view${indGroup==="all"?" active":""}" onclick="setIndGroup('all')"><span class="iv-dot" style="background:#7a8699"></span><span class="iv-l">All categories</span><span class="iv-n">${catBase.length}</span></button>`+
+      (state.inductionGroups||[]).map(g => `<button class="ir-view${indGroup===g.id?" active":""}" onclick="setIndGroup('${g.id}')"><span class="iv-dot" style="background:#5b8def"></span><span class="iv-l">${esc(g.name)}</span><span class="iv-n">${catBase.filter(i=>i.group===g.id).length}</span></button>`).join("");
+  }
+  const planOpts = ["all","Gold","Silver","Micro Drone"].map(p=>`<option value="${esc(p)}" ${indPlan===p?"selected":""}>${p==="all"?"All Plans":p}</option>`).join("");
+  return `<div class="ir-sec"><div class="ir-h">Views</div>${views}</div>`+
+    `<div class="ir-sec"><div class="ir-h ir-h-row"><span>Categories</span><button class="ir-edit" onclick="toggleCatEdit()">${indCatEdit?"Done":"✎ Edit"}</button></div>${cats}</div>`+
+    `<div class="ir-sec"><div class="ir-h">Filters</div><select class="input ir-sel" onchange="setIndPlan(this.value)">${planOpts}</select></div>`;
+}
+function indRowHTML(i){
+  const d = indDays(i);
+  const daysCell = d==null ? `<span class="ind-muted">—</span>` : `<span class="ind-days ${d<0?"neg":(d<=7?"soon":"")}">${d}</span>`;
+  const plan = i.plan ? `<span class="plan-pill ${planClass(i.plan)}">${esc(i.plan)}</span>` : `<span class="ind-muted">—</span>`;
+  const conf = i.confirmed==="confirmed" ? `<span class="ind-check on">✓</span>` : i.confirmed==="proposed" ? `<span class="ind-check prop">·</span>` : `<span class="ind-check"></span>`;
+  const allow = v => (v && !/^(no|0|n|none)$/i.test(String(v).trim())) ? `<span class="ag-ic on" title="${esc(v)}"></span>` : `<span class="ag-ic" title="not allowed / unknown"></span>`;
+  const lnk = i.inductionLink ? `<a href="${esc(i.inductionLink)}" target="_blank" rel="noopener" class="ind-tlink" onclick="event.stopPropagation()">link ↗</a>` : `<span class="ind-muted">—</span>`;
+  const contact = i.contact||i.email||i.phone ? `<div class="ind-contact"><div class="ic-name">${esc(i.contact||"—")}</div>${i.email?`<div class="ic-sub">${esc(i.email)}</div>`:""}${i.phone?`<div class="ic-sub">${esc(i.phone)}</div>`:""}</div>` : `<span class="ind-muted">—</span>`;
+  return `<div class="ind-trow${indSelected===i.id?" selected":""}" data-ind="${i.id}">`+
+    `<div class="ind-c site"><span class="ind-dot" style="background:${indStatusColor(i)}"></span><span class="ind-name">${esc(i.name||"Untitled")}</span></div>`+
+    `<div class="ind-c"><span class="ind-k">Plan</span>${plan}</div>`+
+    `<div class="ind-c"><span class="ind-k">Frequency</span><span class="ind-dim">${esc(i.frequency||"—")}</span></div>`+
+    `<div class="ind-c"><span class="ind-k">Contact</span>${contact}</div>`+
+    `<div class="ind-c"><span class="ind-k">Upcoming</span>${i.nextShoot?`📅 ${esc(indDateLabel(i.nextShoot))}`:`<span class="ind-muted">—</span>`}</div>`+
+    `<div class="ind-c"><span class="ind-k">Days</span>${daysCell}</div>`+
+    `<div class="ind-c"><span class="ind-k">Next planned</span><span class="ind-dim">${i.nextProposed?esc(i.nextProposed):"—"}</span></div>`+
+    `<div class="ind-c center"><span class="ind-k">Confirmed</span>${conf}</div>`+
+    `<div class="ind-c center"><span class="ind-k">Aerial / Ground</span><span class="ag">${allow(i.aerialAllowed)}${allow(i.groundAllowed)}</span></div>`+
+    `<div class="ind-c"><span class="ind-k">Induction</span>${lnk}</div>`+
+  `</div>`;
+}
+function indTableInnerHTML(){
+  const list = indVisibleList();
+  const head = `<div class="ind-thead"><div>Site</div><div>Plan</div><div>Frequency</div><div>Contact</div><div>Upcoming shoot</div><div>Days</div><div>Next planned</div><div class="center">Confirmed</div><div class="center">Aerial / Ground</div><div>Induction</div></div>`;
+  const rows = list.length ? list.map(indRowHTML).join("") : `<div class="ind-empty">No sites match this view.</div>`;
+  return head + rows;
+}
+function indDetailHTML(){
+  if(!indSelected) return "";
+  const i = induction(indSelected); if(!i) return "";
+  const d = indDays(i);
+  const daysTxt = d==null ? "—" : (d<0?`${Math.abs(d)} days ago`:(d===0?"Today":`${d} days`));
+  const txt = (k, ph) => `<input class="input" data-k="${k}" value="${esc(i[k]||"")}" placeholder="${esc(ph||"")}" />`;
+  const area = k => `<textarea class="input" data-k="${k}" rows="2">${esc(i[k]||"")}</textarea>`;
+  const w3w = (i.what3words||"").split(/[;\n]/).map(x=>x.trim()).filter(Boolean);
+  const planSel = ["","Gold","Silver","Micro Drone"].map(p=>`<option ${i.plan===p?"selected":""} value="${esc(p)}">${p||"—"}</option>`).join("");
+  const grpSel  = (state.inductionGroups||[]).map(g=>`<option ${i.group===g.id?"selected":""} value="${g.id}">${esc(g.name)}</option>`).join("");
+  const confSel = [["","—"],["confirmed","Confirmed"],["proposed","Proposed"]].map(([v,l])=>`<option ${i.confirmed===v?"selected":""} value="${v}">${l}</option>`).join("");
+  return `<aside class="ind-detail open" id="indDetail">`+
+    `<div class="id-head"><strong>${esc(i.name||"New site")}</strong><button class="btn ghost x" onclick="closeIndDetail()">✕</button></div>`+
+    `<div class="id-body">`+
+      `<div class="id-summary">`+
+        `<div class="id-sum"><span class="id-sl">Upcoming shoot</span><span class="id-sv">${i.nextShoot?esc(indDateLabel(i.nextShoot)):"—"}</span></div>`+
+        `<div class="id-sum"><span class="id-sl">Days until shoot</span><span class="id-sv ${d!=null&&d<0?"neg":""}">${daysTxt}</span></div>`+
+        `<div class="id-sum"><span class="id-sl">Next planned</span><span class="id-sv">${i.nextProposed?esc(i.nextProposed):"—"}</span></div>`+
+        `<div class="id-sum"><span class="id-sl">Confirmed</span><span class="id-sv">${i.confirmed==="confirmed"?"Yes":(i.confirmed==="proposed"?"Proposed":"—")}</span></div>`+
+      `</div>`+
+      `<div class="id-sec"><div class="id-h">Site</div><div class="id-grid">`+
+        `<label>Name<input class="input" data-k="name" value="${esc(i.name||"")}" /></label>`+
+        `<label>Section<select class="input" data-k="group">${grpSel}</select></label>`+
+        `<label>Next shoot<input class="input" type="date" data-k="nextShoot" value="${esc(i.nextShoot||"")}" /></label>`+
+        `<label>Confirmed<select class="input" data-k="confirmed">${confSel}</select></label>`+
+        `<label class="ck"><input type="checkbox" data-k="onHold" ${i.onHold?"checked":""} /> On hold</label>`+
+      `</div></div>`+
+      `<div class="id-sec"><div class="id-h">Plan</div><div class="id-grid">`+
+        `<label>Plan<select class="input" data-k="plan">${planSel}</select></label>`+
+        `<label>Frequency${txt("frequency","e.g. 2 Months")}</label>`+
+        `<label>Aerial captures allowed${txt("aerialAllowed")}</label>`+
+        `<label>Ground captures allowed${txt("groundAllowed")}</label>`+
+      `</div></div>`+
+      `<div class="id-sec"><div class="id-h">Contact</div><div class="id-grid">`+
+        `<label>Site contact${txt("contact")}</label>`+
+        `<label>Number${txt("phone")}</label>`+
+        `<label class="full">Email${i.email?` <a class="ind-open" href="mailto:${esc(i.email)}">✉</a>`:""}${txt("email")}</label>`+
+      `</div></div>`+
+      `<div class="id-sec"><div class="id-h">Location / what3words</div>`+
+        (w3w.length?`<ul class="id-w3w">${w3w.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"")+
+        area("what3words")+
+      `</div>`+
+      `<div class="id-sec"><div class="id-h">Shoot notes</div>${area("notesForShoot")}</div>`+
+      `<div class="id-sec"><div class="id-h">Workflow</div><div class="id-grid">`+
+        `<label>Form received back${txt("formReceived")}</label>`+
+        `<label>Induction info filled out${txt("inductionInfoFilled")}</label>`+
+        `<label class="full">Induction link${i.inductionLink?` <a class="ind-open" href="${esc(i.inductionLink)}" target="_blank" rel="noopener">open ↗</a>`:""}${txt("inductionLink","https://…")}</label>`+
+        `<label class="full">Review Studio link${i.reviewStudioLink?` <a class="ind-open" href="${esc(i.reviewStudioLink)}" target="_blank" rel="noopener">open ↗</a>`:""}${txt("reviewStudioLink","https://…")}</label>`+
+        `<label class="full">Site-specific info link${i.siteInfoLink?` <a class="ind-open" href="${esc(i.siteInfoLink)}" target="_blank" rel="noopener">open ↗</a>`:""}${txt("siteInfoLink","https://…")}</label>`+
+      `</div></div>`+
+      `<div class="id-sec"><div class="id-h">Notes</div>${area("notes")}</div>`+
+    `</div>`+
+    `<div class="id-foot"><button class="btn danger" id="indDetailDel">🗑 Delete site</button></div>`+
+  `</aside>`;
+}
+// Re-render only rail + stats + table (keeps the detail panel's inputs focused while editing).
+function refreshIndData(){
+  const base = indBaseList();
+  const rail = document.getElementById("indRail"); if(rail) rail.innerHTML = indRailHTML(base);
+  const mob = document.getElementById("indViewSel"); if(mob) mob.value = indView;
+  const tw = document.getElementById("indTableWrap"); if(tw){ tw.innerHTML = indTableInnerHTML(); tw.querySelectorAll(".ind-trow[data-ind]").forEach(r => r.onclick = () => selectInduction(r.dataset.ind)); }
+}
+function renderInductions(){
+  const el = document.getElementById("inductionsPage");
+  if(!el) return;
+  if(indSelected && !induction(indSelected)) indSelected = null;
+  const base = indBaseList();
+  const viewSel = IND_VIEWS.map(v=>`<option value="${v.key}" ${indView===v.key?"selected":""}>${v.label}</option>`).join("");
+  const groupSel = `<option value="all" ${indGroup==="all"?"selected":""}>All categories</option>`+
+    (state.inductionGroups||[]).map(g=>`<option value="${g.id}" ${indGroup===g.id?"selected":""}>${esc(g.name)}</option>`).join("");
+  const sortSel = [["shoot","Next shoot"],["name","Name A–Z"],["plan","Plan"],["category","Category"],["added","Recently added"]].map(([v,l])=>`<option value="${v}" ${indSort===v?"selected":""}>Sort: ${l}</option>`).join("");
+  el.innerHTML =
+    `<aside class="ind-rail" id="indRail">${indRailHTML(base)}</aside>`+
+    `<div class="ind-main">`+
+      `<div class="ind-head2"><div><h2>Induction Sites</h2><div class="ind-sub">Track drone shoots, contacts and induction links.</div></div>`+
+        `<button class="btn primary ind-add2" onclick="addInduction()">＋ Add site</button></div>`+
+      `<div class="ind-toolbar2">`+
+        `<input id="indSearch" class="input ind-search2" type="search" placeholder="🔍 Search sites…" value="${esc(indSearch)}" oninput="setIndSearch(this.value)" />`+
+        `<select class="input ind-sortsel" onchange="setIndSort(this.value)">${sortSel}</select>`+
+        `<select id="indViewSel" class="input ind-mobsel" onchange="setIndView(this.value)">${viewSel}</select>`+
+        `<select class="input ind-mobsel" onchange="setIndGroup(this.value)">${groupSel}</select>`+
+        `<button class="btn ghost" onclick="exportInductions()">⤓ Export</button>`+
+      `</div>`+
+      `<div class="ind-table" id="indTableWrap">${indTableInnerHTML()}</div>`+
+    `</div>`+
+    indDetailHTML();
+  el.querySelectorAll("#indTableWrap .ind-trow[data-ind]").forEach(r => r.onclick = () => selectInduction(r.dataset.ind));
+  wireIndDetail();
+}
+function wireIndDetail(){
+  const el = document.getElementById("inductionsPage");
+  const i = induction(indSelected); if(!i) return;
+  el.querySelectorAll(".ind-detail [data-k]").forEach(inp => {
+    const key = inp.dataset.k;
+    if(inp.type === "checkbox"){ inp.addEventListener("change", e => { i[key] = e.target.checked; save(); refreshIndData(); }); return; }
+    const reRender = inp.tagName === "SELECT" || inp.type === "date";   // discrete commits — fine to rebuild panel
+    inp.addEventListener(reRender ? "change" : "input", e => {
+      let v = e.target.value;
+      if(key === "nextShoot") v = v || null;
+      i[key] = v; save();
+      if(reRender) renderInductions(); else { refreshIndData(); const h = el.querySelector(".ind-detail .id-head strong"); if(key==="name" && h) h.textContent = i.name || "New site"; }
+    });
+  });
+  const del = el.querySelector("#indDetailDel"); if(del) del.onclick = () => deleteInduction(indSelected);
+}
+function selectInduction(id){ indSelected = id; renderInductions(); }
+function closeIndDetail(){ indSelected = null; renderInductions(); }
+function addInduction(){
+  const fallback = (state.inductionGroups[0] || {}).id || "aerial";
+  const ind = newInduction({ group: indGroup === "all" ? fallback : indGroup });
+  state.inductions.push(ind); save();
+  selectInduction(ind.id);
+}
+async function deleteInduction(id){
+  const ind = induction(id); if(!ind) return;
+  if(!(await uiConfirm({ title:`Delete “${ind.name||"this site"}”?`, message:"Removes it from the Inductions tab.", okText:"Delete", danger:true }))) return;
+  const snap = JSON.parse(JSON.stringify(ind));
+  state.inductions = state.inductions.filter(x => x.id !== id);
+  indSelected = null; save(); renderInductions();
+  showUndo(`Deleted “${ind.name||"site"}”`, () => { state.inductions.push(snap); save(); renderInductions(); });
+}
+function exportInductions(){
+  const cols = [["name","Site"],["group","Section"],["plan","Plan"],["frequency","Frequency"],["contact","Contact"],["email","Email"],["phone","Number"],["aerialAllowed","Aerial allowed"],["groundAllowed","Ground allowed"],["nextShoot","Upcoming shoot"],["nextProposed","Next planned"],["confirmed","Confirmed"],["formReceived","Form received"],["inductionInfoFilled","Induction info filled"],["what3words","what3words"],["notesForShoot","Shoot notes"],["inductionLink","Induction link"],["reviewStudioLink","Review Studio"],["siteInfoLink","Site info"],["notes","Notes"]];
+  const q = s => '"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  const rows = indVisibleList().map(i => cols.map(([k]) => q(i[k])).join(","));
+  const csv = cols.map(([,l]) => q(l)).join(",") + "\n" + rows.join("\n");
+  const blob = new Blob([csv], { type:"text/csv" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "inductions.csv"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+
 /* ============================ Board navigation (wheel + drag pan) ============================ */
 function setupBoardNav(){
   const board = document.getElementById("board");
 
-  // Vertical wheel scrolls the board horizontally — unless the cursor is over a
-  // column that still has room to scroll vertically in that direction.
+  // Vertical wheel scrolls the board horizontally — but ONLY over the empty board.
+  // Over a column, the wheel stays inside that column and simply stops at its top/
+  // bottom edge (no spilling into horizontal scroll).
   board.addEventListener("wheel", e => {
     if(e.ctrlKey) return; // pinch-zoom gesture — leave it alone
     const dom = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
     // genuine horizontal trackpad swipe — let the browser handle it natively
     if(Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-    const list = e.target.closest && e.target.closest(".col-cards");
-    if(list && list.scrollHeight > list.clientHeight + 1){
-      const atTop = list.scrollTop <= 0;
-      const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 1;
-      const down = dom > 0;
-      if((down && !atBottom) || (!down && !atTop)) return; // let the column scroll
-    }
+    // cursor is over a column → keep the scroll vertical (let it rest at the edge)
+    if(e.target.closest && e.target.closest(".col-cards")) return;
     if(dom === 0) return;
     e.preventDefault();
     board.scrollLeft += dom;
@@ -3408,6 +3861,35 @@ function setupBoardNav(){
     else if(after !== draggingColEl){ board.insertBefore(draggingColEl, after); }
   });
   board.addEventListener("drop", e => { if(draggingColEl) e.preventDefault(); });
+}
+// iPhone swipe gestures: swipe in from the left edge to open the sidebar drawer,
+// swipe left to close it. Commit on release so it never interferes with the board's
+// horizontal touch-scroll or card dragging.
+function setupTouchNav(){
+  if(setupTouchNav._done) return; setupTouchNav._done = true;
+  const EDGE = 28;     // px from the left edge that can start an "open" swipe
+  const THRESH = 45;   // px of horizontal travel needed to commit
+  let sx = 0, sy = 0, fromEdge = false, openAtStart = false, tracking = false;
+  window.addEventListener("touchstart", e => {
+    if(!isMobileView() || e.touches.length !== 1){ tracking = false; return; }
+    const t = e.touches[0];
+    sx = t.clientX; sy = t.clientY;
+    openAtStart = document.body.classList.contains("mobile-nav-open");
+    fromEdge = sx <= EDGE;
+    tracking = fromEdge || openAtStart;   // only track edge-opens or closing an open drawer
+  }, { passive: true });
+  window.addEventListener("touchend", e => {
+    if(!tracking) return; tracking = false;
+    const t = e.changedTouches && e.changedTouches[0]; if(!t) return;
+    const dx = t.clientX - sx, dy = t.clientY - sy;
+    if(Math.abs(dx) < THRESH || Math.abs(dy) > Math.abs(dx)) return;   // not a clear horizontal swipe
+    if(!openAtStart && fromEdge && dx > 0){
+      if(document.body.classList.contains("ind-mode")) return;          // no sidebar on the inductions tab
+      setDrawer(true);
+    } else if(openAtStart && dx < 0){
+      setDrawer(false);
+    }
+  }, { passive: true });
 }
 let draggingColEl = null;
 function wireColumnDrag(handle, colEl){
@@ -3472,6 +3954,7 @@ function hydrate(s){
   if(!Array.isArray(s.statuses)) s.statuses = ["In Progress", "Waiting Feedback", "On Hold", "Awaiting PO", "Completed"];
   s.cards.forEach(c => { if(c.projectNumber===undefined) c.projectNumber=""; if(c.filePath===undefined) c.filePath=""; if(c.client===undefined) c.client=""; if(c.renderSpec===undefined) c.renderSpec=""; });
   if(!Array.isArray(s.clients)) s.clients = [];
+  ensureInductions(s);
   return s;
 }
 function showLogin(){ document.getElementById("loginScreen").classList.add("show"); }
@@ -3519,7 +4002,9 @@ async function bootWithCloud(){
 }
 function finishBoot(){
   applyTheme();
+  renderTabs();
   setupBoardNav();
+  setupTouchNav();
   render();
   makeBackup("startup");
   if(!finishBoot._iv) finishBoot._iv = setInterval(() => makeBackup("auto"), 15 * 60 * 1000);

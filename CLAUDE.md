@@ -21,11 +21,12 @@ PWA.**
   every tiny tweak. (The user explicitly asked for this.)
 - After a push, the live site can take ~1–3 min to rebuild and the CDN/browser cache the old copy — verify
   with a cache-busted fetch and tell the user to **hard-refresh (Ctrl+Shift+R)** / reopen the phone PWA.
-- **Verify changes before deploying.** A local static server works for previewing
-  (`python -m http.server`), but the app shows a **login screen** (cloud is enabled), so to test board/card
-  behaviour without logging in, seed a state in the page console: `state = seed(); render();` then drive the
-  functions / inspect computed styles. (On the original Desktop PC there's a `.claude/launch.json` + preview
-  tooling; a laptop can just use `python -m http.server`.)
+- **Verify changes before deploying.** A local static server works for previewing (`python -m http.server`,
+  or `node` if Python isn't installed — see `.claude/serve.js`, which is **gitignored** dev tooling, not part
+  of the deployed site). The app shows a **login screen** (cloud is enabled), so to test without logging in,
+  seed a state in the page console: `state = seed(); ensureInductions(state); render();` then drive the
+  functions / inspect computed styles. (`ensureInductions` is needed for the Inductions tab — `seed()` alone
+  doesn't populate it.)
 - **Never change the internal storage keys** `ptracker.v1` (localStorage) or `ptracker-fs` (IndexedDB) — doing
   so loses the user's local data. The on-screen name has changed over time; these keys must not.
 
@@ -40,8 +41,9 @@ PWA.**
 
 - **Vanilla JS, no framework, no dependencies** except the Supabase JS client loaded from a CDN.
 - One global **`state`** object (columns, cards, sideLinks, linkGroups, statuses, clients, quickNotes, dark,
-  etc.). `render()` rebuilds the board from `state`; `save()` persists it (localStorage + debounced cloud
-  upsert + optional local file). Most mutations call `save()` then `render()`.
+  plus **`inductions`**, **`inductionGroups`**, **`tabLabels`** — see the Inductions section). `render()`
+  rebuilds the board from `state`; `save()` persists it (localStorage + debounced cloud upsert + optional
+  local file). Most mutations call `save()` then `render()`.
 - **Cards** have a `type`: `project` (full card), `note` (sticky), `checklist` (tickable items). Project cards
   carry: `title`, `projectNumber`, `notes`, `color`, `links`, `image`, `status`, `client`, `renderSpec`
   (render/output spec), `filePath`, `shootDate`, `priority`, plus `timer`/`logs` (see "removed" below).
@@ -61,6 +63,11 @@ PWA.**
   bar / Dynamic Island / home indicator. **CSS gotcha:** the base toolbar rule is `header.topbar`, so a
   mobile `.topbar` override loses on specificity — match the base selector. (Same class of bug bit the
   sidebar width earlier.)
+- **Board wheel scroll** (`setupBoardNav`): a vertical wheel pans the board horizontally **only over the
+  empty board background** — over a column it stays vertical and rests at the column's top/bottom edge (no
+  spill into horizontal scroll). Genuine horizontal trackpad swipes pass through natively.
+- **iPhone swipe nav** (`setupTouchNav`): swipe in from the **left edge** to open the sidebar drawer, swipe
+  left to close. Commit-on-release (not a finger-tracking drag) so it never fights the board's touch-scroll.
 
 ---
 
@@ -69,8 +76,9 @@ PWA.**
 - **Board**: columns (add/rename/recolour/collapse/compact/reorder via the `⠿` grip), drag-drop cards,
   search, dark mode, undo (Ctrl+Z + toast), styled prompt/confirm/alert dialogs, a global right-click
   context menu, auto-backups (rolling localStorage snapshots) + Backups/Export/Import in the `🗂`/`•••` menu.
-- **Top toolbar**: `☰` · brand · a **Board · Focus** view-switcher · search · **client filter** dropdown ·
-  `•••` overflow menu (Archive, file-save, Backups, Export, Import, Shortcuts, theme, Sign out).
+- **Top toolbar**: `☰` · brand · a **Board · Inductions · Focus** view-switcher (tabs are **renamable —
+  double-click**, stored in `state.tabLabels`) · search · **client filter** dropdown · `•••` overflow menu
+  (Archive, file-save, Backups, Export, Import, Shortcuts, theme, Sign out).
 - **Cards**: project / note / checklist. **Card titles**: a single click/drag moves the card;
   **double-click the title to rename** (project & checklist). New cards open straight into title-editing.
   Whole-card colour tint; priority levels (Low/Medium/Urgent/Very-urgent) with auto-sort-to-top.
@@ -85,7 +93,39 @@ PWA.**
 - **Links sidebar**: client folders, drag-reorder/move links, smart labels for Google Drive links.
 - **Drop / paste an image onto the board** → it becomes a card with that image as its cover; the image is
   auto-downscaled (~1100px JPEG) so it doesn't bloat saved data.
-- **Inductions**: some cards have a live "shoot in N days" countdown (`shootDate`).
+- **Inductions tab**: a full dashboard tracking drone-shoot site inductions — see its own section below.
+  (Project **cards** also still have a live "shoot in N days" countdown via `shootDate`.)
+
+---
+
+## Inductions tab (dashboard) — `state.inductions`
+
+A dedicated **Inductions** tab (2nd in the top switcher) — a site-induction tracker for drone shoots that was
+originally a separate Google Sheet, now merged in. It **takes over the workspace on desktop**
+(`body.ind-mode` hides the links sidebar) and **adapts to a stacked card layout on iPhone**.
+
+- **Data**: `state.inductions` = array of site records — see `newInduction()` for the full field list
+  (name, group, plan, `nextShoot` `YYYY-MM-DD`, confirmed `confirmed|proposed|""`, contact/email/phone,
+  aerial/groundAllowed, what3words, frequency, notesForShoot, nextProposed, form/induction-info flags, three
+  links, notes, `onHold`). Synced via Supabase + in backups/export like everything else.
+- **Seeded once** from the original sheet via `INDUCTIONS_SEED` → `ensureInductions(s)`, gated by
+  `s._mig_inductions_tab`. `ensureInductions()` runs from **both** `load()` (localStorage) and `hydrate()`
+  (cloud), so it seeds whichever way the state arrives (cloud users get it via `hydrate()`). It also ensures
+  `state.inductionGroups` + `state.tabLabels` defaults on every boot (idempotent).
+- **Categories** = `state.inductionGroups` `[{id,name}]` (default Aerial/Satellite; ids match the old group
+  strings). Each induction's `group` is a category id. Editable in the rail (**✎ Edit → rename / add /
+  delete**; deleting reassigns its sites to another category; the last one can't be deleted).
+- **Views** (left rail) are **computed segments** — Needs Date / Shoot Confirmed / Due This Week / Overdue /
+  Live Inductions — all derived via `indSeg()`. **On Hold is the only manual flag.** We deliberately did NOT
+  add a status field here (the sheet's "Status" column was folded into `notes` on import).
+- **Layout**: `renderInductions()` builds `#inductionsPage` as `[rail | main | detail]`. Main = heading +
+  toolbar (search, **sort**, Export CSV) + table (`indTableInnerHTML`). Detail = a slide-in editable panel
+  (`indDetailHTML` + `wireIndDetail`). Editing a **text** field calls `refreshIndData()` (rebuilds rail+table
+  only, keeps the panel's input focused); **selects/date** fields do a full `renderInductions()`.
+- **Sort** (`indSort`): Next shoot (default) / Name / Plan / Category / Recently added. **"Days till"** reuses
+  the card countdown — `shootInfo({ shootDate: ind.nextShoot })`.
+- UI state (`indView/indGroup/indPlan/indSearch/indSort/indSelected/indCatEdit`) is **not persisted** (like
+  the board's search/filter).
 
 ---
 
