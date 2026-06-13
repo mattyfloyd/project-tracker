@@ -109,6 +109,10 @@ A dedicated **Inductions** tab (2nd in the top switcher) — a site-induction tr
 originally a separate Google Sheet, now merged in. It **takes over the workspace on desktop**
 (`body.ind-mode` hides the links sidebar) and **adapts to a stacked card layout on iPhone**.
 
+> `body.ind-mode .sidebar { display:none }` is **desktop-only** — the mobile `@media` block re-shows it
+> (`body.sidebar-hidden .sidebar, body.ind-mode .sidebar { display:flex }`) so the ☰ button / left-edge
+> swipe still open the links drawer on this tab on a phone. (Without that, the drawer opened empty.)
+
 - **Data**: `state.inductions` = array of site records — see `newInduction()` for the full field list
   (name, group, plan, `nextShoot` `YYYY-MM-DD`, confirmed `confirmed|proposed|""`, contact/email/phone,
   aerial/groundAllowed, what3words, frequency, notesForShoot, nextProposed, form/induction-info flags, three

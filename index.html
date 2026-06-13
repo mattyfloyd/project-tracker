@@ -884,7 +884,7 @@
       box-shadow: var(--shadow-lg);
       padding: calc(20px + env(safe-area-inset-top)) 16px calc(90px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
     }
-    body.sidebar-hidden .sidebar { display: flex; }   /* desktop "hidden" pref must not hide the mobile drawer */
+    body.sidebar-hidden .sidebar, body.ind-mode .sidebar { display: flex; }   /* desktop-only hides (pref + inductions takeover) must not hide the mobile drawer */
     body.mobile-nav-open .sidebar { transform: translateX(0); }
     /* dim backdrop behind the drawer */
     body.mobile-nav-open .mobile-scrim {
@@ -3893,7 +3893,6 @@ function setupTouchNav(){
     const dx = t.clientX - sx, dy = t.clientY - sy;
     if(Math.abs(dx) < THRESH || Math.abs(dy) > Math.abs(dx)) return;   // not a clear horizontal swipe
     if(!openAtStart && fromEdge && dx > 0){
-      if(document.body.classList.contains("ind-mode")) return;          // no sidebar on the inductions tab
       setDrawer(true);
     } else if(openAtStart && dx < 0){
       setDrawer(false);
